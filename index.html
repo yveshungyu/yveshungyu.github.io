@@ -1,38 +1,106 @@
 <!DOCTYPE html>
-<html>
- <head>
-<link rel="stylesheet" href="style.css" />
-  <title>Yves Chen</title>
- </head>
- <body>
-  <header>
-  <h1>Creative Technologist · Spatial Experience Designer</h2>
-  <h2> Yves Chen is a creative technologist and spatial experience designer currently pursuing a Master of Science in Architectural Technologies at SCI-Arc. Originally from Taoyuan, Taiwan, Yves blends AI, sensory interaction, and product innovation to create immersive environments beyond traditional architecture. His recent work, ÔDÔRAI, explores personalized olfactory experiences powered by smart devices and real-time biometric data. </h2>  
-  </header>
-  <main> 
-   <section>
-  <p> Featured Work: ÔDÔRAI</p>
-  <img />
-  <img />
-  <img />
-  <img />
-  <img />
-  
-   <section>
-  <h1> Technical Tools</h1>
-  <h2> Yves integrates Rhino, Grasshopper, Arduino, Raspberry Pi, Unreal Engine, coding, and 3D printing into his research and design process, exploring how emerging tools can support immersive and responsive environments. </h2>
-   </section>   
-   <section>
-  <h1> Design Interests</h1>
-  <h2> Beyond architecture, Yves is deeply interested in fragrance design, experimental cooking, dessert-making, and fashion—fields that enrich his approach to multisensory experiences and personal expression. </h2>
-   </section>
-  </main>
- </body>
- <footer>
-<video controls width="640">
-  <source src="https://yveshungyu.github.io/assest/Artist%20S%20Rendering%20Of%20An%20Odor%20Map%20Highlighting%20Three%20Scent%20Labels.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
- <h3> Contact: yves.hungyu@gmail.com </h3>
- </footer>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ÔDÔRAI - AI Driven Personal Aromatherapist</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <header class="main-header">
+            <div class="header-left">
+                <a href="#" class="header-nav"><i class="fas fa-bars"></i> <span>Menu</span></a>
+                <a href="#" class="header-nav"><i class="fas fa-search"></i> <span>Search</span></a>
+            </div>
+            <a href="#" class="logo">ÔDÔRAI</a>
+            <div class="header-right">
+                <a href="#" class="btn-subscribe d-none-mobile">Subscription</a>
+                <a href="#" class="d-none-mobile">Contact Us</a>
+                <a href="#"><i class="fas fa-user"></i></a>
+                <a href="#"><i class="fas fa-shopping-bag"></i></a>
+            </div>
+        </header>
+
+        <main class="product-grid">
+            <div class="product-image-container">
+                <img src="images/diffuser-main.png" alt="ÔDÔRAI AI Diffuser" id="main-product-image">
+            </div>
+
+            <div class="product-info">
+                <p class="product-sku">PMAL721</p>
+                <div class="product-title-header">
+        <h1 class="product-title">DIFFUSER - AI Driven Personal Aromatherapist</h1>
+        <i class="far fa-heart" id="wishlist-heart"></i>
+    </div>
+    <p class="product-price" id="product-price">$ 599.00</p>
+
+    <div class="color-selector">
+        <h4>Colors: <span style="color: #888;" id="color-name">origin</span></h4>
+        <div class="color-swatches">
+            <div class="color-swatch selected" 
+                 data-main-image="images/diffuser-main.png" 
+                 data-color-name="origin" 
+                 data-price="$ 599.00">
+                 <img src="images/swatch-origin.jpg" alt="Color Swatch Origin">
+            </div>
+            <div class="color-swatch" 
+                 data-main-image="images/diffuser-aether.png" 
+                 data-color-name="aether" 
+                 data-price="$ 629.00">
+                 <img src="images/swatch-aether.jpg" alt="Color Swatch Aether">
+            </div>
+            <div class="color-swatch" 
+                 data-main-image="images/diffuser-prism.png" 
+                 data-color-name="prism" 
+                 data-price="$ 649.00">
+                 <img src="images/swatch-prism.jpg" alt="Color Swatch Prism">
+            </div>
+        </div>
+    </div>
+
+                <div class="action-buttons">
+                    <a href="#" class="btn btn-primary" id="contact-btn">Contact Concierge Services</a>
+                    <a href="#" class="btn btn-secondary" id="find-store-btn">Find in Store</a>
+                </div>
+
+                <div class="product-description">
+                    <p>Evoking the poetics of breath and presence, ÔDÔRAI recognizes scent as the primordial language. Within its quiet, sculptural form lies its true emotion recognition and spatial behavior. This intelligent diffuser weaves personalized aromas into daily rituals, inspired by biophilic designs, ÔDÔRAI’s presence forges a living dialogue between humans and nature.</p>
+                    <span class="read-more">Read more</span>
+                </div>
+                <div class="info-accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Delivery & Returns</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <p>Enjoy free standard shipping on all orders. Expedited shipping options are available at checkout. We accept returns within 30 days of purchase for a full refund. The item must be in its original condition and packaging.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-header">
+                            <span>Gifting</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <p>This item can be gift-wrapped. Add a personal message at checkout, and we will include a complimentary gift card. The price will be concealed on the packing slip.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
 </html>

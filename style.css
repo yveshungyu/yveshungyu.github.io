@@ -887,6 +887,8 @@ body {
         top: auto;
         overflow-x: auto;
         overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
     
     /* 手機版照片水平排列 */
@@ -894,17 +896,30 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: auto;
+        width: 400%; /* 4張圖片的總寬度 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    /* 隱藏滾動條 */
+    .product-image-container::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .product-image-container {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
     }
     
     .image-stack img {
-        flex: 0 0 100%;
-        width: 100%;
+        flex: 0 0 25%; /* 每張圖片占總容器的25% */
+        width: 25%;
         height: 100%;
         object-fit: contain;
+        object-position: center;
         scroll-snap-align: start;
+        scroll-snap-stop: always;
     }
     
     /* 移動端圖片指示器 */
@@ -1000,6 +1015,8 @@ body {
         top: auto;
         overflow-x: auto;
         overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
     
     /* 768px 以下也使用水平排列 */
@@ -1007,17 +1024,20 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: auto;
+        width: 400%; /* 4張圖片的總寬度 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
     }
     
     .image-stack img {
-        flex: 0 0 100%;
-        width: 100%;
+        flex: 0 0 25%; /* 每張圖片占總容器的25% */
+        width: 25%;
         height: 100%;
         object-fit: contain;
+        object-position: center;
         scroll-snap-align: start;
+        scroll-snap-stop: always;
     }
     
     .product-info {
@@ -1092,6 +1112,8 @@ body {
         top: auto;
         overflow-x: auto;
         overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
     }
     
     /* 480px 以下也使用水平排列 */
@@ -1099,17 +1121,20 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: auto;
+        width: 400%; /* 4張圖片的總寬度 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
     }
     
     .image-stack img {
-        flex: 0 0 100%;
-        width: 100%;
+        flex: 0 0 25%; /* 每張圖片占總容器的25% */
+        width: 25%;
         height: 100%;
         object-fit: contain;
+        object-position: center;
         scroll-snap-align: start;
+        scroll-snap-stop: always;
     }
     
     .product-info {

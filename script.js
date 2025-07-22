@@ -234,6 +234,13 @@ document.addEventListener('DOMContentLoaded', function() {
         generateImageStack(currentColorGroup);
         updateWishlistHeart(currentColorGroup); // 初始化愛心狀態
         updateCartBadge(); // 初始化購物車徽章
+        
+        // 確保移動端從第一張圖片開始
+        if (isMobileDevice()) {
+            setTimeout(() => {
+                resetImageIndex();
+            }, 200);
+        }
     }
     
     // 延遲初始化
@@ -472,10 +479,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const images = imageStack.querySelectorAll('img');
         if (images.length === 0 || index < 0 || index >= images.length) return;
         
-        const targetImage = images[index];
-        const scrollLeft = targetImage.offsetLeft;
+        const container = imageStack.parentElement;
+        const containerWidth = container.offsetWidth;
+        const scrollLeft = index * containerWidth; // 精確計算每張圖片的位置
         
-        imageStack.parentElement.scrollTo({
+        container.scrollTo({
             left: scrollLeft,
             behavior: 'smooth'
         });
@@ -504,26 +512,38 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (touchDiffX > 10) {
             isScrolling = true;
+            // 阻止默認滾動行為，完全由我們控制
+            e.preventDefault();
         }
     }
 
     function handleTouchEnd(e) {
         if (!isMobileDevice() || !isScrolling) return;
         
-        const swipeThreshold = 50;
+        const swipeThreshold = 30; // 降低滑動閾值，讓滑動更敏感
         const swipeDistance = touchEndX - touchStartX;
         
         if (Math.abs(swipeDistance) > swipeThreshold) {
             const currentImages = imageGroups[currentColorGroup];
             if (!currentImages) return;
             
+            let newIndex = currentImageIndex;
+            
             if (swipeDistance > 0 && currentImageIndex > 0) {
                 // 向右滑動 - 上一張
-                scrollToImageIndex(currentImageIndex - 1);
+                newIndex = currentImageIndex - 1;
             } else if (swipeDistance < 0 && currentImageIndex < currentImages.length - 1) {
                 // 向左滑動 - 下一張
-                scrollToImageIndex(currentImageIndex + 1);
+                newIndex = currentImageIndex + 1;
             }
+            
+            // 確保只滑動一張圖片
+            if (newIndex !== currentImageIndex) {
+                scrollToImageIndex(newIndex);
+            }
+        } else {
+            // 如果滑動距離不夠，回彈到當前圖片
+            scrollToImageIndex(currentImageIndex);
         }
         
         isScrolling = false;
@@ -538,17 +558,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // 監聽滾動事件以更新當前圖片索引
         const imageContainer = imageStack.parentElement;
         if (imageContainer) {
+            let scrollTimeout;
             imageContainer.addEventListener('scroll', function() {
                 if (!isMobileDevice()) return;
                 
-                const scrollLeft = this.scrollLeft;
-                const containerWidth = this.offsetWidth;
-                const newIndex = Math.round(scrollLeft / containerWidth);
-                
-                if (newIndex !== currentImageIndex && newIndex >= 0) {
-                    currentImageIndex = newIndex;
-                    updateIndicators(newIndex);
-                }
+                // 使用防抖來避免頻繁觸發
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const scrollLeft = this.scrollLeft;
+                    const containerWidth = this.offsetWidth;
+                    const newIndex = Math.round(scrollLeft / containerWidth);
+                    const maxIndex = imageGroups[currentColorGroup] ? imageGroups[currentColorGroup].length - 1 : 0;
+                    
+                    if (newIndex !== currentImageIndex && newIndex >= 0 && newIndex <= maxIndex) {
+                        currentImageIndex = newIndex;
+                        updateIndicators(newIndex);
+                    }
+                }, 100);
             });
         }
     }
@@ -558,7 +584,11 @@ document.addEventListener('DOMContentLoaded', function() {
         currentImageIndex = 0;
         if (isMobileDevice()) {
             setTimeout(() => {
-                scrollToImageIndex(0);
+                // 確保滾動到第一張圖片
+                const container = imageStack.parentElement;
+                if (container) {
+                    container.scrollLeft = 0;
+                }
                 updateIndicators(0);
             }, 100);
         }

@@ -33,10 +33,24 @@
             </div>
         </header>
 
+        <!-- Mobile Search Bar -->
+        <div class="mobile-search-container" id="mobile-search">
+            <div class="mobile-search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" placeholder="Search for AI Diffusers & Scents" class="mobile-search-input">
+                <button class="search-clear-btn" id="search-clear">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
         <main class="product-grid">
             <div class="product-image-container">
                 <div class="image-stack" id="image-stack">
                     <!-- 圖片會動態生成 -->
+                </div>
+                <div class="mobile-image-indicators" id="mobile-indicators">
+                    <!-- 指示器會動態生成 -->
                 </div>
             </div>
 
@@ -95,11 +109,17 @@
                             <span>Sustainability</span>
                             <i class="fas fa-plus"></i>
                         </div>
+                        <div class="info-content">
+                            <p>ÔDÔRAI embraces a future where technology and ecology coexist. Each diffuser is crafted with minimal environmental impact — from responsibly sourced materials to modular components designed for longevity and repairability. Our refillable scent capsules reduce waste, supporting a closed-loop system that honors the earth as much as the air we breathe.</p>
+                        </div>
                     </div>
                     <div class="info-item expandable">
                         <div class="info-header">
                             <span>Product Care</span>
                             <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="info-content">
+                            <p>To preserve your ÔDÔRAI diffuser's elegance and performance, gently wipe the exterior with a dry or lightly damp microfiber cloth. Avoid abrasive cleaners. Scent modules should be stored in a cool, dry place. Regularly clean the nebulization chamber using alcohol spray to maintain optimal diffusion quality.</p>
                         </div>
                     </div>
                     <div class="info-item expandable">
@@ -107,14 +127,17 @@
                             <span>In-Store Service</span>
                             <i class="fas fa-plus"></i>
                         </div>
+                        <div class="info-content">
+                            <p>Experience ÔDÔRAI in person. Our in-store advisors offer personalized scent consultations and device guidance tailored to your lifestyle. Whether discovering your ideal fragrance mode or setting up your device, we're here to elevate your sensory journey.</p>
+                        </div>
                     </div>
-                    <div class="info-item arrow">
+                    <div class="info-item arrow" id="delivery-returns-trigger">
                         <div class="info-header">
                             <span>Delivery & Returns</span>
                             <i class="fas fa-chevron-right"></i>
                         </div>
                     </div>
-                    <div class="info-item arrow">
+                    <div class="info-item arrow" id="gifting-trigger">
                         <div class="info-header">
                             <span>Gifting</span>
                             <i class="fas fa-chevron-right"></i>
@@ -124,6 +147,243 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Delivery & Returns Sidebar -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="delivery-sidebar" id="delivery-sidebar">
+        <div class="sidebar-header">
+            <h2>Delivery & Returns</h2>
+            <button class="close-btn" id="close-sidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Payment</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="section-subtitle">Credit card, debit card, PayPal or Apple Pay</p>
+                <div class="section-details">
+                    <p>Payments are accepted via credit card, debit card, Apple Pay, or PayPal with a valid billing address and shipping address. Accepted credit cards are Visa, American Express, Discover, and Mastercard.</p>
+                    <p>When placing an order, your billing address must correspond to the address of your credit card, or we will not be able to process your order.</p>
+                    <p>All transactions are secured. The ÔDÔRAI website is provided with an SSL encryption system to protect personal and payment data.</p>
+                </div>
+            </div>
+            
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Shipping & Delivery</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="section-subtitle">Complimentary Standard Delivery</p>
+                <div class="section-details">
+                    <h4>Quick Facts</h4>
+                    <ul>
+                        <li>Orders may take 24 to 48 hours to process</li>
+                        <li>Once processed, you will receive tracking information</li>
+                        <li>Signature required for all ÔDÔRAI diffusers</li>
+                        <li>Track your order via email confirmation</li>
+                    </ul>
+                    
+                    <h4>Delivery Options</h4>
+                    <div class="delivery-option">
+                        <strong>NEXT DAY DELIVERY</strong>
+                        <p>Fee: $25 for orders under $500 | Complimentary for orders $500 and above</p>
+                        <p>Timing: Orders placed by 2pm EST Monday - Friday</p>
+                    </div>
+                    
+                    <div class="delivery-option">
+                        <strong>STANDARD DELIVERY</strong>
+                        <p>Fee: Complimentary for all orders</p>
+                        <p>Timing: 3-5 business days</p>
+                        <p>Eco-friendly packaging with carbon-neutral shipping</p>
+                    </div>
+                    
+                    <div class="delivery-option">
+                        <strong>PREMIUM SETUP SERVICE</strong>
+                        <p>Fee: $75</p>
+                        <p>Our technician will deliver and set up your ÔDÔRAI diffuser, including initial scent calibration and personalized AI training.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Returns & Exchanges</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="section-subtitle">30-day complimentary returns</p>
+                <div class="section-details">
+                    <h4>Returns Policy</h4>
+                    <ul>
+                        <li>Complimentary returns within 30 days</li>
+                        <li>Item must be in original condition and packaging</li>
+                        <li>Include original receipt and accessories</li>
+                        <li>Scent cartridges cannot be returned for hygiene reasons</li>
+                    </ul>
+                    
+                    <h4>How to Return</h4>
+                    <ol>
+                        <li>Contact our support team at hello@odorai.com</li>
+                        <li>Receive prepaid return label</li>
+                        <li>Pack item in original packaging</li>
+                        <li>Drop off at any UPS location</li>
+                    </ol>
+                    
+                    <p><strong>Exchanges:</strong> For different colors or technical issues, contact our team for seamless exchange process.</p>
+                </div>
+            </div>
+            
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Next Day Collect-in-Store</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="section-details">
+                    <p>Pick up your ÔDÔRAI diffuser from select authorized retailers and experience centers.</p>
+                    
+                    <h4>Collection Details</h4>
+                    <ul>
+                        <li>Fee: Complimentary for all orders</li>
+                        <li>Timing: 1-2 business days</li>
+                        <li>Available at select locations in major cities</li>
+                        <li>Includes complimentary setup demonstration</li>
+                    </ul>
+                    
+                    <h4>What to Bring</h4>
+                    <ul>
+                        <li>Government-issued photo ID</li>
+                        <li>Order confirmation email</li>
+                        <li>Payment method used for purchase</li>
+                    </ul>
+                    
+                    <p>Orders not collected within 14 days will be automatically refunded.</p>
+                </div>
+            </div>
+            
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Packaging</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="section-subtitle">Sustainable luxury packaging</p>
+                <div class="section-details">
+                    <p>Every ÔDÔRAI diffuser arrives in our signature sustainable packaging, crafted from recycled materials and designed for reuse.</p>
+                    
+                    <h4>Package Contents</h4>
+                    <ul>
+                        <li>ÔDÔRAI AI Diffuser in protective foam</li>
+                        <li>Premium setup guide with QR code</li>
+                        <li>Starter scent cartridge (Origin)</li>
+                        <li>USB-C charging cable</li>
+                        <li>Welcome card with care instructions</li>
+                    </ul>
+                    
+                    <p>Our packaging is 100% recyclable and uses soy-based inks. The protective materials are biodegradable and compostable.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gifting Sidebar -->
+    <div class="gifting-sidebar" id="gifting-sidebar">
+        <div class="sidebar-header">
+            <h2>Gifting</h2>
+            <button class="close-btn" id="close-gifting-sidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="delivery-section">
+                <p class="gifting-intro">We do our utmost to ensure the most enjoyable gifting experience, both for you and for the person who receives your ÔDÔRAI diffuser.</p>
+            </div>
+            
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Luxury Gift Packaging</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="section-subtitle">Premium presentation in signature ÔDÔRAI box</p>
+                <div class="section-details">
+                    <p>All ÔDÔRAI diffusers are delivered in our signature sustainable luxury box. The gift packaging includes:</p>
+                    <ul>
+                        <li>Elegant magnetic closure gift box</li>
+                        <li>Protective inserts to ensure perfect condition</li>
+                        <li>Premium tissue paper with ÔDÔRAI seal</li>
+                        <li>Complimentary gift card with personalized message</li>
+                    </ul>
+                    <p>All receipts are price-free for privacy and discretion.</p>
+                </div>
+            </div>
+
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Personalized Gift Messages</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="section-subtitle">Add a personal touch to your gift</p>
+                <div class="section-details">
+                    <p>During checkout, you can add a personalized message that will be beautifully printed on premium cardstock and included with your gift.</p>
+                    <ul>
+                        <li>Custom message up to 200 characters</li>
+                        <li>Printed on ÔDÔRAI letterhead</li>
+                        <li>Elegant envelope with wax seal</li>
+                        <li>Available in multiple languages</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Gift Setup Service</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="section-subtitle">Professional setup and personalization</p>
+                <div class="section-details">
+                    <p>Make your gift extra special with our complimentary gift setup service:</p>
+                    <ul>
+                        <li>Pre-configure device with recipient's preferences</li>
+                        <li>Include setup guide with personalized instructions</li>
+                        <li>Optional virtual consultation session</li>
+                        <li>Curated scent selection based on preferences</li>
+                    </ul>
+                    <p><strong>Gift Registry:</strong> Recipients can customize their experience later through our gift portal.</p>
+                </div>
+            </div>
+
+            <div class="delivery-section expandable-section">
+                <div class="section-header">
+                    <span>Corporate & Bulk Gifting</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <p class="section-subtitle">Perfect for corporate events and special occasions</p>
+                <div class="section-details">
+                    <p>For orders of 10 or more ÔDÔRAI diffusers, we offer special corporate gifting services:</p>
+                    <ul>
+                        <li>Volume discounts available</li>
+                        <li>Custom branding options</li>
+                        <li>Dedicated account manager</li>
+                        <li>Flexible delivery scheduling</li>
+                        <li>Corporate invoicing available</li>
+                    </ul>
+                    <p>Contact our corporate gifting team at <strong>corporate@odorai.com</strong> for custom quotes.</p>
+                </div>
+            </div>
+
+            <div class="delivery-section">
+                <div class="contact-section">
+                    <h4>Need Gift Assistance?</h4>
+                    <p>Our gifting specialists are here to help create the perfect sensory experience for your loved ones.</p>
+                    <div class="contact-info">
+                        <p><strong>Email:</strong> gifts@odorai.com</p>
+                        <p><strong>Phone:</strong> +1 (555) ÔDÔRAI</p>
+                        <p><strong>Hours:</strong> Monday - Friday, 9AM - 6PM EST</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>

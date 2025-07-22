@@ -659,31 +659,117 @@ body {
 }
 
 .btn-primary:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    transition: all 0.1s ease;
 }
 
-/* 按钮加载状态 */
+/* 加购物车按钮特殊优化 */
+#place-in-cart {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#place-in-cart:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+#place-in-cart:not(.loading):active {
+    transform: translateY(-1px) scale(0.97);
+}
+
+/* 优化的按钮加载状态 */
 .btn.loading {
     color: transparent;
     pointer-events: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: loadingShimmer 1.5s infinite;
 }
 
 .btn.loading::after {
     content: '';
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 20px;
     height: 20px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #fff;
     border-radius: 50%;
-    animation: buttonSpin 1s linear infinite;
-    color: #fff;
+    animation: buttonSpin 0.8s linear infinite;
+}
+
+@keyframes loadingShimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
 }
 
 @keyframes buttonSpin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* 优化的动画效果 */
+@keyframes enhancedRipple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+@keyframes flyToCart {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(calc(var(--delta-x) * 0.5), calc(var(--delta-y) * 0.3)) scale(0.8);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(var(--delta-x), var(--delta-y)) scale(0.3);
+        opacity: 0;
+    }
+}
+
+@keyframes cartBounce {
+    0%, 100% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    75% {
+        transform: scale(1.15);
+    }
 }
 
 /* 按钮点击涟漪效果 */

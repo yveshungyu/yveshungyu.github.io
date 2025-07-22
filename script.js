@@ -87,40 +87,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Place in Cart Button
+    // Place in Cart Button - 优化版
     if (placeInCartBtn) {
         placeInCartBtn.addEventListener('click', function(event) {
             event.preventDefault(); 
             
-            // 添加涟漪效果
-            addRippleEffect(this, event);
+            // 防止重复点击
+            if (this.classList.contains('loading')) return;
+            
+            // 添加优化的涟漪效果
+            addEnhancedRippleEffect(this, event);
             
             // 添加加载状态
             this.classList.add('loading');
+            this.style.transform = 'scale(0.98)';
             
-            // 模拟加载时间
+            // 优化的加载时间
             setTimeout(() => {
                 // 移除加载状态
                 this.classList.remove('loading');
+                this.style.transform = '';
                 
                 // 增加購物車數量
                 cartItemCount++;
                 
-                // 更新購物車徽章
-                updateCartBadge();
+                // 显示购物车飞入动画
+                showCartFlyAnimation(this);
                 
-                // 獲取當前選中的顏色名稱
+                // 更新購物車徽章
+                setTimeout(() => {
+                    updateCartBadge();
+                }, 300);
+                
+                // 获取當前選中的顏色名稱
                 const colorName = currentColorGroup.charAt(0).toUpperCase() + currentColorGroup.slice(1);
                 
-                // 显示成功动画
-                showSuccessAnimation(this);
+                // 显示优化的成功动画
+                showEnhancedSuccessAnimation(this);
                 
-                // 顯示添加成功訊息
+                // 显示优雅的成功通知
                 setTimeout(() => {
-                    alert(`Added ${colorName} DIFFUSER to cart! (${cartItemCount} items)`);
-                }, 500);
+                    showSuccessNotification(`${colorName} DIFFUSER added to cart!`, cartItemCount);
+                }, 200);
                 
-            }, 1500); // 1.5秒加载时间
+            }, 800); // 优化为0.8秒加载时间
         });
     }
 
@@ -791,6 +801,189 @@ document.addEventListener('DOMContentLoaded', function() {
             button.style.background = '';
             button.style.transform = '';
         }, 1000);
+    }
+
+    // --- 优化的动画函数 ---
+    
+    // 增强的涟漪效果
+    function addEnhancedRippleEffect(button, event) {
+        const rect = button.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        const ripple = document.createElement('div');
+        ripple.className = 'enhanced-ripple';
+        ripple.style.cssText = `
+            position: absolute;
+            left: ${x - 10}px;
+            top: ${y - 10}px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: enhancedRipple 0.6s ease-out;
+            pointer-events: none;
+            z-index: 100;
+        `;
+        
+        button.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple && ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 600);
+    }
+    
+    // 购物车飞入动画
+    function showCartFlyAnimation(button) {
+        const cartIcon = document.querySelector('.cart-icon-wrapper');
+        if (!cartIcon) return;
+        
+        const buttonRect = button.getBoundingClientRect();
+        const cartRect = cartIcon.getBoundingClientRect();
+        
+        const flyingIcon = document.createElement('div');
+        flyingIcon.innerHTML = '<i class="fas fa-shopping-bag"></i>';
+        flyingIcon.style.cssText = `
+            position: fixed;
+            left: ${buttonRect.left + buttonRect.width / 2}px;
+            top: ${buttonRect.top + buttonRect.height / 2}px;
+            font-size: 20px;
+            color: #4a90e2;
+            z-index: 10000;
+            pointer-events: none;
+            animation: flyToCart 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        `;
+        
+        document.body.appendChild(flyingIcon);
+        
+        // 动态设置飞行终点
+        const deltaX = cartRect.left + cartRect.width / 2 - (buttonRect.left + buttonRect.width / 2);
+        const deltaY = cartRect.top + cartRect.height / 2 - (buttonRect.top + buttonRect.height / 2);
+        
+        flyingIcon.style.setProperty('--delta-x', `${deltaX}px`);
+        flyingIcon.style.setProperty('--delta-y', `${deltaY}px`);
+        
+        setTimeout(() => {
+            if (flyingIcon && flyingIcon.parentNode) {
+                flyingIcon.parentNode.removeChild(flyingIcon);
+            }
+            
+            // 购物车图标跳动效果
+            cartIcon.style.animation = 'cartBounce 0.4s ease';
+            setTimeout(() => {
+                cartIcon.style.animation = '';
+            }, 400);
+        }, 800);
+    }
+    
+    // 增强的成功动画
+    function showEnhancedSuccessAnimation(button) {
+        const originalText = button.innerHTML;
+        const originalColor = button.style.backgroundColor;
+        
+        // 第一阶段：显示check图标
+        button.innerHTML = '<i class="fas fa-check"></i>';
+        button.style.backgroundColor = '#10b981';
+        button.style.transform = 'scale(1.05)';
+        button.style.boxShadow = '0 8px 25px rgba(16, 185, 129, 0.3)';
+        
+        // 第二阶段：脉动效果
+        setTimeout(() => {
+            button.style.transform = 'scale(1)';
+        }, 150);
+        
+        // 第三阶段：显示"Added!"文字
+        setTimeout(() => {
+            button.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i>Added!';
+            button.style.transform = 'scale(1.02)';
+        }, 300);
+        
+        // 第四阶段：恢复原状
+        setTimeout(() => {
+            button.style.transform = 'scale(1)';
+            button.style.backgroundColor = originalColor;
+            button.style.boxShadow = '';
+            button.innerHTML = originalText;
+        }, 1500);
+    }
+    
+    // 优雅的成功通知
+    function showSuccessNotification(message, cartCount) {
+        const notification = document.createElement('div');
+        notification.className = 'success-notification';
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            z-index: 10003;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 300px;
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="
+                    width: 32px; 
+                    height: 32px; 
+                    background: rgba(255, 255, 255, 0.2); 
+                    border-radius: 50%; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center;
+                    flex-shrink: 0;
+                ">
+                    <i class="fas fa-check" style="font-size: 14px;"></i>
+                </div>
+                <div>
+                    <div style="font-size: 14px; margin-bottom: 2px;">${message}</div>
+                    <div style="font-size: 12px; opacity: 0.8;">Cart: ${cartCount} item${cartCount > 1 ? 's' : ''}</div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // 显示动画
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+            notification.style.opacity = '1';
+        }, 50);
+        
+        // 自动隐藏
+        setTimeout(() => {
+            notification.style.transform = 'translateX(400px)';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification && notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 400);
+        }, 3500);
+        
+        // 点击关闭
+        notification.addEventListener('click', () => {
+            notification.style.transform = 'translateX(400px)';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification && notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 400);
+        });
     }
     
     // 通用按钮交互增强

@@ -889,6 +889,14 @@ body {
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        width: 100%;
+        box-sizing: border-box;
+        /* 確保初始位置正確 */
+        scroll-behavior: auto;
+        /* 清除任何可能影響第一張圖片的邊距 */
+        margin: 0;
+        padding: 0;
+        border: none;
     }
     
     /* 手機版照片水平排列 */
@@ -896,10 +904,14 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: 400%; /* 4張圖片的總寬度 */
+        width: max-content; /* 讓寬度根據內容自動計算 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
+        /* 確保第一張圖片從最左邊開始 */
+        margin-left: 0;
+        padding-left: 0;
+        transform: translateX(0);
     }
     
     /* 隱藏滾動條 */
@@ -913,24 +925,34 @@ body {
     }
     
     .image-stack img {
-        flex: 0 0 100%; /* 每張圖片佔滿整個視窗寬度 */
-        width: 100vw; /* 圖片寬度等於視窗寬度 */
+        flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
+        width: 100vw; /* 每張圖片寬度等於視窗寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;
         scroll-snap-align: start;
         scroll-snap-stop: always;
+        /* 清除圖片的預設邊距 */
+        margin: 0;
+        padding: 0;
+        border: none;
+        display: block;
     }
     
     /* 移動端圖片指示器 */
     .mobile-image-indicators {
         display: flex !important;
-        position: absolute;
-        bottom: 20px;
+        position: fixed;
+        bottom: 35vh; /* 位於圖片區域底部附近 */
         left: 50%;
         transform: translateX(-50%);
         gap: 8px;
-        z-index: 10;
+        z-index: 100;
+        pointer-events: auto;
+        background-color: rgba(0, 0, 0, 0.3);
+        padding: 8px 12px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
     }
     
     .indicator-dot {
@@ -940,11 +962,40 @@ body {
         background-color: rgba(255, 255, 255, 0.5);
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.3s ease;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
     
     .indicator-dot.active {
         background-color: rgba(255, 255, 255, 0.9);
         transform: scale(1.2);
+        border: 1px solid rgba(0, 0, 0, 0.4);
+    }
+    
+    /* 確保指示器只在移動端顯示 */
+    @media (min-width: 993px) {
+        .mobile-image-indicators {
+            display: none !important;
+        }
+    }
+    
+    /* 不同屏幕尺寸下的指示器位置調整 */
+    @media (max-width: 992px) {
+        .mobile-image-indicators {
+            bottom: 35vh; /* 60vh圖片區域的底部附近 */
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .mobile-image-indicators {
+            bottom: 45vh; /* 50vh圖片區域的底部附近 */
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .mobile-image-indicators {
+            bottom: 50vh; /* 45vh圖片區域的底部附近 */
+        }
     }
 
     .product-info {
@@ -1017,6 +1068,8 @@ body {
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     /* 768px 以下也使用水平排列 */
@@ -1024,15 +1077,15 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: 400%; /* 4張圖片的總寬度 */
+        width: max-content; /* 讓寬度根據內容自動計算 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
     }
     
     .image-stack img {
-        flex: 0 0 100%; /* 每張圖片佔滿整個視窗寬度 */
-        width: 100vw; /* 圖片寬度等於視窗寬度 */
+        flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
+        width: 100vw; /* 每張圖片寬度等於視窗寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -1114,6 +1167,8 @@ body {
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        width: 100%;
+        box-sizing: border-box;
     }
     
     /* 480px 以下也使用水平排列 */
@@ -1121,15 +1176,15 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: 400%; /* 4張圖片的總寬度 */
+        width: max-content; /* 讓寬度根據內容自動計算 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
     }
     
     .image-stack img {
-        flex: 0 0 100%; /* 每張圖片佔滿整個視窗寬度 */
-        width: 100vw; /* 圖片寬度等於視窗寬度 */
+        flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
+        width: 100vw; /* 每張圖片寬度等於視窗寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -1198,6 +1253,33 @@ body {
         height: 40vh;
         position: relative;
         top: auto;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* 320px 以下也使用水平排列 */
+    .image-stack {
+        display: flex;
+        flex-direction: row;
+        height: 100%;
+        width: max-content; /* 讓寬度根據內容自動計算 */
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+    
+    .image-stack img {
+        flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
+        width: 100vw; /* 每張圖片寬度等於視窗寬度 */
+        height: 100%;
+        object-fit: contain;
+        object-position: center;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
     }
     
     .product-info {

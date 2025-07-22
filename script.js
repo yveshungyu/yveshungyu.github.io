@@ -184,34 +184,68 @@ document.addEventListener('DOMContentLoaded', function() {
             img.src = imageSrc;
             img.alt = `ÔDÔRAI AI Diffuser ${colorGroup} ${index + 1}`;
             img.loading = 'lazy'; // 延遲載入優化性能
+            
+            // 第一張圖片加載完成後確保位置正確
+            if (index === 0 && isMobileDevice()) {
+                img.onload = function() {
+                    const container = imageStack.parentElement;
+                    if (container) {
+                        setTimeout(() => {
+                            container.scrollLeft = 0;
+                            container.scrollTo({ left: 0, behavior: 'auto' });
+                            currentImageIndex = 0;
+                            updateIndicators(0);
+                        }, 50);
+                    }
+                };
+            }
+            
             imageStack.appendChild(img);
         });
         
         // 生成移動端指示器
         generateMobileIndicators(images.length);
+        
+        // 圖片生成後立即重置位置（特別是第一張圖片）
+        if (isMobileDevice()) {
+            const container = imageStack.parentElement;
+            if (container) {
+                // 強制重置到開始位置
+                setTimeout(() => {
+                    container.scrollLeft = 0;
+                    container.scrollTo({ left: 0, behavior: 'auto' });
+                }, 10);
+            }
+        }
     }
     
     // 生成移動端指示器
     function generateMobileIndicators(imageCount) {
         const indicatorsContainer = document.getElementById('mobile-indicators');
-        if (!indicatorsContainer || !isMobileDevice()) return;
+        if (!indicatorsContainer) return;
         
         // 清空現有指示器
         indicatorsContainer.innerHTML = '';
         
-        // 為每張圖片創建指示器
-        for (let i = 0; i < imageCount; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'indicator-dot';
-            if (i === 0) dot.classList.add('active');
-            
-            // 點擊指示器跳轉到對應圖片
-            dot.addEventListener('click', () => {
-                scrollToImageIndex(i);
-                updateIndicators(i);
-            });
-            
-            indicatorsContainer.appendChild(dot);
+        // 只在移動端顯示指示器
+        if (isMobileDevice()) {
+            // 為每張圖片創建指示器
+            for (let i = 0; i < imageCount; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 0) dot.classList.add('active');
+                
+                // 點擊指示器跳轉到對應圖片
+                dot.addEventListener('click', () => {
+                    scrollToImageIndex(i);
+                    updateIndicators(i);
+                });
+                
+                indicatorsContainer.appendChild(dot);
+            }
+            indicatorsContainer.style.display = 'flex';
+        } else {
+            indicatorsContainer.style.display = 'none';
         }
     }
     
@@ -237,14 +271,58 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 確保移動端從第一張圖片開始
         if (isMobileDevice()) {
+            // 立即重置位置
+            const container = imageStack?.parentElement;
+            if (container) {
+                container.scrollLeft = 0;
+            }
+            
+            // 延遲確保位置正確
             setTimeout(() => {
                 resetImageIndex();
-            }, 200);
+            }, 100);
+            
+            // 額外確保位置穩定
+            setTimeout(() => {
+                if (container) {
+                    container.scrollLeft = 0;
+                    container.scrollTo({ left: 0, behavior: 'auto' });
+                    updateIndicators(0);
+                }
+            }, 300);
         }
     }
     
+    // 立即初始化位置（防止第一張圖片顯示問題）
+    const immediateInit = () => {
+        const container = document.querySelector('.product-image-container');
+        if (container && isMobileDevice()) {
+            container.scrollLeft = 0;
+            container.style.scrollBehavior = 'auto';
+        }
+    };
+    
+    // 立即執行一次
+    immediateInit();
+    
     // 延遲初始化
-    setTimeout(initializeImages, 100);
+    setTimeout(() => {
+        immediateInit(); // 再次確保位置正確
+        initializeImages();
+    }, 100);
+    
+    // 窗口大小調整時重新初始化
+    window.addEventListener('resize', function() {
+        setTimeout(() => {
+            if (imageStack) {
+                const currentImages = imageGroups[currentColorGroup];
+                if (currentImages) {
+                    generateMobileIndicators(currentImages.length);
+                    resetImageIndex();
+                }
+            }
+        }, 100);
+    });
 
 
 
@@ -480,8 +558,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (images.length === 0 || index < 0 || index >= images.length) return;
         
         const container = imageStack.parentElement;
-        const viewportWidth = window.innerWidth; // 使用視窗寬度
-        const scrollLeft = index * viewportWidth; // 每張圖片佔一個視窗寬度
+        const viewportWidth = window.innerWidth; // 使用視窗寬度確保精確
+        const scrollLeft = index * viewportWidth; // 每張圖片佔據一個視窗寬度
         
         container.scrollTo({
             left: scrollLeft,
@@ -514,6 +592,15 @@ document.addEventListener('DOMContentLoaded', function() {
             isScrolling = true;
             // 阻止默認滾動行為，完全由我們控制
             e.preventDefault();
+            
+            // 限制滑動距離，防止一次滑動多張圖片
+            const container = imageStack.parentElement;
+            const maxSwipe = window.innerWidth * 0.3; // 最多只能滑動30%的視窗寬度
+            const swipeDistance = touchEndX - touchStartX;
+            
+            if (Math.abs(swipeDistance) > maxSwipe) {
+                touchEndX = touchStartX + (swipeDistance > 0 ? maxSwipe : -maxSwipe);
+            }
         }
     }
 
@@ -530,15 +617,16 @@ document.addEventListener('DOMContentLoaded', function() {
             let newIndex = currentImageIndex;
             
             if (swipeDistance > 0 && currentImageIndex > 0) {
-                // 向右滑動 - 上一張
+                // 向右滑動 - 上一張（不管滑動力度多大，只移動一張）
                 newIndex = currentImageIndex - 1;
             } else if (swipeDistance < 0 && currentImageIndex < currentImages.length - 1) {
-                // 向左滑動 - 下一張
+                // 向左滑動 - 下一張（不管滑動力度多大，只移動一張）
                 newIndex = currentImageIndex + 1;
             }
             
-            // 確保只滑動一張圖片
+            // 確保只滑動一張圖片，防止跳躍式滑動
             if (newIndex !== currentImageIndex) {
+                e.preventDefault(); // 防止默認滑動行為
                 scrollToImageIndex(newIndex);
             }
         } else {
@@ -554,6 +642,22 @@ document.addEventListener('DOMContentLoaded', function() {
         imageStack.addEventListener('touchstart', handleTouchStart, { passive: false });
         imageStack.addEventListener('touchmove', handleTouchMove, { passive: false });
         imageStack.addEventListener('touchend', handleTouchEnd, { passive: false });
+        
+        // 禁用原生滑動行為，完全由我們控制
+        imageStack.parentElement.addEventListener('scroll', function(e) {
+            if (isMobileDevice() && isScrolling) {
+                // 如果正在進行自定義滑動，暫時禁用原生滾動
+                const container = this;
+                const currentScroll = container.scrollLeft;
+                const viewportWidth = window.innerWidth;
+                const targetScroll = currentImageIndex * viewportWidth;
+                
+                // 如果滾動位置偏離目標位置太多，強制回到正確位置
+                if (Math.abs(currentScroll - targetScroll) > viewportWidth * 0.5) {
+                    container.scrollLeft = targetScroll;
+                }
+            }
+        });
         
         // 監聽滾動事件以更新當前圖片索引
         const imageContainer = imageStack.parentElement;
@@ -588,10 +692,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 const container = imageStack.parentElement;
                 if (container) {
                     container.scrollLeft = 0;
+                    // 強制重新觸發滾動事件確保位置正確
+                    container.scrollTo({ left: 0, behavior: 'auto' });
                 }
                 updateIndicators(0);
-            }, 100);
+            }, 150);
         }
     }
+    
+    // 頁面完全加載後的最終檢查（確保第一張圖片正確顯示）
+    window.addEventListener('load', function() {
+        if (isMobileDevice()) {
+            setTimeout(() => {
+                const container = document.querySelector('.product-image-container');
+                if (container) {
+                    container.scrollLeft = 0;
+                    container.scrollTo({ left: 0, behavior: 'auto' });
+                    updateIndicators(0);
+                    currentImageIndex = 0;
+                }
+            }, 100);
+        }
+    });
 
 });

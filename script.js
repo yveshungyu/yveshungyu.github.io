@@ -480,8 +480,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (images.length === 0 || index < 0 || index >= images.length) return;
         
         const container = imageStack.parentElement;
-        const containerWidth = container.offsetWidth;
-        const scrollLeft = index * containerWidth; // 精確計算每張圖片的位置
+        const viewportWidth = window.innerWidth; // 使用視窗寬度
+        const scrollLeft = index * viewportWidth; // 每張圖片佔一個視窗寬度
         
         container.scrollTo({
             left: scrollLeft,
@@ -566,8 +566,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     const scrollLeft = this.scrollLeft;
-                    const containerWidth = this.offsetWidth;
-                    const newIndex = Math.round(scrollLeft / containerWidth);
+                    const viewportWidth = window.innerWidth; // 使用視窗寬度
+                    const newIndex = Math.round(scrollLeft / viewportWidth);
                     const maxIndex = imageGroups[currentColorGroup] ? imageGroups[currentColorGroup].length - 1 : 0;
                     
                     if (newIndex !== currentImageIndex && newIndex >= 0 && newIndex <= maxIndex) {

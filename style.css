@@ -913,8 +913,8 @@ body {
     }
     
     .image-stack img {
-        flex: 0 0 25%; /* 每張圖片占總容器的25% */
-        width: 25%;
+        flex: 0 0 100%; /* 每張圖片佔滿整個視窗寬度 */
+        width: 100vw; /* 圖片寬度等於視窗寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -1031,8 +1031,8 @@ body {
     }
     
     .image-stack img {
-        flex: 0 0 25%; /* 每張圖片占總容器的25% */
-        width: 25%;
+        flex: 0 0 100%; /* 每張圖片佔滿整個視窗寬度 */
+        width: 100vw; /* 圖片寬度等於視窗寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -1128,8 +1128,8 @@ body {
     }
     
     .image-stack img {
-        flex: 0 0 25%; /* 每張圖片占總容器的25% */
-        width: 25%;
+        flex: 0 0 100%; /* 每張圖片佔滿整個視窗寬度 */
+        width: 100vw; /* 圖片寬度等於視窗寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;

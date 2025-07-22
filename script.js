@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const placeInCartBtn = document.getElementById('place-in-cart');
     const contactAdvisorBtn = document.querySelector('.contact-advisor');
     const cartBadge = document.getElementById('cart-badge');
+    
+    // Mobile search elements
+    const mobileSearchInput = document.querySelector('.mobile-search-input');
+    const searchClearBtn = document.getElementById('search-clear');
 
     // --- Color Selection Logic ---
     colorSwatches.forEach(swatch => {
@@ -363,6 +367,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Mobile Search Functionality ---
     if (mobileSearchInput && searchClearBtn) {
+        // 顯示/隱藏清除按鈕
+        mobileSearchInput.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                searchClearBtn.classList.add('show');
+            } else {
+                searchClearBtn.classList.remove('show');
+            }
+        });
+
         // 點擊清除按鈕
         searchClearBtn.addEventListener('click', function() {
             mobileSearchInput.value = '';
@@ -406,8 +419,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (images.length === 0 || index < 0 || index >= images.length) return;
         
         const container = imageStack.parentElement;
-        const viewportWidth = window.innerWidth; // 使用視窗寬度確保精確
-        const scrollLeft = index * viewportWidth; // 每張圖片佔據一個視窗寬度
+        const containerWidth = container.offsetWidth; // 使用實際容器寬度
+        const scrollLeft = index * containerWidth; // 每張圖片佔據一個容器寬度
         
         // 確保容器有滑動動畫
         container.style.scrollBehavior = 'smooth';
@@ -446,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 限制滑動距離，防止一次滑動多張圖片
             const container = imageStack.parentElement;
-            const maxSwipe = window.innerWidth * 0.3; // 最多只能滑動30%的視窗寬度
+            const maxSwipe = container.offsetWidth * 0.3; // 最多只能滑動30%的容器寬度
             const swipeDistance = touchEndX - touchStartX;
             
             if (Math.abs(swipeDistance) > maxSwipe) {
@@ -500,11 +513,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 如果正在進行自定義滑動，暫時禁用原生滾動
                 const container = this;
                 const currentScroll = container.scrollLeft;
-                const viewportWidth = window.innerWidth;
-                const targetScroll = currentImageIndex * viewportWidth;
+                const containerWidth = container.offsetWidth;
+                const targetScroll = currentImageIndex * containerWidth;
                 
                 // 如果滾動位置偏離目標位置太多，強制回到正確位置
-                if (Math.abs(currentScroll - targetScroll) > viewportWidth * 0.5) {
+                if (Math.abs(currentScroll - targetScroll) > containerWidth * 0.5) {
                     container.scrollLeft = targetScroll;
                 }
             }
@@ -521,8 +534,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     const scrollLeft = this.scrollLeft;
-                    const viewportWidth = window.innerWidth; // 使用視窗寬度
-                    const newIndex = Math.round(scrollLeft / viewportWidth);
+                    const containerWidth = this.offsetWidth; // 使用實際容器寬度
+                    const newIndex = Math.round(scrollLeft / containerWidth);
                     const maxIndex = imageGroups[currentColorGroup] ? imageGroups[currentColorGroup].length - 1 : 0;
                     
                     if (newIndex !== currentImageIndex && newIndex >= 0 && newIndex <= maxIndex) {

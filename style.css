@@ -42,7 +42,7 @@ body {
 /* 為固定header騰出空間 */
 @media (max-width: 992px) {
     body {
-        padding-top: 80px;
+        padding-top: 140px; /* 增加 padding 來容納 header + search bar */
     }
 }
 
@@ -107,6 +107,74 @@ body {
 
 .header-nav i {
     font-size: 18px;
+}
+
+/* --- Mobile Search Bar --- */
+.mobile-search-container {
+    display: none;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 15px 20px;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #f8f8f8;
+    border-radius: 25px;
+    padding: 12px 20px;
+    margin: 0;
+}
+
+.search-icon {
+    color: #999;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.mobile-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+    font-family: inherit;
+}
+
+.mobile-search-input::placeholder {
+    color: #999;
+    font-size: 15px;
+}
+
+.search-clear-btn {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 5px;
+    display: none;
+}
+
+.search-clear-btn.show {
+    display: block;
+}
+
+.mobile-search-bar:focus-within {
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-search-input:focus {
+    outline: none;
 }
 
 /* --- Cart Badge --- */
@@ -501,6 +569,11 @@ body {
     .main-header:hover {
         background-color: rgba(255, 255, 255, 1);
     }
+    
+    /* 顯示移動搜索欄 */
+    .mobile-search-container {
+        display: block;
+    }
     .product-grid {
         grid-template-columns: 1fr;
         gap: 0;
@@ -533,7 +606,7 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: max-content; /* 讓寬度根據內容自動計算 */
+        width: 400%; /* 4張圖片的總寬度 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
@@ -557,7 +630,7 @@ body {
     
     .image-stack img {
         flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
-        width: 100vw; /* 每張圖片寬度等於視窗寬度 */
+        width: 100%; /* 每張圖片寬度等於容器寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -641,14 +714,36 @@ body {
 
 /* Small Tablet */
 @media (max-width: 768px) {
+    body {
+        padding-top: 130px; /* 調整小屏幕的 padding */
+    }
+    
     .main-header {
         padding: 20px 20px;
         position: fixed;
         background-color: rgba(255, 255, 255, 0.95);
     }
     
+    .mobile-search-container {
+        top: 70px; /* 調整搜索欄位置 */
+        padding: 12px 20px;
+    }
+    
+    .mobile-search-bar {
+        padding: 10px 16px;
+    }
+    
+    .mobile-search-input {
+        font-size: 15px;
+    }
+    
     .header-left span, 
     .header-right .d-none-mobile {
+        display: none;
+    }
+    
+    /* 隱藏手機版 header 中的搜索圖標 */
+    .header-nav:nth-child(2) {
         display: none;
     }
     
@@ -676,7 +771,7 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: max-content; /* 讓寬度根據內容自動計算 */
+        width: 400%; /* 4張圖片的總寬度 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
@@ -684,7 +779,7 @@ body {
     
     .image-stack img {
         flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
-        width: 100vw; /* 每張圖片寬度等於視窗寬度 */
+        width: 100%; /* 每張圖片寬度等於容器寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -723,10 +818,31 @@ body {
 
 /* Mobile */
 @media (max-width: 480px) {
+    body {
+        padding-top: 120px; /* 調整最小屏幕的 padding */
+    }
+    
     .main-header {
         padding: 15px 15px;
         position: fixed;
         background-color: rgba(255, 255, 255, 0.95);
+    }
+    
+    .mobile-search-container {
+        top: 65px; /* 進一步調整搜索欄位置 */
+        padding: 10px 15px;
+    }
+    
+    .mobile-search-bar {
+        padding: 8px 14px;
+    }
+    
+    .mobile-search-input {
+        font-size: 14px;
+    }
+    
+    .mobile-search-input::placeholder {
+        font-size: 14px;
     }
     
     .header-left, .header-right {
@@ -754,7 +870,7 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: max-content; /* 讓寬度根據內容自動計算 */
+        width: 400%; /* 4張圖片的總寬度 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
@@ -762,7 +878,7 @@ body {
     
     .image-stack img {
         flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
-        width: 100vw; /* 每張圖片寬度等於視窗寬度 */
+        width: 100%; /* 每張圖片寬度等於容器寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -844,7 +960,7 @@ body {
         display: flex;
         flex-direction: row;
         height: 100%;
-        width: max-content; /* 讓寬度根據內容自動計算 */
+        width: 400%; /* 4張圖片的總寬度 */
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scroll-behavior: smooth;
@@ -852,7 +968,7 @@ body {
     
     .image-stack img {
         flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
-        width: 100vw; /* 每張圖片寬度等於視窗寬度 */
+        width: 100%; /* 每張圖片寬度等於容器寬度 */
         height: 100%;
         object-fit: contain;
         object-position: center;

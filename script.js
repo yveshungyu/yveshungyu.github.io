@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const wishlistHeart = document.getElementById('wishlist-heart');
     const placeInCartBtn = document.getElementById('place-in-cart');
     const contactAdvisorBtn = document.querySelector('.contact-advisor');
+    const cartBadge = document.getElementById('cart-badge');
 
     // --- Color Selection Logic ---
     colorSwatches.forEach(swatch => {
@@ -65,7 +66,18 @@ document.addEventListener('DOMContentLoaded', function() {
     if (placeInCartBtn) {
         placeInCartBtn.addEventListener('click', function(event) {
             event.preventDefault(); 
-            alert('Adding to cart...');
+            
+            // 增加購物車數量
+            cartItemCount++;
+            
+            // 更新購物車徽章
+            updateCartBadge();
+            
+            // 獲取當前選中的顏色名稱
+            const colorName = currentColorGroup.charAt(0).toUpperCase() + currentColorGroup.slice(1);
+            
+            // 顯示添加成功訊息
+            alert(`Added ${colorName} DIFFUSER to cart! (${cartItemCount} items)`);
         });
     }
 
@@ -125,6 +137,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
+    // 購物車狀態管理
+    let cartItemCount = 0;
+    
+    // 更新購物車徽章
+    function updateCartBadge() {
+        if (!cartBadge) return;
+        
+        cartBadge.textContent = cartItemCount;
+        
+        if (cartItemCount > 0) {
+            cartBadge.classList.add('show');
+            cartBadge.classList.remove('empty');
+        } else {
+            cartBadge.classList.remove('show');
+            cartBadge.classList.add('empty');
+        }
+    }
+    
     // 生成圖片堆疊
     function generateImageStack(colorGroup) {
         if (!imageStack) return;
@@ -152,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function initializeImages() {
         generateImageStack(currentColorGroup);
         updateWishlistHeart(currentColorGroup); // 初始化愛心狀態
+        updateCartBadge(); // 初始化購物車徽章
     }
     
     // 延遲初始化

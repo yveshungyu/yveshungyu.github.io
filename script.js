@@ -1,66 +1,183 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // --- Element Selection ---
-    const mainProductImage = document.getElementById('main-product-image');
+    const imageStack = document.getElementById('image-stack');
     const colorSwatches = document.querySelectorAll('.color-swatch');
     const colorNameDisplay = document.getElementById('color-name');
-    const priceDisplay = document.getElementById('product-price'); // **NEW**: Select the price element
+    const priceDisplay = document.getElementById('product-price');
 
     const wishlistHeart = document.getElementById('wishlist-heart');
-    const contactBtn = document.getElementById('contact-btn');
-    const findStoreBtn = document.getElementById('find-store-btn');
+    const placeInCartBtn = document.getElementById('place-in-cart');
+    const contactAdvisorBtn = document.querySelector('.contact-advisor');
 
-    // --- Image, Color Name, and Price Swapping Logic ---
+    // --- Color Selection Logic ---
     colorSwatches.forEach(swatch => {
         swatch.addEventListener('click', function() {
-            // 1. Get data from the dataset of the clicked swatch
-            const newImageSrc = this.dataset.mainImage;
             const newColorName = this.dataset.colorName;
-            const newPrice = this.dataset.price; // **NEW**: Get the price from the dataset
+            const newPrice = this.dataset.price;
 
-            // 2. Update the main product image
-            mainProductImage.src = newImageSrc;
+            // 切換到對應的圖片組
+            if (imageGroups[newColorName]) {
+                currentColorGroup = newColorName;
+                
+                // 重新生成圖片堆疊
+                generateImageStack(currentColorGroup);
 
-            // 3. Update the displayed color name
-            colorNameDisplay.textContent = newColorName;
-            
-            // 4. Update the displayed price
-            priceDisplay.textContent = newPrice; // **NEW**: Update the price content
+                // 更新顯示文字
+                if (colorNameDisplay) colorNameDisplay.textContent = newColorName;
+                if (priceDisplay) priceDisplay.textContent = newPrice;
 
-            // 5. Update the 'selected' visual style
-            colorSwatches.forEach(s => s.classList.remove('selected'));
-            this.classList.add('selected');
+                // 更新 Wishlist 愛心狀態
+                updateWishlistHeart(currentColorGroup);
+
+                // 更新選中樣式
+                colorSwatches.forEach(s => s.classList.remove('selected'));
+                this.classList.add('selected');
+                
+                // 滾動回頂部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         });
     });
 
     // --- Button Click Logic ---
 
     // Wishlist Heart Button
-    wishlistHeart.addEventListener('click', function() {
-        this.classList.toggle('active');
-        if (this.classList.contains('active')) {
-            this.classList.remove('far');
-            this.classList.add('fas');
-            alert('Added to your wishlist!');
+    if (wishlistHeart) {
+        wishlistHeart.addEventListener('click', function() {
+            // 切換當前顏色的 wishlist 狀態
+            wishlistStates[currentColorGroup] = !wishlistStates[currentColorGroup];
+            
+            // 更新愛心顯示
+            updateWishlistHeart(currentColorGroup);
+            
+            // 顯示對應的提示訊息
+            const colorName = currentColorGroup.charAt(0).toUpperCase() + currentColorGroup.slice(1);
+            if (wishlistStates[currentColorGroup]) {
+                alert(`Added ${colorName} to your wishlist!`);
+            } else {
+                alert(`Removed ${colorName} from your wishlist.`);
+            }
+        });
+    }
+
+    // Place in Cart Button
+    if (placeInCartBtn) {
+        placeInCartBtn.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            alert('Adding to cart...');
+        });
+    }
+
+    // Contact Advisor Button
+    if (contactAdvisorBtn) {
+        contactAdvisorBtn.addEventListener('click', function(event) {
+            event.preventDefault(); 
+            alert('Contacting an Advisor...');
+        });
+    }
+
+
+    // --- Image Stack Logic ---
+    const imageGroups = {
+        origin: [
+            'images/diffuser-main.png',
+            'images/diffuser-main1.png',
+            'images/diffuser-main2.png',
+            'images/diffuser-main3.png'
+        ],
+        aether: [
+            'images/diffuser-aether.png',
+            'images/diffuser-aether1.png', 
+            'images/diffuser-aether2.png',
+            'images/diffuser-aether3.png'
+        ],
+        prism: [
+            'images/diffuser-prism.png',
+            'images/diffuser-prism1.png',
+            'images/diffuser-prism2.png', 
+            'images/diffuser-prism3.png'
+        ]
+    };
+    
+    let currentColorGroup = 'origin';
+    
+    // Wishlist 狀態管理
+    const wishlistStates = {
+        origin: false,
+        aether: false,
+        prism: false
+    };
+    
+    // 更新愛心圖標狀態
+    function updateWishlistHeart(colorGroup) {
+        if (!wishlistHeart) return;
+        
+        const isWishlisted = wishlistStates[colorGroup];
+        if (isWishlisted) {
+            wishlistHeart.classList.remove('far');
+            wishlistHeart.classList.add('fas');
+            wishlistHeart.style.color = '#ff6b6b';
         } else {
-            this.classList.remove('fas');
-            this.classList.add('far');
-            alert('Removed from your wishlist.');
+            wishlistHeart.classList.remove('fas');
+            wishlistHeart.classList.add('far');
+            wishlistHeart.style.color = '#333';
         }
-    });
+    }
+    
+    // 生成圖片堆疊
+    function generateImageStack(colorGroup) {
+        if (!imageStack) return;
+        
+        // 清空現有圖片
+        imageStack.innerHTML = '';
+        
+        // 獲取對應顏色組的圖片
+        const images = imageGroups[colorGroup];
+        if (!images) return;
+        
+        // 為每張圖片創建img元素
+        images.forEach((imageSrc, index) => {
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.alt = `ÔDÔRAI AI Diffuser ${colorGroup} ${index + 1}`;
+            img.loading = 'lazy'; // 延遲載入優化性能
+            imageStack.appendChild(img);
+        });
+    }
+    
 
-    // Contact Concierge Button
-    contactBtn.addEventListener('click', function(event) {
-        event.preventDefault(); 
-        alert('Contacting Concierge Services...');
-    });
+    
+    // 初始化圖片堆疊
+    function initializeImages() {
+        generateImageStack(currentColorGroup);
+        updateWishlistHeart(currentColorGroup); // 初始化愛心狀態
+    }
+    
+    // 延遲初始化
+    setTimeout(initializeImages, 100);
 
-    // Find in Store Button
-    findStoreBtn.addEventListener('click', function(event) {
-        event.preventDefault(); 
-        alert('Opening store locator...');
-    });
 
+
+    // --- Read More/Less Logic ---
+    const readMoreBtn = document.getElementById('read-more-btn');
+    const productDescription = document.querySelector('.product-description');
+
+    if (readMoreBtn && productDescription) {
+        readMoreBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            
+            if (productDescription.classList.contains('collapsed')) {
+                productDescription.classList.remove('collapsed');
+                productDescription.classList.add('expanded');
+                this.textContent = 'Read less';
+            } else {
+                productDescription.classList.remove('expanded');
+                productDescription.classList.add('collapsed');
+                this.textContent = 'Read more';
+            }
+        });
+    }
 
     // --- Accordion Logic (remains the same) ---
     const accordionItems = document.querySelectorAll('.accordion-item');

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>ÔDÔRAI - AI Driven Personal Aromatherapist</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,11 +32,14 @@
 
         <main class="product-grid">
             <div class="product-image-container">
-                <img src="images/diffuser-main.png" alt="ÔDÔRAI AI Diffuser" id="main-product-image">
+                <div class="image-stack" id="image-stack">
+                    <!-- 圖片會動態生成 -->
+                </div>
             </div>
 
             <div class="product-info">
-                <p class="product-sku">PMAL721</p>
+                <div class="product-info-content">
+                    <p class="product-sku">PMAL721</p>
                 <div class="product-title-header">
         <h1 class="product-title">DIFFUSER - AI Driven Personal Aromatherapist</h1>
         <i class="far fa-heart" id="wishlist-heart"></i>
@@ -44,7 +47,10 @@
     <p class="product-price" id="product-price">$ 599.00</p>
 
     <div class="color-selector">
-        <h4>Colors: <span style="color: #888;" id="color-name">origin</span></h4>
+        <div class="color-label">
+            <span>Colors</span>
+            <span class="color-name" id="color-name">origin</span>
+        </div>
         <div class="color-swatches">
             <div class="color-swatch selected" 
                  data-main-image="images/diffuser-main.png" 
@@ -67,34 +73,51 @@
         </div>
     </div>
 
+
+
                 <div class="action-buttons">
-                    <a href="#" class="btn btn-primary" id="contact-btn">Contact Concierge Services</a>
-                    <a href="#" class="btn btn-secondary" id="find-store-btn">Find in Store</a>
+                    <a href="#" class="btn btn-primary" id="place-in-cart">Place in Cart</a>
+                    <a href="#" class="contact-advisor">Contact an Advisor</a>
                 </div>
 
-                <div class="product-description">
+                <p class="delivery-info">Complimentary Standard Delivery or Collect-in-Store.</p>
+
+                <div class="product-description collapsed">
                     <p>Evoking the poetics of breath and presence, ÔDÔRAI recognizes scent as the primordial language. Within its quiet, sculptural form lies its true emotion recognition and spatial behavior. This intelligent diffuser weaves personalized aromas into daily rituals, inspired by biophilic designs, ÔDÔRAI’s presence forges a living dialogue between humans and nature.</p>
-                    <span class="read-more">Read more</span>
+                    <a href="#" class="read-more" id="read-more-btn">Read more</a>
                 </div>
-                <div class="info-accordion">
-                    <div class="accordion-item">
-                        <div class="accordion-header">
+                <div class="info-sections">
+                    <div class="info-item expandable">
+                        <div class="info-header">
+                            <span>Sustainability</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="info-item expandable">
+                        <div class="info-header">
+                            <span>Product Care</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="info-item expandable">
+                        <div class="info-header">
+                            <span>In-Store Service</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                    <div class="info-item arrow">
+                        <div class="info-header">
                             <span>Delivery & Returns</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <p>Enjoy free standard shipping on all orders. Expedited shipping options are available at checkout. We accept returns within 30 days of purchase for a full refund. The item must be in its original condition and packaging.</p>
+                            <i class="fas fa-chevron-right"></i>
                         </div>
                     </div>
-                    <div class="accordion-item">
-                        <div class="accordion-header">
+                    <div class="info-item arrow">
+                        <div class="info-header">
                             <span>Gifting</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="accordion-content">
-                            <p>This item can be gift-wrapped. Add a personal message at checkout, and we will include a complimentary gift card. The price will be concealed on the packing slip.</p>
+                            <i class="fas fa-chevron-right"></i>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </main>

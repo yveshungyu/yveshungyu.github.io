@@ -524,6 +524,186 @@ body {
     color: #666;
 }
 
+/* --- Info Item Content (Accordion) --- */
+.info-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.info-content.expanded {
+    max-height: 200px;
+    padding: 0 0 20px 0;
+}
+
+.info-content p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+}
+
+.info-item.expandable .info-header i {
+    transition: transform 0.3s ease;
+}
+
+.info-item.expandable.expanded .info-header i {
+    transform: rotate(45deg);
+}
+
+/* --- Sidebar Styles --- */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -50%;
+    width: 50%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 1200;
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.show {
+    right: 0;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 40px;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.sidebar-header h2 {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+    color: #333;
+}
+
+.sidebar-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+.sidebar-close:hover {
+    color: #333;
+}
+
+.sidebar-content {
+    padding: 20px 40px 40px;
+}
+
+/* --- Sidebar Section Items (Internal Accordion) --- */
+.section-item {
+    border-bottom: 1px solid #eee;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.section-header:hover {
+    color: #666;
+}
+
+.section-header i {
+    font-size: 14px;
+    color: #666;
+    transition: transform 0.3s ease;
+}
+
+.section-item.expanded .section-header i {
+    transform: rotate(45deg);
+}
+
+.section-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.section-details.expanded {
+    max-height: 300px;
+    padding: 0 0 20px 0;
+}
+
+.section-details p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #666;
+    margin: 8px 0;
+}
+
+/* --- Responsive Sidebar --- */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .sidebar-header {
+        padding: 20px 30px;
+    }
+    
+    .sidebar-content {
+        padding: 15px 30px 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-header {
+        padding: 20px 20px;
+    }
+    
+    .sidebar-content {
+        padding: 15px 20px 30px;
+    }
+    
+    .sidebar-header h2 {
+        font-size: 20px;
+    }
+}
+
 /* --- Responsive Design --- */
 
 /* Large Desktop - 真正滿版 */

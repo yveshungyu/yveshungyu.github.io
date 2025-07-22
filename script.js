@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile search elements
     const mobileSearchInput = document.querySelector('.mobile-search-input');
     const searchClearBtn = document.getElementById('search-clear');
+    
+    // Mobile image navigation
+    let currentImageIndex = 0;
 
     // --- Color Selection Logic ---
     colorSwatches.forEach(swatch => {
@@ -24,6 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // 切換到對應的圖片組
             if (imageGroups[newColorName]) {
                 currentColorGroup = newColorName;
+                
+                // 立即重置圖片索引到第一張
+                currentImageIndex = 0;
                 
                 // 重新生成圖片堆疊
                 generateImageStack(currentColorGroup);
@@ -38,6 +44,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 更新選中樣式
                 colorSwatches.forEach(s => s.classList.remove('selected'));
                 this.classList.add('selected');
+                
+                // 強制重置到第一張圖片（所有設備）
+                resetImageIndex();
+                
+                // 額外確保移動端位置正確
+                if (isMobileDevice()) {
+                    setTimeout(() => {
+                        const container = imageStack?.parentElement;
+                        if (container) {
+                            container.scrollLeft = 0;
+                            container.scrollTo({ left: 0, behavior: 'auto' });
+                            updateIndicators(0);
+                        }
+                    }, 100);
+                }
                 
                 // 滾動回頂部
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -202,12 +223,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isMobileDevice()) {
             const container = imageStack.parentElement;
             if (container) {
+                // 確保圖片索引重置
+                currentImageIndex = 0;
+                
                 // 強制重置到開始位置
                 setTimeout(() => {
                     // 暫時設置為auto，確保初始位置正確
                     container.style.scrollBehavior = 'auto';
                     container.scrollLeft = 0;
                     container.scrollTo({ left: 0, behavior: 'auto' });
+                    
+                    // 更新指示器到第一個
+                    updateIndicators(0);
                     
                     // 恢復smooth滑動動畫
                     setTimeout(() => {
@@ -250,7 +277,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 更新指示器狀態
     function updateIndicators(activeIndex) {
+        if (!isMobileDevice()) return; // 只在移動端更新指示器
+        
         const indicators = document.querySelectorAll('.indicator-dot');
+        if (indicators.length === 0) return; // 如果沒有指示器就返回
+        
         indicators.forEach((dot, index) => {
             if (index === activeIndex) {
                 dot.classList.add('active');
@@ -258,12 +289,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 dot.classList.remove('active');
             }
         });
+        
+        // 確保當前圖片索引與指示器同步
+        currentImageIndex = activeIndex;
     }
     
 
     
     // 初始化圖片堆疊
     function initializeImages() {
+        // 確保初始索引為0
+        currentImageIndex = 0;
+        
         generateImageStack(currentColorGroup);
         updateWishlistHeart(currentColorGroup); // 初始化愛心狀態
         updateCartBadge(); // 初始化購物車徽章
@@ -274,6 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const container = imageStack?.parentElement;
             if (container) {
                 container.scrollLeft = 0;
+                container.style.scrollBehavior = 'auto';
             }
             
             // 延遲確保位置正確
@@ -345,24 +383,133 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Accordion Logic (remains the same) ---
-    const accordionItems = document.querySelectorAll('.accordion-item');
-    accordionItems.forEach(item => {
-        const header = item.querySelector('.accordion-header');
-        const content = item.querySelector('.accordion-content');
-        const icon = header.querySelector('i');
-
+    // --- Accordion Logic for Info Sections ---
+    const expandableItems = document.querySelectorAll('.info-item.expandable');
+    expandableItems.forEach(item => {
+        const header = item.querySelector('.info-header');
+        const content = item.querySelector('.info-content');
+        
         header.addEventListener('click', () => {
-            if (content.style.maxHeight) {
-                content.style.maxHeight = null;
-                content.style.paddingBottom = "0px";
-                icon.style.transform = 'rotate(0deg)';
+            const isExpanded = item.classList.contains('expanded');
+            
+            // 關閉其他手風琴項目
+            expandableItems.forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('expanded');
+                    const otherContent = otherItem.querySelector('.info-content');
+                    if (otherContent) {
+                        otherContent.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // 切換當前項目
+            if (isExpanded) {
+                item.classList.remove('expanded');
+                content.classList.remove('expanded');
             } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-                content.style.paddingBottom = "20px";
-                icon.style.transform = 'rotate(180deg)';
+                item.classList.add('expanded');
+                content.classList.add('expanded');
             }
         });
+    });
+
+    // --- Sidebar Logic ---
+    const deliveryTrigger = document.getElementById('delivery-returns-trigger');
+    const giftingTrigger = document.getElementById('gifting-trigger');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const deliverySidebar = document.getElementById('delivery-sidebar');
+    const giftingSidebar = document.getElementById('gifting-sidebar');
+    const deliveryClose = document.getElementById('delivery-close');
+    const giftingClose = document.getElementById('gifting-close');
+
+    // 顯示 Delivery & Returns 侧边栏
+    function showDeliverySidebar() {
+        hideAllSidebars(); // 確保其他侧边栏關閉
+        sidebarOverlay.classList.add('show');
+        deliverySidebar.classList.add('show');
+        document.body.style.overflow = 'hidden'; // 防止背景滾動
+    }
+
+    // 顯示 Gifting 侧边栏
+    function showGiftingSidebar() {
+        hideAllSidebars(); // 確保其他侧边栏關閉
+        sidebarOverlay.classList.add('show');
+        giftingSidebar.classList.add('show');
+        document.body.style.overflow = 'hidden'; // 防止背景滾動
+    }
+
+    // 隱藏所有侧边栏
+    function hideAllSidebars() {
+        sidebarOverlay.classList.remove('show');
+        deliverySidebar.classList.remove('show');
+        giftingSidebar.classList.remove('show');
+        document.body.style.overflow = 'auto'; // 恢復背景滾動
+    }
+
+    // 事件監聽器
+    if (deliveryTrigger) {
+        deliveryTrigger.addEventListener('click', showDeliverySidebar);
+    }
+
+    if (giftingTrigger) {
+        giftingTrigger.addEventListener('click', showGiftingSidebar);
+    }
+
+    if (deliveryClose) {
+        deliveryClose.addEventListener('click', hideAllSidebars);
+    }
+
+    if (giftingClose) {
+        giftingClose.addEventListener('click', hideAllSidebars);
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', hideAllSidebars);
+    }
+
+    // ESC 鍵關閉侧边栏
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            hideAllSidebars();
+        }
+    });
+
+    // --- Sidebar Internal Accordion Logic ---
+    const sectionItems = document.querySelectorAll('.section-item');
+    sectionItems.forEach(item => {
+        const header = item.querySelector('.section-header');
+        const details = item.querySelector('.section-details');
+        
+        if (header && details) {
+            header.addEventListener('click', () => {
+                const isExpanded = item.classList.contains('expanded');
+                const parentSidebar = item.closest('.sidebar');
+                
+                // 關閉同一个侧边栏中的其他項目
+                if (parentSidebar) {
+                    const siblingItems = parentSidebar.querySelectorAll('.section-item');
+                    siblingItems.forEach(siblingItem => {
+                        if (siblingItem !== item) {
+                            siblingItem.classList.remove('expanded');
+                            const siblingDetails = siblingItem.querySelector('.section-details');
+                            if (siblingDetails) {
+                                siblingDetails.classList.remove('expanded');
+                            }
+                        }
+                    });
+                }
+                
+                // 切換當前項目
+                if (isExpanded) {
+                    item.classList.remove('expanded');
+                    details.classList.remove('expanded');
+                } else {
+                    item.classList.add('expanded');
+                    details.classList.add('expanded');
+                }
+            });
+        }
     });
 
     // --- Mobile Search Functionality ---
@@ -551,29 +698,42 @@ document.addEventListener('DOMContentLoaded', function() {
     function resetImageIndex() {
         currentImageIndex = 0;
         if (isMobileDevice()) {
-            setTimeout(() => {
-                // 確保滾動到第一張圖片
-                const container = imageStack.parentElement;
-                if (container) {
-                    container.scrollLeft = 0;
-                    // 強制重新觸發滾動事件確保位置正確
-                    container.scrollTo({ left: 0, behavior: 'auto' });
-                }
+            const container = imageStack?.parentElement;
+            if (container) {
+                // 立即重置位置
+                container.style.scrollBehavior = 'auto';
+                container.scrollLeft = 0;
+                container.scrollTo({ left: 0, behavior: 'auto' });
+                
+                // 更新指示器
                 updateIndicators(0);
-            }, 150);
+                
+                // 延時恢復smooth滾動
+                setTimeout(() => {
+                    container.style.scrollBehavior = 'smooth';
+                }, 50);
+            }
         }
     }
     
     // 頁面完全加載後的最終檢查（確保第一張圖片正確顯示）
     window.addEventListener('load', function() {
+        // 確保初始化時圖片索引為0
+        currentImageIndex = 0;
+        
         if (isMobileDevice()) {
             setTimeout(() => {
                 const container = document.querySelector('.product-image-container');
                 if (container) {
+                    container.style.scrollBehavior = 'auto';
                     container.scrollLeft = 0;
                     container.scrollTo({ left: 0, behavior: 'auto' });
                     updateIndicators(0);
-                    currentImageIndex = 0;
+                    
+                    // 恢復smooth滾動
+                    setTimeout(() => {
+                        container.style.scrollBehavior = 'smooth';
+                    }, 50);
                 }
             }, 100);
         }

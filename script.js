@@ -10,13 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const placeInCartBtn = document.getElementById('place-in-cart');
     const contactAdvisorBtn = document.querySelector('.contact-advisor');
     const cartBadge = document.getElementById('cart-badge');
-    
-    // Mobile search elements
-    const mobileSearchInput = document.querySelector('.mobile-search-input');
-    const searchClearBtn = document.getElementById('search-clear');
-    
-    // Mobile image navigation
-    let currentImageIndex = 0;
 
     // --- Color Selection Logic ---
     colorSwatches.forEach(swatch => {
@@ -41,11 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 更新選中樣式
                 colorSwatches.forEach(s => s.classList.remove('selected'));
                 this.classList.add('selected');
-                
-                // 重置圖片索引（移動端）
-                if (typeof resetImageIndex === 'function') {
-                    resetImageIndex();
-                }
                 
                 // 滾動回頂部
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -212,8 +200,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (container) {
                 // 強制重置到開始位置
                 setTimeout(() => {
+                    // 暫時設置為auto，確保初始位置正確
+                    container.style.scrollBehavior = 'auto';
                     container.scrollLeft = 0;
                     container.scrollTo({ left: 0, behavior: 'auto' });
+                    
+                    // 恢復smooth滑動動畫
+                    setTimeout(() => {
+                        container.style.scrollBehavior = 'smooth';
+                    }, 100);
                 }, 10);
             }
         }
@@ -346,175 +341,28 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Accordion Logic for Info Sections ---
-    const infoItems = document.querySelectorAll('.info-item.expandable');
-    
-    infoItems.forEach(item => {
-        const header = item.querySelector('.info-header');
-        
-        if (header) {
-            header.addEventListener('click', function(event) {
-                event.preventDefault();
-                
-                // 如果當前item已經展開，直接收起
-                if (item.classList.contains('expanded')) {
-                    item.classList.remove('expanded');
-                    return;
-                }
-                
-                // 收起所有其他已展開的item
-                infoItems.forEach(otherItem => {
-                    if (otherItem !== item) {
-                        otherItem.classList.remove('expanded');
-                    }
-                });
-                
-                // 展開當前點擊的item
-                item.classList.add('expanded');
-            });
-        }
-    });
+    // --- Accordion Logic (remains the same) ---
+    const accordionItems = document.querySelectorAll('.accordion-item');
+    accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        const content = item.querySelector('.accordion-content');
+        const icon = header.querySelector('i');
 
-    // --- Delivery Sidebar Logic ---
-    const deliveryTrigger = document.getElementById('delivery-returns-trigger');
-    const deliverySidebar = document.getElementById('delivery-sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    const closeSidebarBtn = document.getElementById('close-sidebar');
-
-    // --- Gifting Sidebar Logic ---
-    const giftingTrigger = document.getElementById('gifting-trigger');
-    const giftingSidebar = document.getElementById('gifting-sidebar');
-    const closeGiftingSidebarBtn = document.getElementById('close-gifting-sidebar');
-
-    // 顯示配送側邊欄
-    function showDeliverySidebar() {
-        hideGiftingSidebar(); // 先關閉其他側邊欄
-        deliverySidebar.classList.add('active');
-        sidebarOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    // 隱藏配送側邊欄
-    function hideDeliverySidebar() {
-        deliverySidebar.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    // 顯示禮品側邊欄
-    function showGiftingSidebar() {
-        hideDeliverySidebar(); // 先關閉其他側邊欄
-        giftingSidebar.classList.add('active');
-        sidebarOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    // 隱藏禮品側邊欄
-    function hideGiftingSidebar() {
-        giftingSidebar.classList.remove('active');
-        if (!deliverySidebar.classList.contains('active')) {
-            sidebarOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    }
-
-    // 隱藏所有側邊欄
-    function hideAllSidebars() {
-        hideDeliverySidebar();
-        hideGiftingSidebar();
-    }
-
-    // 點擊 Delivery & Returns 觸發側邊欄
-    if (deliveryTrigger) {
-        deliveryTrigger.addEventListener('click', function(event) {
-            event.preventDefault();
-            showDeliverySidebar();
+        header.addEventListener('click', () => {
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                content.style.paddingBottom = "0px";
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                content.style.paddingBottom = "20px";
+                icon.style.transform = 'rotate(180deg)';
+            }
         });
-    }
-
-    // 點擊 Gifting 觸發側邊欄
-    if (giftingTrigger) {
-        giftingTrigger.addEventListener('click', function(event) {
-            event.preventDefault();
-            showGiftingSidebar();
-        });
-    }
-
-    // 點擊關閉配送側邊欄按鈕
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener('click', function(event) {
-            event.preventDefault();
-            hideDeliverySidebar();
-        });
-    }
-
-    // 點擊關閉禮品側邊欄按鈕
-    if (closeGiftingSidebarBtn) {
-        closeGiftingSidebarBtn.addEventListener('click', function(event) {
-            event.preventDefault();
-            hideGiftingSidebar();
-        });
-    }
-
-    // 點擊遮罩關閉所有側邊欄
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', function() {
-            hideAllSidebars();
-        });
-    }
-
-    // ESC 鍵關閉所有側邊欄
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            hideAllSidebars();
-        }
-    });
-
-    // --- Sidebar Section Expansion Logic ---
-    const expandableSections = document.querySelectorAll('.expandable-section');
-    
-    expandableSections.forEach(section => {
-        const header = section.querySelector('.section-header');
-        
-        if (header) {
-            header.addEventListener('click', function(event) {
-                event.preventDefault();
-                
-                // 找出當前section所屬的側邊欄
-                const parentSidebar = section.closest('.delivery-sidebar, .gifting-sidebar');
-                
-                // 切換當前section的展開狀態
-                if (section.classList.contains('expanded')) {
-                    section.classList.remove('expanded');
-                } else {
-                    // 只收起同一個側邊欄中的其他已展開的sections
-                    if (parentSidebar) {
-                        const siblingExpandableSections = parentSidebar.querySelectorAll('.expandable-section');
-                        siblingExpandableSections.forEach(otherSection => {
-                            if (otherSection !== section) {
-                                otherSection.classList.remove('expanded');
-                            }
-                        });
-                    }
-                    
-                    // 展開當前點擊的section
-                    section.classList.add('expanded');
-                }
-            });
-        }
     });
 
     // --- Mobile Search Functionality ---
     if (mobileSearchInput && searchClearBtn) {
-        // 顯示/隱藏清除按鈕
-        mobileSearchInput.addEventListener('input', function() {
-            if (this.value.length > 0) {
-                searchClearBtn.classList.add('show');
-            } else {
-                searchClearBtn.classList.remove('show');
-            }
-        });
-
         // 點擊清除按鈕
         searchClearBtn.addEventListener('click', function() {
             mobileSearchInput.value = '';
@@ -560,6 +408,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = imageStack.parentElement;
         const viewportWidth = window.innerWidth; // 使用視窗寬度確保精確
         const scrollLeft = index * viewportWidth; // 每張圖片佔據一個視窗寬度
+        
+        // 確保容器有滑動動畫
+        container.style.scrollBehavior = 'smooth';
         
         container.scrollTo({
             left: scrollLeft,

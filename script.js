@@ -1464,7 +1464,6 @@ document.addEventListener('DOMContentLoaded', function() {
             '.btn-primary': 'Add this diffuser to your cart',
             '.fa-heart': 'Add to wishlist',
             '.info-header': 'Click to view details',
-            '.cart-icon-wrapper': 'View your cart items',
             '.mobile-search-input': 'Search for products',
         };
         
@@ -1535,6 +1534,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     class UserBehaviorTracker {
         constructor() {
+            console.log('🤖 Initializing UserBehaviorTracker...');
             this.actions = [];
             this.preferences = {
                 favoriteColors: {},
@@ -1544,6 +1544,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
             this.sessionStart = Date.now();
             this.init();
+            console.log('✅ UserBehaviorTracker initialized successfully');
         }
         
         init() {
@@ -1647,9 +1648,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         generateRecommendations() {
+            console.log('🎯 Smart recommendations will show in 10 seconds...');
             setTimeout(() => {
+                console.log('🚀 Showing personalized recommendations now!');
                 this.showPersonalizedRecommendations();
-            }, 30000); // 30秒后开始显示推荐
+            }, 10000); // 10秒后开始显示推荐
         }
         
         updateRecommendations() {
@@ -1658,6 +1661,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         showPersonalizedRecommendations() {
+            console.log('📋 Creating recommendation panel...');
             const recommendationPanel = this.createRecommendationPanel();
             
             // 分析用户偏好
@@ -1667,19 +1671,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     'origin'
                 );
             
+            console.log('🎨 Most viewed color:', mostViewedColor);
+            console.log('📊 User preferences:', this.preferences);
+            
             const recommendations = this.getSmartRecommendations(mostViewedColor);
+            console.log('💡 Generated recommendations:', recommendations);
+            
             this.displayRecommendations(recommendationPanel, recommendations);
         }
         
         createRecommendationPanel() {
             const panel = document.createElement('div');
             panel.className = 'smart-recommendation-panel';
+            // 檢查螢幕尺寸調整樣式
+            const isMobile = window.innerWidth <= 768;
+            const panelWidth = isMobile ? Math.min(320, window.innerWidth - 40) : 280;
+            const panelRight = isMobile ? 10 : 20;
+            
             panel.style.cssText = `
                 position: fixed;
                 top: 50%;
-                right: 20px;
-                transform: translateY(-50%);
-                width: 280px;
+                right: ${panelRight}px;
+                width: ${panelWidth}px;
+                max-height: 80vh;
                 background: rgba(255, 255, 255, 0.95);
                 backdrop-filter: blur(20px);
                 border-radius: 15px;
@@ -1691,31 +1705,51 @@ document.addEventListener('DOMContentLoaded', function() {
                 opacity: 0;
                 transform: translateY(-50%) translateX(300px);
                 transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                overflow-y: auto;
+                box-sizing: border-box;
             `;
             
             document.body.appendChild(panel);
+            console.log('📦 Recommendation panel added to DOM');
             
             // 显示动画
             setTimeout(() => {
                 panel.style.opacity = '1';
                 panel.style.transform = 'translateY(-50%) translateX(0)';
+                console.log('🎬 Panel animation started - should be visible now!');
             }, 100);
             
-            // 自动隐藏
+            // 1分鐘後自動隱藏
             setTimeout(() => {
-                panel.style.opacity = '0';
-                panel.style.transform = 'translateY(-50%) translateX(300px)';
-                setTimeout(() => panel.remove(), 500);
-            }, 10000);
+                if (panel.parentNode) {
+                    panel.style.opacity = '0';
+                    panel.style.transform = 'translateY(-50%) translateX(300px)';
+                    setTimeout(() => {
+                        if (panel.parentNode) {
+                            panel.remove();
+                        }
+                    }, 500);
+                }
+            }, 60000); // 60秒 = 1分鐘
             
+            console.log('🏗️ Panel created successfully');
             return panel;
         }
         
         getSmartRecommendations(preferredColor) {
             const recommendations = [];
             
+            // 總是顯示Custom Scent Profile作為主要推薦
+            recommendations.push({
+                type: 'personalization',
+                title: 'Custom Scent Profile',
+                description: 'Create a personalized aromatherapy experience based on your preferences.',
+                action: 'Start Quiz',
+                icon: '🌟'
+            });
+            
             // 基于颜色偏好的推荐
-            if (this.preferences.favoriteColors[preferredColor] > 2) {
+            if (this.preferences.favoriteColors[preferredColor] > 1) {
                 recommendations.push({
                     type: 'color_match',
                     title: `Perfect for ${preferredColor} lovers!`,
@@ -1725,8 +1759,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // 基于浏览时间的推荐
-            if (this.preferences.timeSpent > 60000) { // 1分钟
+            // 基于浏览时间的推荐（降低門檻）
+            if (this.preferences.timeSpent > 30000) { // 30秒
                 recommendations.push({
                     type: 'engagement',
                     title: 'Exclusive Offer!',
@@ -1736,14 +1770,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // 基于交互次数的推荐
-            if (this.preferences.interactions > 15) {
+            // 如果沒有其他推薦，可以添加顏色相關推薦
+            if (recommendations.length === 1 && this.preferences.favoriteColors[preferredColor] > 0) {
                 recommendations.push({
-                    type: 'personalization',
-                    title: 'Custom Scent Profile',
-                    description: 'Create a personalized aromatherapy experience based on your preferences.',
-                    action: 'Start Quiz',
-                    icon: '🌟'
+                    type: 'color_match',
+                    title: `Perfect for ${preferredColor} lovers!`,
+                    description: `Based on your interest in ${preferredColor}, you might love our complementary scent collection.`,
+                    action: 'View Collection',
+                    icon: '🎨'
                 });
             }
             
@@ -1751,7 +1785,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         displayRecommendations(panel, recommendations) {
-            if (recommendations.length === 0) return;
+            console.log('🖼️ Displaying recommendations:', recommendations.length, 'items');
+            if (recommendations.length === 0) {
+                console.log('❌ No recommendations to display');
+                return;
+            }
             
             const html = `
                 <div style="display: flex; align-items: center; margin-bottom: 15px;">
@@ -1765,7 +1803,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #333;">${rec.title}</h4>
                         </div>
                         <p style="margin: 0 0 10px 0; font-size: 12px; color: #666; line-height: 1.4;">${rec.description}</p>
-                        <button style="
+                        <button class="quiz-trigger-btn" data-quiz-type="${rec.type}" style="
                             background: #4a90e2; 
                             color: white; 
                             border: none; 
@@ -1786,6 +1824,934 @@ document.addEventListener('DOMContentLoaded', function() {
             `;
             
             panel.innerHTML = html;
+            console.log('✅ Recommendation panel HTML content set');
+            
+            // Add event listeners for quiz buttons
+            const quizButtons = panel.querySelectorAll('.quiz-trigger-btn');
+            console.log('🔘 Found quiz buttons:', quizButtons.length);
+            quizButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (button.textContent.includes('Start Quiz')) {
+                        console.log('🎲 Starting scent quiz...');
+                        this.startScentQuiz();
+                    }
+                });
+            });
+        }
+        
+        // Scent Profile Quiz System
+        startScentQuiz() {
+            // 隱藏推薦面板當用戶開始測驗
+            this.hideRecommendationPanel();
+            
+            const quizModal = this.createQuizModal();
+            document.body.appendChild(quizModal);
+            this.showQuestion(1);
+        }
+        
+        createQuizModal() {
+            const modal = document.createElement('div');
+            modal.id = 'scent-quiz-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 10002;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            `;
+            
+            const quizContainer = document.createElement('div');
+            quizContainer.id = 'quiz-container';
+            quizContainer.style.cssText = `
+                background: white;
+                border-radius: 20px;
+                padding: 40px;
+                max-width: 600px;
+                width: 90%;
+                max-height: 90%;
+                overflow-y: auto;
+                position: relative;
+                transform: scale(0.9);
+                transition: transform 0.3s ease;
+                font-family: 'Inter', sans-serif;
+            `;
+            
+            modal.appendChild(quizContainer);
+            
+            // Show animation
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                quizContainer.style.transform = 'scale(1)';
+            }, 10);
+            
+            return modal;
+        }
+        
+        quizData = {
+            currentQuestion: 1,
+            totalQuestions: 8,
+            answers: {},
+            questions: [
+                {
+                    id: 1,
+                    question: "When do you most often use aromatherapy diffusers?",
+                    options: [
+                        { id: 'morning', text: '🌅 Morning time - Helps me wake up and start a great day', value: 'morning' },
+                        { id: 'work', text: '💼 Work focus - Enhance concentration and work efficiency', value: 'work' },
+                        { id: 'relax', text: '🏠 Home relaxation - After-work stress relief time', value: 'relax' },
+                        { id: 'sleep', text: '🌙 Bedtime preparation - Helps me relax and fall asleep', value: 'sleep' }
+                    ]
+                },
+                {
+                    id: 2,
+                    question: "What kind of feeling do you want aromatherapy to bring you?",
+                    options: [
+                        { id: 'calm', text: '✨ Calm & Relaxed - Stress relief, meditation, inner peace', value: 'calm' },
+                        { id: 'energetic', text: '⚡ Energetic & Vibrant - Refreshing, motivating, positive energy', value: 'energetic' },
+                        { id: 'focused', text: '🧘 Focused & Balanced - Concentration, mental tranquility', value: 'focused' },
+                        { id: 'cozy', text: '💕 Warm & Comfortable - Feeling of home, cozy atmosphere', value: 'cozy' }
+                    ]
+                },
+                {
+                    id: 3,
+                    question: "Which scent profile appeals to you most?",
+                    options: [
+                        { id: 'fresh', text: '🌿 Fresh & Natural - Mint, eucalyptus, tea tree, lemon', value: 'fresh' },
+                        { id: 'floral', text: '🌸 Floral & Elegant - Lavender, rose, jasmine, orange blossom', value: 'floral' },
+                        { id: 'woody', text: '🌲 Woody & Grounding - Sandalwood, cedar, amber, patchouli', value: 'woody' },
+                        { id: 'citrus', text: '🍊 Citrus & Vibrant - Orange, bergamot, grapefruit, sweet orange', value: 'citrus' }
+                    ]
+                },
+                {
+                    id: 4,
+                    question: "Which space do you primarily use the diffuser in?",
+                    options: [
+                        { id: 'bedroom', text: '🛏️ Bedroom - Private resting space (15-20 sqm)', value: 'bedroom' },
+                        { id: 'living', text: '🛋️ Living room - Open public area (20-30 sqm)', value: 'living' },
+                        { id: 'office', text: '💼 Study/Office - Focused work space (10-15 sqm)', value: 'office' },
+                        { id: 'whole_home', text: '🏡 Entire home - Whole house aromatherapy (30+ sqm)', value: 'whole_home' }
+                    ]
+                },
+                {
+                    id: 5,
+                    question: "Which lifestyle best describes you?",
+                    options: [
+                        { id: 'natural', text: '🌱 Natural wellness advocate - Values organic, natural, eco-friendly', value: 'natural' },
+                        { id: 'remote', text: '💻 Remote work from home - Home-based work, needs focus & relaxation balance', value: 'remote' },
+                        { id: 'efficient', text: '🎯 Efficiency expert - Pursues high efficiency, simplicity, practicality', value: 'efficient' },
+                        { id: 'aesthetic', text: '🎨 Aesthetic lifestyle - Focus on taste, design, beauty', value: 'aesthetic' },
+                        { id: 'spiritual', text: '🧘 Mind-body-spirit explorer - Focus on meditation, yoga, spiritual growth', value: 'spiritual' }
+                    ]
+                },
+                {
+                    id: 6,
+                    question: "What is your preferred aromatherapy intensity?",
+                    options: [
+                        { id: 'light', text: '🪶 Light & Subtle - Barely perceptible gentle fragrance', value: 'light' },
+                        { id: 'medium', text: '🌼 Medium & Moderate - Noticeable but not overwhelming', value: 'medium' },
+                        { id: 'strong', text: '🌹 Rich & Intense - Like obvious aromatic presence', value: 'strong' },
+                        { id: 'adjustable', text: '🎛️ Adjustable - Adjust according to mood and occasion', value: 'adjustable' }
+                    ]
+                },
+                {
+                    id: 7,
+                    question: "What do you most need AI aromatherapy to help you solve?",
+                    options: [
+                        { id: 'sleep', text: '😴 Improve sleep - Deep sleep, quick sleep onset, sleep quality', value: 'sleep' },
+                        { id: 'purify', text: '🤧 Purify air - Antibacterial deodorization, fresh air, healthy environment', value: 'purify' },
+                        { id: 'focus', text: '🧠 Enhance focus - Work efficiency, memory, creativity', value: 'focus' },
+                        { id: 'stress', text: '💆 Stress relief - Anxiety relief, emotional balance, mental health', value: 'stress' }
+                    ]
+                },
+                {
+                    id: 8,
+                    question: "Do you have any allergens or scents you dislike? (Optional)",
+                    type: 'text',
+                    placeholder: "lavender, citrus, woody, floral",
+                    note: "Optional: Enter in English, separate multiple items with commas. Leave blank if none. Common allergens: eucalyptus, peppermint, sandalwood, rose"
+                }
+            ]
+        };
+        
+        showQuestion(questionNumber) {
+            const container = document.getElementById('quiz-container');
+            const question = this.quizData.questions[questionNumber - 1];
+            
+            let html = `
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <button id="close-quiz" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+                </div>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h2 style="margin: 0 0 10px 0; font-size: 24px; color: #333;">Custom Scent Profile</h2>
+                    <div style="background: #f0f0f0; border-radius: 10px; height: 6px; margin: 10px 0;">
+                        <div style="background: #4a90e2; height: 100%; border-radius: 10px; width: ${(questionNumber / this.quizData.totalQuestions) * 100}%; transition: width 0.3s ease;"></div>
+                    </div>
+                    <p style="margin: 5px 0 0 0; font-size: 14px; color: #666;">Question ${questionNumber} of ${this.quizData.totalQuestions}</p>
+                </div>
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 18px; margin-bottom: 25px; color: #333; line-height: 1.4;">${question.question}</h3>
+            `;
+            
+            if (question.type === 'text') {
+                html += `
+                    <div>
+                        <input type="text" id="allergen-input" placeholder="${question.placeholder}" style="
+                            width: 100%;
+                            padding: 15px;
+                            border: 2px solid #e0e0e0;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            font-family: 'Inter', sans-serif;
+                            box-sizing: border-box;
+                            margin-bottom: 10px;
+                        ">
+                        <p style="font-size: 12px; color: #666; margin: 0;">${question.note}</p>
+                    </div>
+                `;
+            } else {
+                html += '<div>';
+                question.options.forEach(option => {
+                    html += `
+                        <button class="quiz-option" data-value="${option.value}" style="
+                            display: block;
+                            width: 100%;
+                            padding: 15px 20px;
+                            margin-bottom: 12px;
+                            border: 2px solid #e0e0e0;
+                            border-radius: 12px;
+                            background: white;
+                            text-align: left;
+                            cursor: pointer;
+                            font-size: 14px;
+                            font-family: 'Inter', sans-serif;
+                            transition: all 0.3s ease;
+                            line-height: 1.4;
+                            position: relative;
+                        " onmouseover="if(!this.classList.contains('selected')) { this.style.borderColor='#4a90e2'; this.style.background='#f8f9ff'; }" onmouseout="if(!this.classList.contains('selected')) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
+                            ${option.text}
+                        </button>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            html += `
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <button id="prev-btn" style="
+                        padding: 12px 24px;
+                        border: 2px solid #e0e0e0;
+                        border-radius: 25px;
+                        background: white;
+                        color: #666;
+                        cursor: pointer;
+                        font-family: 'Inter', sans-serif;
+                        font-weight: 500;
+                        display: ${questionNumber === 1 ? 'none' : 'block'};
+                    ">Previous</button>
+                    <button id="next-btn" style="
+                        padding: 12px 24px;
+                        border: none;
+                        border-radius: 25px;
+                        background: ${question.type === 'text' ? '#4a90e2' : '#ccc'};
+                        color: white;
+                        cursor: ${question.type === 'text' ? 'pointer' : 'not-allowed'};
+                        font-family: 'Inter', sans-serif;
+                        font-weight: 500;
+                        margin-left: auto;
+                    " ${question.type === 'text' ? '' : 'disabled'}>${questionNumber === this.quizData.totalQuestions ? 'Generate Profile' : 'Next'}</button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            
+            // Add event listeners
+            document.getElementById('close-quiz').addEventListener('click', () => {
+                this.closeQuiz();
+            });
+            
+            if (question.type === 'text') {
+                const input = document.getElementById('allergen-input');
+                const nextBtn = document.getElementById('next-btn');
+                
+                // For allergen question (Q8), allow empty input
+                nextBtn.style.background = '#4a90e2';
+                nextBtn.style.cursor = 'pointer';
+                nextBtn.disabled = false;
+                
+                input.addEventListener('input', () => {
+                    // Keep button enabled regardless of input
+                    nextBtn.style.background = '#4a90e2';
+                    nextBtn.style.cursor = 'pointer';
+                    nextBtn.disabled = false;
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    // Always allow proceeding, even with empty input
+                    this.quizData.answers[question.id] = input.value.trim();
+                    if (questionNumber === this.quizData.totalQuestions) {
+                        this.generateScentProfile();
+                    } else {
+                        this.showQuestion(questionNumber + 1);
+                    }
+                });
+            } else {
+                const options = document.querySelectorAll('.quiz-option');
+                const nextBtn = document.getElementById('next-btn');
+                
+                options.forEach(option => {
+                    option.addEventListener('click', () => {
+                        // Remove selection from other options
+                        options.forEach(opt => {
+                            opt.classList.remove('selected');
+                            opt.style.borderColor = '#e0e0e0';
+                            opt.style.background = 'white';
+                            opt.style.boxShadow = 'none';
+                            opt.style.transform = 'none';
+                        });
+                        
+                        // Select current option with strong visual feedback
+                        option.classList.add('selected');
+                        option.style.borderColor = '#4a90e2';
+                        option.style.background = 'linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%)';
+                        option.style.boxShadow = '0 4px 12px rgba(74, 144, 226, 0.2)';
+                        option.style.transform = 'translateY(-2px)';
+                        
+                        // Add checkmark visual indicator
+                        const existingCheck = option.querySelector('.checkmark');
+                        if (!existingCheck) {
+                            const checkmark = document.createElement('span');
+                            checkmark.className = 'checkmark';
+                            checkmark.innerHTML = '✓';
+                            checkmark.style.cssText = `
+                                position: absolute;
+                                top: 15px;
+                                right: 20px;
+                                color: #4a90e2;
+                                font-weight: bold;
+                                font-size: 18px;
+                            `;
+                            option.appendChild(checkmark);
+                        }
+                        
+                        // Remove checkmarks from other options
+                        options.forEach(opt => {
+                            if (opt !== option) {
+                                const check = opt.querySelector('.checkmark');
+                                if (check) check.remove();
+                            }
+                        });
+                        
+                        // Enable next button
+                        nextBtn.style.background = '#4a90e2';
+                        nextBtn.style.cursor = 'pointer';
+                        nextBtn.disabled = false;
+                        
+                        // Store answer
+                        this.quizData.answers[question.id] = option.dataset.value;
+                    });
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    if (!nextBtn.disabled) {
+                        if (questionNumber === this.quizData.totalQuestions) {
+                            this.generateScentProfile();
+                        } else {
+                            this.showQuestion(questionNumber + 1);
+                        }
+                    }
+                });
+            }
+            
+            if (questionNumber > 1) {
+                document.getElementById('prev-btn').addEventListener('click', () => {
+                    this.showQuestion(questionNumber - 1);
+                });
+            }
+            
+            // Restore previous answer if exists
+            if (question.type !== 'text') {
+                const previousAnswer = this.quizData.answers[question.id];
+                if (previousAnswer) {
+                    const selectedOption = document.querySelector(`[data-value="${previousAnswer}"]`);
+                    if (selectedOption) {
+                        // Trigger click to restore selection
+                        selectedOption.click();
+                    }
+                }
+            } else {
+                // For text input, restore previous value
+                const input = document.getElementById('allergen-input');
+                const previousAnswer = this.quizData.answers[question.id];
+                if (previousAnswer && input) {
+                    input.value = previousAnswer;
+                    // Enable next button if there's content
+                    if (previousAnswer.trim()) {
+                        const nextBtn = document.getElementById('next-btn');
+                        nextBtn.style.background = '#4a90e2';
+                        nextBtn.style.cursor = 'pointer';
+                        nextBtn.disabled = false;
+                    }
+                }
+            }
+        }
+        
+        closeQuiz() {
+            const modal = document.getElementById('scent-quiz-modal');
+            if (modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    modal.remove();
+                }, 300);
+            }
+        }
+        
+        // Complete ingredient database
+        ingredientDatabase = {
+            fresh: {
+                'Lemon': { effect: 'Awakening & Refreshing', category: 'fresh' },
+                'Peppermint': { effect: 'Cool & Focused', category: 'fresh' },
+                'Eucalyptus': { effect: 'Air Purifying', category: 'fresh' },
+                'Tea Tree': { effect: 'Antibacterial & Deodorizing', category: 'fresh' },
+                'Lemongrass': { effect: 'Vitality Boost', category: 'fresh' },
+                'Rosemary': { effect: 'Memory Enhancement', category: 'fresh' },
+                'Thyme': { effect: 'Fresh Purification', category: 'fresh' },
+                'Basil': { effect: 'Clear Focus', category: 'fresh' }
+            },
+            floral: {
+                'Lavender': { effect: 'Relaxing & Sleep-inducing', category: 'floral' },
+                'Jasmine': { effect: 'Warm & Joyful', category: 'floral' },
+                'Neroli': { effect: 'Elegant & Tranquil', category: 'floral' },
+                'Chamomile': { effect: 'Soothing & Calming', category: 'floral' },
+                'White Chamomile': { effect: 'Deep Relaxation', category: 'floral' },
+                'Rose': { effect: 'Emotional Balance', category: 'floral' },
+                'Geranium': { effect: 'Harmonious & Soothing', category: 'floral' },
+                'Ylang Ylang': { effect: 'Romantic & Relaxing', category: 'floral' },
+                'Violet': { effect: 'Gentle & Peaceful', category: 'floral' }
+            },
+            woody: {
+                'Sandalwood': { effect: 'Deep Meditation', category: 'woody' },
+                'Cedarwood': { effect: 'Security & Stability', category: 'woody' },
+                'Patchouli': { effect: 'Mysterious & Grounding', category: 'woody' },
+                'Frankincense': { effect: 'Spiritual Purification', category: 'woody' },
+                'Myrrh': { effect: 'Ancient Wisdom', category: 'woody' },
+                'Pine': { effect: 'Forest Fresh', category: 'woody' },
+                'Cypress': { effect: 'Resilient Balance', category: 'woody' },
+                'Juniper': { effect: 'Purifying Protection', category: 'woody' }
+            },
+            citrus: {
+                'Sweet Orange': { effect: 'Happy & Positive Energy', category: 'citrus' },
+                'Grapefruit': { effect: 'Uplifting Spirit', category: 'citrus' },
+                'Bergamot': { effect: 'Emotional Balance', category: 'citrus' },
+                'Yuzu': { effect: 'Fresh Vitality', category: 'citrus' },
+                'Lime': { effect: 'Refreshing & Awakening', category: 'citrus' },
+                'Blood Orange': { effect: 'Warm Vitality', category: 'citrus' },
+                'Mandarin': { effect: 'Gentle & Sweet', category: 'citrus' }
+            },
+            spice: {
+                'Cinnamon': { effect: 'Warm Vitality', category: 'spice' },
+                'Vanilla': { effect: 'Comfort & Sweetness', category: 'spice' },
+                'Clove': { effect: 'Warm Embrace', category: 'spice' },
+                'Ginger': { effect: 'Energizing Warmth', category: 'spice' },
+                'Cardamom': { effect: 'Exotic Appeal', category: 'spice' },
+                'Nutmeg': { effect: 'Cozy Comfort', category: 'spice' },
+                'Black Pepper': { effect: 'Stimulating Energy', category: 'spice' },
+                'Bay Leaf': { effect: 'Fresh Warmth', category: 'spice' }
+            },
+            herbal: {
+                'Sage': { effect: 'Purifying Wisdom', category: 'herbal' },
+                'Clary Sage': { effect: 'Hormonal Balance', category: 'herbal' },
+                'Marjoram': { effect: 'Deep Relaxation', category: 'herbal' },
+                'Hyssop': { effect: 'Respiratory Support', category: 'herbal' },
+                'Mugwort': { effect: 'Intuition Enhancement', category: 'herbal' },
+                'Menthol': { effect: 'Ultimate Cooling', category: 'herbal' }
+            }
+        };
+        
+        generateScentProfile() {
+            const answers = this.quizData.answers;
+            const allergens = this.parseAllergens(answers[8] || '');
+            
+            // Generate profile based on answers
+            const profile = this.calculatePersonalizedProfile(answers, allergens);
+            
+            this.showScentProfile(profile);
+        }
+        
+        parseAllergens(allergenString) {
+            if (!allergenString) return [];
+            
+            const allergenMap = {
+                'lavender': ['Lavender', 'Clary Sage'],
+                'citrus': ['Lemon', 'Sweet Orange', 'Grapefruit', 'Bergamot', 'Yuzu', 'Lime', 'Blood Orange', 'Mandarin', 'Neroli'],
+                'woody': ['Sandalwood', 'Cedarwood', 'Patchouli', 'Frankincense', 'Myrrh', 'Pine', 'Cypress', 'Juniper'],
+                'floral': ['Lavender', 'Jasmine', 'Neroli', 'Chamomile', 'White Chamomile', 'Rose', 'Geranium', 'Ylang Ylang', 'Violet'],
+                'mint': ['Peppermint', 'Menthol'],
+                'eucalyptus': ['Eucalyptus'],
+                'peppermint': ['Peppermint', 'Menthol'],
+                'sandalwood': ['Sandalwood'],
+                'rose': ['Rose'],
+                'tea tree': ['Tea Tree'],
+                'bergamot': ['Bergamot'],
+                'lemon': ['Lemon'],
+                'orange': ['Sweet Orange', 'Blood Orange'],
+                'jasmine': ['Jasmine'],
+                'vanilla': ['Vanilla'],
+                'cinnamon': ['Cinnamon'],
+                'ginger': ['Ginger']
+            };
+            
+            const excludedIngredients = [];
+            const inputAllergens = allergenString.toLowerCase().split(',').map(s => s.trim());
+            
+            inputAllergens.forEach(allergen => {
+                if (allergenMap[allergen]) {
+                    excludedIngredients.push(...allergenMap[allergen]);
+                }
+            });
+            
+            return excludedIngredients;
+        }
+        
+        calculatePersonalizedProfile(answers, allergens) {
+            // Base formula selection based on primary scent preference
+            const primaryCategory = answers[3]; // Question 3: scent profile
+            const needsPrimary = answers[7]; // Question 7: special needs
+            const feeling = answers[2]; // Question 2: expected feeling
+            const usage = answers[1]; // Question 1: usage time
+            const lifestyle = answers[5]; // Question 5: lifestyle
+            const intensity = answers[6]; // Question 6: intensity
+            const space = answers[4]; // Question 4: space
+            
+            // Get available ingredients (excluding allergens)
+            const availableIngredients = this.getAvailableIngredients(allergens);
+            
+            // Calculate profile name
+            const profileName = this.generateProfileName(needsPrimary, primaryCategory);
+            
+            // Generate formula
+            const formula = this.generateFormula(answers, availableIngredients);
+            
+            return {
+                name: profileName.name,
+                subtitle: profileName.subtitle,
+                description: profileName.description,
+                formula: formula,
+                answers: answers
+            };
+        }
+        
+        getAvailableIngredients(allergens) {
+            const available = {};
+            
+            Object.keys(this.ingredientDatabase).forEach(category => {
+                available[category] = {};
+                Object.keys(this.ingredientDatabase[category]).forEach(ingredient => {
+                    if (!allergens.includes(ingredient)) {
+                        available[category][ingredient] = this.ingredientDatabase[category][ingredient];
+                    }
+                });
+            });
+            
+            return available;
+        }
+        
+        generateProfileName(needs, scent) {
+            const profiles = {
+                'focus_fresh': { 
+                    name: 'FOCUS', 
+                    subtitle: 'Ultra Focus Formula',
+                    description: 'Cognitive Enhancement Complex'
+                },
+                'focus_floral': { 
+                    name: 'BLOOM', 
+                    subtitle: 'Floral Focus Formula',
+                    description: 'Elegant Concentration Complex'
+                },
+                'focus_woody': { 
+                    name: 'GROVE', 
+                    subtitle: 'Grounded Focus Formula',
+                    description: 'Forest Clarity Complex'
+                },
+                'focus_citrus': { 
+                    name: 'BURST', 
+                    subtitle: 'Citrus Focus Formula',
+                    description: 'Energetic Concentration Complex'
+                },
+                'sleep_fresh': { 
+                    name: 'DRIFT', 
+                    subtitle: 'Fresh Sleep Formula',
+                    description: 'Clean Rest Complex'
+                },
+                'sleep_floral': { 
+                    name: 'DREAM', 
+                    subtitle: 'Floral Sleep Formula',
+                    description: 'Peaceful Slumber Complex'
+                },
+                'sleep_woody': { 
+                    name: 'NEST', 
+                    subtitle: 'Woody Sleep Formula',
+                    description: 'Grounding Rest Complex'
+                },
+                'sleep_citrus': { 
+                    name: 'SUNSET', 
+                    subtitle: 'Citrus Sleep Formula',
+                    description: 'Gentle Evening Complex'
+                },
+                'purify_fresh': { 
+                    name: 'PURE', 
+                    subtitle: 'Air Purification Formula',
+                    description: 'Environmental Cleansing Complex'
+                },
+                'purify_floral': { 
+                    name: 'BLOOM+', 
+                    subtitle: 'Floral Purify Formula',
+                    description: 'Elegant Purification Complex'
+                },
+                'purify_woody': { 
+                    name: 'FOREST', 
+                    subtitle: 'Woody Purify Formula',
+                    description: 'Natural Cleansing Complex'
+                },
+                'purify_citrus': { 
+                    name: 'FRESH', 
+                    subtitle: 'Citrus Purify Formula',
+                    description: 'Zesty Cleansing Complex'
+                },
+                'stress_fresh': { 
+                    name: 'CALM', 
+                    subtitle: 'Fresh Relief Formula',
+                    description: 'Stress Release Complex'
+                },
+                'stress_floral': { 
+                    name: 'PEACE', 
+                    subtitle: 'Floral Relief Formula',
+                    description: 'Tranquil Balance Complex'
+                },
+                'stress_woody': { 
+                    name: 'ZEN', 
+                    subtitle: 'Woody Relief Formula',
+                    description: 'Grounding Balance Complex'
+                },
+                'stress_citrus': { 
+                    name: 'JOY', 
+                    subtitle: 'Citrus Relief Formula',
+                    description: 'Uplifting Balance Complex'
+                }
+            };
+            
+            const key = `${needs}_${scent}`;
+            return profiles[key] || { 
+                name: 'CUSTOM', 
+                subtitle: 'Personalized Formula',
+                description: 'AI-Crafted Complex'
+            };
+        }
+        
+        generateFormula(answers, availableIngredients) {
+            const primaryCategory = answers[3];
+            const needsCategory = answers[7];
+            const feeling = answers[2];
+            const lifestyle = answers[5];
+            const intensity = answers[6];
+            
+            // Start with base ingredients from primary category
+            const baseIngredients = this.selectBaseIngredients(primaryCategory, availableIngredients);
+            
+            // Add functional ingredients based on needs
+            const functionalIngredients = this.selectFunctionalIngredients(needsCategory, availableIngredients);
+            
+            // Add feeling-based ingredients
+            const feelingIngredients = this.selectFeelingIngredients(feeling, availableIngredients);
+            
+            // Add lifestyle modifiers
+            const lifestyleIngredients = this.selectLifestyleIngredients(lifestyle, availableIngredients);
+            
+            // Combine and calculate percentages
+            const combinedIngredients = this.combineIngredients([
+                ...baseIngredients,
+                ...functionalIngredients,
+                ...feelingIngredients,
+                ...lifestyleIngredients
+            ]);
+            
+            // Apply intensity modifier
+            const intensityModifier = this.getIntensityModifier(intensity);
+            
+            // Calculate final percentages
+            return this.calculateFinalPercentages(combinedIngredients, intensityModifier);
+        }
+        
+        selectBaseIngredients(category, available) {
+            const categoryMap = {
+                'fresh': 'fresh',
+                'floral': 'floral', 
+                'woody': 'woody',
+                'citrus': 'citrus'
+            };
+            
+            const targetCategory = categoryMap[category] || 'fresh';
+            const ingredients = available[targetCategory];
+            
+            // Select top 3-4 ingredients from primary category
+            const selected = Object.keys(ingredients).slice(0, 4).map(name => ({
+                name,
+                effect: ingredients[name].effect,
+                baseWeight: 15,
+                source: 'primary'
+            }));
+            
+            return selected;
+        }
+        
+        selectFunctionalIngredients(needs, available) {
+            const needsMap = {
+                'focus': ['Rosemary', 'Lemon', 'Peppermint', 'Basil'],
+                'sleep': ['Lavender', 'Chamomile', 'Sandalwood', 'Marjoram'],
+                'purify': ['Tea Tree', 'Eucalyptus', 'Lemon', 'Thyme', 'Sage'],
+                'stress': ['Bergamot', 'Lavender', 'Neroli', 'Ylang Ylang', 'Marjoram']
+            };
+            
+            const targetIngredients = needsMap[needs] || [];
+            const selected = [];
+            
+            // Find available ingredients from the needs list
+            Object.keys(available).forEach(category => {
+                Object.keys(available[category]).forEach(ingredient => {
+                    if (targetIngredients.includes(ingredient)) {
+                        selected.push({
+                            name: ingredient,
+                            effect: available[category][ingredient].effect,
+                            baseWeight: 12,
+                            source: 'functional'
+                        });
+                    }
+                });
+            });
+            
+            return selected.slice(0, 3); // Limit to 3 functional ingredients
+        }
+        
+        selectFeelingIngredients(feeling, available) {
+            const feelingMap = {
+                'calm': ['Chamomile', 'White Chamomile', 'Violet', 'Marjoram'],
+                'energetic': ['Ginger', 'Black Pepper', 'Lemongrass', 'Blood Orange'],
+                'focused': ['Frankincense', 'Sage', 'Thyme', 'Juniper'],
+                'cozy': ['Vanilla', 'Cinnamon', 'Clove', 'Nutmeg']
+            };
+            
+            const targetIngredients = feelingMap[feeling] || [];
+            const selected = [];
+            
+            Object.keys(available).forEach(category => {
+                Object.keys(available[category]).forEach(ingredient => {
+                    if (targetIngredients.includes(ingredient)) {
+                        selected.push({
+                            name: ingredient,
+                            effect: available[category][ingredient].effect,
+                            baseWeight: 8,
+                            source: 'feeling'
+                        });
+                    }
+                });
+            });
+            
+            return selected.slice(0, 2);
+        }
+        
+        selectLifestyleIngredients(lifestyle, available) {
+            const lifestyleMap = {
+                'natural': ['Tea Tree', 'Eucalyptus', 'Sage', 'Thyme'],
+                'remote': ['Rosemary', 'Chamomile'],
+                'efficient': ['Menthol', 'Black Pepper', 'Ginger', 'Lemongrass'],
+                'aesthetic': ['Yuzu', 'Ylang Ylang', 'Cardamom', 'Jasmine'],
+                'spiritual': ['Frankincense', 'Myrrh', 'Sage', 'Mugwort']
+            };
+            
+            const targetIngredients = lifestyleMap[lifestyle] || [];
+            const selected = [];
+            
+            Object.keys(available).forEach(category => {
+                Object.keys(available[category]).forEach(ingredient => {
+                    if (targetIngredients.includes(ingredient)) {
+                        selected.push({
+                            name: ingredient,
+                            effect: available[category][ingredient].effect,
+                            baseWeight: 5,
+                            source: 'lifestyle'
+                        });
+                    }
+                });
+            });
+            
+            return selected.slice(0, 2);
+        }
+        
+        combineIngredients(ingredientArrays) {
+            const combined = {};
+            
+            ingredientArrays.forEach(ingredient => {
+                if (combined[ingredient.name]) {
+                    combined[ingredient.name].baseWeight += ingredient.baseWeight;
+                } else {
+                    combined[ingredient.name] = { ...ingredient };
+                }
+            });
+            
+            return Object.values(combined);
+        }
+        
+        getIntensityModifier(intensity) {
+            const modifiers = {
+                'light': 0.8,
+                'medium': 1.0,
+                'strong': 1.2,
+                'adjustable': 1.0
+            };
+            
+            return modifiers[intensity] || 1.0;
+        }
+        
+        calculateFinalPercentages(ingredients, intensityModifier) {
+            // Sort by weight descending
+            ingredients.sort((a, b) => b.baseWeight - a.baseWeight);
+            
+            // Take top 6-8 ingredients
+            const topIngredients = ingredients.slice(0, Math.min(8, ingredients.length));
+            
+            // Calculate total weight
+            const totalWeight = topIngredients.reduce((sum, ing) => sum + ing.baseWeight, 0);
+            
+            // Reserve 10% for AI balance factor
+            const reservedPercent = 10;
+            const availablePercent = 100 - reservedPercent;
+            
+            // Calculate percentages
+            const formula = topIngredients.map(ingredient => {
+                const percentage = ((ingredient.baseWeight / totalWeight) * availablePercent * intensityModifier);
+                return {
+                    name: ingredient.name,
+                    effect: ingredient.effect,
+                    percentage: Math.round(percentage * 10) / 10 // Round to 1 decimal place
+                };
+            });
+            
+            // Ensure total doesn't exceed 90%
+            const currentTotal = formula.reduce((sum, ing) => sum + ing.percentage, 0);
+            if (currentTotal > availablePercent) {
+                const ratio = availablePercent / currentTotal;
+                formula.forEach(ingredient => {
+                    ingredient.percentage = Math.round(ingredient.percentage * ratio * 10) / 10;
+                });
+            }
+            
+            return formula;
+        }
+        
+        showScentProfile(profile) {
+            const container = document.getElementById('quiz-container');
+            
+            const formulaHtml = profile.formula.map(ingredient => 
+                `<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                    <div>
+                        <span style="font-weight: 600; color: #333;">${ingredient.name}</span>
+                        <span style="font-size: 12px; color: #666; margin-left: 8px;">${ingredient.percentage}%</span>
+                    </div>
+                    <span style="font-size: 11px; color: #888;">${ingredient.effect}</span>
+                </div>`
+            ).join('');
+            
+            const totalVisible = profile.formula.reduce((sum, ing) => sum + ing.percentage, 0);
+            const aiBalanceFactor = Math.round((100 - totalVisible) * 10) / 10;
+            
+            const html = `
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <button id="close-profile" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #666;">×</button>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-size: 32px; margin-bottom: 10px;">🌟</div>
+                    <h2 style="margin: 0 0 5px 0; font-size: 24px; color: #333;">Your ÔDÔRAI Custom Scent Profile</h2>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%); border-radius: 15px; padding: 25px; margin-bottom: 25px;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <h3 style="margin: 0 0 5px 0; font-size: 20px; color: #333;">【Main Function Formula】- ${profile.name} ${profile.subtitle}</h3>
+                        <p style="margin: 0; font-size: 14px; color: #666;">🧠 ${profile.description}</p>
+                    </div>
+                    
+                    <div style="background: white; border-radius: 12px; padding: 20px;">
+                        ${formulaHtml}
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-top: 2px solid #4a90e2; margin-top: 10px;">
+                            <div>
+                                <span style="font-weight: 600; color: #4a90e2;">AI Intelligent Balance Factor</span>
+                                <span style="font-size: 12px; color: #666; margin-left: 8px;">${aiBalanceFactor}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #f8f8f8; border-radius: 10px; padding: 20px; text-align: center;">
+                    <h4 style="margin: 0 0 10px 0; color: #333;">【Monthly Optimization Promise】</h4>
+                    <p style="margin: 0; font-size: 14px; color: #666; line-height: 1.5;">✨ ÔDÔRAI will continuously learn and improve your exclusive formula</p>
+                </div>
+                
+                <div style="display: flex; justify-content: center; margin-top: 25px;">
+                    <button id="save-profile" style="
+                        background: #4a90e2;
+                        color: white;
+                        border: none;
+                        padding: 15px 30px;
+                        border-radius: 25px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        font-family: 'Inter', sans-serif;
+                        transition: background 0.3s ease;
+                    " onmouseover="this.style.background='#357abd'" onmouseout="this.style.background='#4a90e2'">
+                        Save My Profile
+                    </button>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            
+            // Add event listeners
+            document.getElementById('close-profile').addEventListener('click', () => {
+                this.closeQuiz();
+            });
+            
+            document.getElementById('save-profile').addEventListener('click', () => {
+                // Save profile to localStorage
+                localStorage.setItem('odorai_scent_profile', JSON.stringify(profile));
+                
+                // Show success message
+                alert('Your custom scent profile has been saved! ÔDÔRAI will use this to personalize your aromatherapy experience.');
+                
+                // Close quiz modal
+                this.closeQuiz();
+            });
+        }
+        
+        // Hide recommendation panel
+        hideRecommendationPanel() {
+            const panel = document.querySelector('.smart-recommendation-panel');
+            if (panel) {
+                panel.style.opacity = '0';
+                panel.style.transform = 'translateY(-50%) translateX(300px)';
+                setTimeout(() => {
+                    if (panel.parentNode) {
+                        panel.remove();
+                    }
+                }, 500);
+            }
         }
         
         // showEngagementReward 函数已移除

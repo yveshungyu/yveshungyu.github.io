@@ -1719,7 +1719,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('🎬 Panel animation started - should be visible now!');
             }, 100);
             
-            // 1分鐘後自動隱藏
+            // 30秒後自動隱藏
             setTimeout(() => {
                 if (panel.parentNode) {
                     panel.style.opacity = '0';
@@ -1730,7 +1730,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }, 500);
                 }
-            }, 60000); // 60秒 = 1分鐘
+            }, 30000); // 30秒 = 0.5分鐘
             
             console.log('🏗️ Panel created successfully');
             return panel;
@@ -1748,19 +1748,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon: '🌟'
             });
             
-            // 基于颜色偏好的推荐
-            if (this.preferences.favoriteColors[preferredColor] > 1) {
-                recommendations.push({
-                    type: 'color_match',
-                    title: `Perfect for ${preferredColor} lovers!`,
-                    description: `Based on your interest in ${preferredColor}, you might love our complementary scent collection.`,
-                    action: 'View Collection',
-                    icon: '🎨'
-                });
-            }
-            
             // 基于浏览时间的推荐（降低門檻）
-            if (this.preferences.timeSpent > 30000) { // 30秒
+            if (this.preferences.timeSpent > 30000 && recommendations.length < 2) {
                 recommendations.push({
                     type: 'engagement',
                     title: 'Exclusive Offer!',
@@ -1770,23 +1759,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            // 如果沒有其他推薦，可以添加顏色相關推薦
-            if (recommendations.length === 1 && this.preferences.favoriteColors[preferredColor] > 0) {
-                recommendations.push({
-                    type: 'color_match',
-                    title: `Perfect for ${preferredColor} lovers!`,
-                    description: `Based on your interest in ${preferredColor}, you might love our complementary scent collection.`,
-                    action: 'View Collection',
-                    icon: '🎨'
-                });
-            }
-            
             return recommendations.slice(0, 2); // 最多显示2个推荐
         }
         
         displayRecommendations(panel, recommendations) {
-            console.log('🖼️ Displaying recommendations:', recommendations.length, 'items');
-            if (recommendations.length === 0) {
+            // 過濾掉add_to_cart類型的推薦
+            const filtered = recommendations.filter(rec => rec.type !== 'add_to_cart');
+            console.log('🖼️ Displaying recommendations:', filtered.length, 'items');
+            if (filtered.length === 0) {
                 console.log('❌ No recommendations to display');
                 return;
             }
@@ -1796,14 +1776,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     <span style="font-size: 20px; margin-right: 10px;">🤖</span>
                     <h3 style="margin: 0; font-size: 16px; font-weight: 600; color: #333;">Smart Recommendations</h3>
                 </div>
-                ${recommendations.map(rec => `
+                ${filtered.map(rec => `
                     <div style="background: rgba(74, 144, 226, 0.1); border-radius: 10px; padding: 15px; margin-bottom: 10px; border-left: 3px solid #4a90e2;">
                         <div style="display: flex; align-items: center; margin-bottom: 8px;">
                             <span style="font-size: 18px; margin-right: 8px;">${rec.icon}</span>
                             <h4 style="margin: 0; font-size: 14px; font-weight: 600; color: #333;">${rec.title}</h4>
                         </div>
                         <p style="margin: 0 0 10px 0; font-size: 12px; color: #666; line-height: 1.4;">${rec.description}</p>
-                        <button class="quiz-trigger-btn" data-quiz-type="${rec.type}" style="
+                        <button class="quiz-trigger-btn" data-quiz-type="${rec.type}" data-color-group="${rec.colorGroup || ''}" style="
                             background: #4a90e2; 
                             color: white; 
                             border: none; 
@@ -1822,15 +1802,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     Powered by AI · Based on your browsing behavior
                 </div>
             `;
-            
             panel.innerHTML = html;
             console.log('✅ Recommendation panel HTML content set');
-            
             // Add event listeners for quiz buttons
             const quizButtons = panel.querySelectorAll('.quiz-trigger-btn');
             console.log('🔘 Found quiz buttons:', quizButtons.length);
             quizButtons.forEach(button => {
-                button.addEventListener('click', () => {
+                button.addEventListener('click', (e) => {
                     if (button.textContent.includes('Start Quiz')) {
                         console.log('🎲 Starting scent quiz...');
                         this.startScentQuiz();
@@ -2780,5 +2758,37 @@ document.addEventListener('DOMContentLoaded', function() {
         const analytics = behaviorTracker.getAnalytics();
         localStorage.setItem('odorai_user_behavior', JSON.stringify(analytics));
     });
+
+    // 在全域window上掛一個addToCartFromPanel方法，複用主頁的加入購物車邏輯
+    window.addToCartFromPanel = function(colorGroup, button, event) {
+        // 切換顏色
+        if (typeof colorGroup === 'string' && window.currentColorGroup !== colorGroup) {
+            window.currentColorGroup = colorGroup;
+            if (typeof generateImageStack === 'function') generateImageStack(colorGroup);
+            if (typeof updateWishlistHeart === 'function') updateWishlistHeart(colorGroup);
+            if (typeof updateCartBadge === 'function') updateCartBadge();
+        }
+        // 模擬主頁按鈕的動畫和邏輯
+        if (button) {
+            if (button.classList.contains('loading')) return;
+            addEnhancedRippleEffect(button, event || { clientX: 0, clientY: 0 });
+            button.classList.add('loading');
+            button.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                button.classList.remove('loading');
+                button.style.transform = '';
+                window.cartItemCount = (window.cartItemCount || 0) + 1;
+                showCartFlyAnimation(button);
+                setTimeout(() => {
+                    updateCartBadge();
+                }, 300);
+                const colorName = window.currentColorGroup.charAt(0).toUpperCase() + window.currentColorGroup.slice(1);
+                showEnhancedSuccessAnimation(button);
+                setTimeout(() => {
+                    showSuccessNotification(`${colorName} DIFFUSER added to cart!`, window.cartItemCount);
+                }, 200);
+            }, 800);
+        }
+    }
 
 });

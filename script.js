@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Mobile Image Swipe Navigation ---
     function isMobileDevice() {
-        return window.innerWidth <= 992;
+        return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     }
 
     function scrollToImageIndex(index) {
@@ -1763,14 +1763,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         displayRecommendations(panel, recommendations) {
-            // 過濾掉add_to_cart類型的推薦
+            // 移除舊的事件監聽
+            const oldBtns = document.querySelectorAll('.quiz-trigger-btn');
+            oldBtns.forEach(btn => {
+                const newBtn = btn.cloneNode(true);
+                btn.parentNode.replaceChild(newBtn, btn);
+            });
+            // ... existing code ...
             const filtered = recommendations.filter(rec => rec.type !== 'add_to_cart');
-            console.log('🖼️ Displaying recommendations:', filtered.length, 'items');
-            if (filtered.length === 0) {
-                console.log('❌ No recommendations to display');
-                return;
-            }
-            
+            // ... existing code ...
             const html = `
                 <div style="display: flex; align-items: center; margin-bottom: 15px;">
                     <span style="font-size: 20px; margin-right: 10px;">🤖</span>
@@ -2790,5 +2791,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 800);
         }
     }
+
+    // 粒子、呼吸光效、滑鼠跟隨、涟漪動畫初始化前加判斷
+    if (!isMobileDevice()) {
+        if (typeof startParticleSystem === 'function') startParticleSystem();
+        if (typeof createMouseFollower === 'function') createMouseFollower();
+        if (typeof createAdvancedMouseFollower === 'function') createAdvancedMouseFollower();
+        if (typeof createStatusIndicator === 'function') createStatusIndicator();
+        if (typeof enhanceMouseInteractions === 'function') enhanceMouseInteractions();
+        if (typeof createParallaxEffects === 'function') createParallaxEffects();
+        if (typeof createDynamicTooltips === 'function') createDynamicTooltips();
+        if (typeof initParallaxEffects === 'function') initParallaxEffects();
+        if (typeof addRippleEffect === 'function') window.enableRipple = true;
+    } else {
+        // 手機端移除動畫相關DOM
+        const particles = document.querySelector('.particles-container');
+        if (particles) particles.remove();
+        const glow = document.querySelector('.breathing-glow');
+        if (glow) glow.remove();
+    }
+
+    // 進入頁面時自動生成圖片堆疊與愛心狀態
+    if (typeof generateImageStack === 'function') generateImageStack(currentColorGroup);
+    if (typeof updateWishlistHeart === 'function') updateWishlistHeart(currentColorGroup);
 
 });

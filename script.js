@@ -280,21 +280,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 確保圖片索引重置
                 currentImageIndex = 0;
                 
+                // 立即重置位置，不等待
+                container.style.scrollBehavior = 'auto';
+                container.scrollLeft = 0;
+                
                 // 強制重置到開始位置
                 setTimeout(() => {
-                    // 暫時設置為auto，確保初始位置正確
-                    container.style.scrollBehavior = 'auto';
                     container.scrollLeft = 0;
                     container.scrollTo({ left: 0, behavior: 'auto' });
+                    container.scrollTo(0, container.scrollTop);
                     
                     // 更新指示器到第一個
                     updateIndicators(0);
+                    
+                    console.log('📱 Images generated - forced to first image');
                     
                     // 恢復smooth滑動動畫
                     setTimeout(() => {
                         container.style.scrollBehavior = 'smooth';
                     }, 100);
                 }, 10);
+                
+                // 額外保障，再次檢查位置
+                setTimeout(() => {
+                    if (container.scrollLeft !== 0) {
+                        container.scrollLeft = 0;
+                        container.scrollTo({ left: 0, behavior: 'auto' });
+                        console.log('📱 Additional reset performed');
+                    }
+                }, 200);
             }
         }
     }
@@ -761,21 +775,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // 當切換顏色時重置圖片索引
     function resetImageIndex() {
         currentImageIndex = 0;
+        console.log('📱 Resetting image index to 0');
+        
         if (isMobileDevice()) {
             const container = imageStack?.parentElement;
             if (container) {
-                // 立即重置位置
+                // 強制重置位置，多重保障
                 container.style.scrollBehavior = 'auto';
                 container.scrollLeft = 0;
+                
+                // 使用多種方式確保位置重置
                 container.scrollTo({ left: 0, behavior: 'auto' });
+                container.scrollTo(0, container.scrollTop);
                 
                 // 更新指示器
                 updateIndicators(0);
                 
-                // 延時恢復smooth滾動
+                // 再次確認位置
                 setTimeout(() => {
+                    if (container.scrollLeft !== 0) {
+                        container.scrollLeft = 0;
+                        console.log('📱 Force reset scroll position');
+                    }
                     container.style.scrollBehavior = 'smooth';
                 }, 50);
+                
+                console.log('📱 Image index reset completed');
             }
         }
     }
@@ -2925,7 +2950,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (imageGroups[newColorName]) {
                     currentColorGroup = newColorName;
+                    
+                    // 立即重置圖片索引到第一張
                     currentImageIndex = 0;
+                    
+                    // 重新生成圖片堆疊
                     generateImageStack(currentColorGroup);
 
                     const colorNameDisplay = document.getElementById('color-name');
@@ -2938,7 +2967,29 @@ document.addEventListener('DOMContentLoaded', function() {
                     colorSwatches.forEach(s => s.classList.remove('selected'));
                     this.classList.add('selected');
                     
+                    // 強制重置到第一張圖片
                     resetImageIndex();
+                    
+                    // 手機端額外確保位置正確
+                    if (isMobileDevice()) {
+                        setTimeout(() => {
+                            const container = imageStack?.parentElement;
+                            if (container) {
+                                container.style.scrollBehavior = 'auto';
+                                container.scrollLeft = 0;
+                                container.scrollTo({ left: 0, behavior: 'auto' });
+                                currentImageIndex = 0;
+                                updateIndicators(0);
+                                
+                                console.log('📱 Color changed - Reset to first image');
+                                
+                                // 恢復smooth滾動
+                                setTimeout(() => {
+                                    container.style.scrollBehavior = 'smooth';
+                                }, 100);
+                            }
+                        }, 50);
+                    }
                 }
             });
         });

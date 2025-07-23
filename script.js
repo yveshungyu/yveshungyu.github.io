@@ -301,61 +301,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 生成移動端指示器 - 始終生成4個點
     function generateMobileIndicators(imageCount) {
+        // 手機端不再顯示指示器點
         const indicatorsContainer = document.getElementById('mobile-indicators');
-        if (!indicatorsContainer) return;
-        
-        // 清空現有指示器
-        indicatorsContainer.innerHTML = '';
-        
-        // 只在移動端顯示指示器
-        if (isMobileDevice()) {
-            // 確保始終顯示4個點（對應4張圖片）
-            const totalDots = 4;
-            for (let i = 0; i < totalDots; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'indicator-dot';
-                if (i === 0) dot.classList.add('active');
-                
-                // 點擊指示器跳轉到對應圖片
-                dot.addEventListener('click', () => {
-                    scrollToImageIndex(i);
-                    updateIndicators(i);
-                });
-                
-                indicatorsContainer.appendChild(dot);
-            }
-            indicatorsContainer.style.display = 'flex';
-            console.log('📱 Generated 4 indicators for mobile');
-        } else {
+        if (indicatorsContainer && isMobileDevice()) {
             indicatorsContainer.style.display = 'none';
+            indicatorsContainer.innerHTML = '';
         }
     }
     
-    // 更新指示器狀態 - 確保4個點都存在
+    // 更新指示器狀態 - 手機端不再需要
     function updateIndicators(activeIndex) {
         if (!isMobileDevice()) return; // 只在移動端更新指示器
         
-        const indicatorsContainer = document.getElementById('mobile-indicators');
-        if (!indicatorsContainer) return;
-        
-        // 確保始終有4個指示器
-        let indicators = document.querySelectorAll('.indicator-dot');
-        if (indicators.length !== 4) {
-            generateMobileIndicators(4);
-            indicators = document.querySelectorAll('.indicator-dot');
-        }
-        
-        indicators.forEach((dot, index) => {
-            if (index === activeIndex) {
-                dot.classList.add('active');
-            } else {
-                dot.classList.remove('active');
-            }
-        });
-        
-        // 確保當前圖片索引與指示器同步
+        // 手機端不再顯示指示器點，只更新當前圖片索引
         currentImageIndex = activeIndex;
-        console.log('📱 Updated indicators, active:', activeIndex);
+        console.log('📱 Current image index:', activeIndex);
     }
     
 
@@ -655,6 +615,8 @@ document.addEventListener('DOMContentLoaded', function() {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
         isScrolling = false;
+        
+        console.log('📱 Touch start at:', touchStartX, touchStartY);
     }
 
     function handleTouchMove(e) {
@@ -690,7 +652,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleTouchEnd(e) {
-        if (!isMobileDevice() || !isScrolling) return;
+        if (!isMobileDevice()) return;
+        
+        // 只有當確實在進行圖片滑動時才處理
+        if (!isScrolling) {
+            console.log('📱 Touch end - no horizontal scrolling detected');
+            return;
+        }
         
         const swipeThreshold = 50;
         const swipeDistance = touchEndX - touchStartX;
@@ -736,22 +704,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 添加觸摸事件監聽器（只在需要時）
     if (imageStack && isMobileDevice()) {
+        // 使用passive: false只針對特定情況
         imageStack.addEventListener('touchstart', handleTouchStart, { passive: true });
-        imageStack.addEventListener('touchmove', handleTouchMove, { passive: true });
+        imageStack.addEventListener('touchmove', handleTouchMove, { passive: false });
         imageStack.addEventListener('touchend', handleTouchEnd, { passive: true });
         console.log('📱 Touch events added for image navigation');
         
-        // 禁用原生滑動行為，完全由我們控制
+        // 改進滾動事件處理，減少對頁面滾動的干擾
         imageStack.parentElement.addEventListener('scroll', function(e) {
             if (isMobileDevice() && isScrolling) {
-                // 如果正在進行自定義滑動，暫時禁用原生滾動
+                // 只在主動進行圖片滑動時才干預
                 const container = this;
                 const currentScroll = container.scrollLeft;
                 const containerWidth = container.offsetWidth;
                 const targetScroll = currentImageIndex * containerWidth;
                 
-                // 如果滾動位置偏離目標位置太多，強制回到正確位置
-                if (Math.abs(currentScroll - targetScroll) > containerWidth * 0.5) {
+                // 允許更大的偏差範圍
+                if (Math.abs(currentScroll - targetScroll) > containerWidth * 0.8) {
                     container.scrollLeft = targetScroll;
                 }
             }
@@ -3040,15 +3009,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // 重新初始化指示器點擊功能
-        const indicators = document.querySelectorAll('.indicator-dot');
-        indicators.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                console.log('📱 Indicator clicked:', index);
-                scrollToImageIndex(index);
-            });
-        });
-        
         console.log('📱 Mobile click events reinitialized');
     }
 
@@ -3076,6 +3036,23 @@ document.addEventListener('DOMContentLoaded', function() {
         // 確保頁面可以正常滾動
         document.body.style.overflow = 'auto';
         document.body.style.overscrollBehavior = 'auto';
+        document.body.style.touchAction = 'manipulation';
+        
+        // 確保非圖片區域的垂直滾動
+        const scrollableElements = [
+            '.product-info',
+            '.main-header', 
+            '.mobile-search-container',
+            '.container'
+        ];
+        
+        scrollableElements.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                element.style.touchAction = 'manipulation';
+                element.style.overflowY = 'auto';
+            }
+        });
         
         console.log('📱 Mobile scrolling optimized');
         
@@ -3109,7 +3086,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const allInteractiveElements = document.querySelectorAll(
             'button, .btn, .color-swatch, .info-header, a, .cart-icon-wrapper, ' +
             '.section-header, .contact-advisor, .header-nav, .fa-heart, ' +
-            '.indicator-dot, .mobile-search-input'
+            '.mobile-search-input'
         );
         
         allInteractiveElements.forEach(element => {

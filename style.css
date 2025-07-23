@@ -1873,4 +1873,37 @@ body {
     }
     
     /* 移除指示器點樣式 */
+    
+    /* 確保測驗彈窗在手機端正常顯示 */
+    #scent-quiz-modal,
+    #quiz-container,
+    .quiz-option {
+        opacity: 1 !important;
+        visibility: visible !important;
+        background: white !important;
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+    
+    #scent-quiz-modal {
+        background: rgba(0, 0, 0, 0.8) !important;
+    }
+    
+    .quiz-option {
+        border: 2px solid #e0e0e0 !important;
+        color: #333 !important;
+        font-size: 13px !important;
+    }
+    
+    .quiz-option.selected {
+        border-color: #4a90e2 !important;
+        background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%) !important;
+    }
+    
+    .checkmark {
+        opacity: 1 !important;
+        visibility: visible !important;
+        color: #4a90e2 !important;
+    }
 }

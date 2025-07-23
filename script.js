@@ -1931,6 +1931,8 @@ document.addEventListener('DOMContentLoaded', function() {
         createQuizModal() {
             const modal = document.createElement('div');
             modal.id = 'scent-quiz-modal';
+            const isMobile = isMobileDevice();
+            
             modal.style.cssText = `
                 position: fixed;
                 top: 0;
@@ -1942,33 +1944,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                opacity: 0;
-                transition: opacity 0.3s ease;
+                opacity: 1 !important;
+                transition: none !important;
+                animation: none !important;
             `;
             
             const quizContainer = document.createElement('div');
             quizContainer.id = 'quiz-container';
+            const containerWidth = isMobile ? '95%' : '90%';
+            const containerMaxWidth = isMobile ? '400px' : '600px';
+            const containerPadding = isMobile ? '20px' : '40px';
+            
             quizContainer.style.cssText = `
-                background: white;
+                background: white !important;
                 border-radius: 20px;
-                padding: 40px;
-                max-width: 600px;
-                width: 90%;
+                padding: ${containerPadding};
+                max-width: ${containerMaxWidth};
+                width: ${containerWidth};
                 max-height: 90%;
                 overflow-y: auto;
                 position: relative;
-                transform: scale(0.9);
-                transition: transform 0.3s ease;
+                transform: scale(1) !important;
+                transition: none !important;
+                animation: none !important;
                 font-family: 'Inter', sans-serif;
+                opacity: 1 !important;
+                visibility: visible !important;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             `;
             
             modal.appendChild(quizContainer);
             
-            // Show animation
-            setTimeout(() => {
+            // 手機端不使用動畫
+            if (isMobile) {
                 modal.style.opacity = '1';
                 quizContainer.style.transform = 'scale(1)';
-            }, 10);
+                console.log('📱 Quiz modal created for mobile without animations');
+            } else {
+                // 桌面端使用動畫
+                modal.style.opacity = '0';
+                modal.style.transition = 'opacity 0.3s ease';
+                quizContainer.style.transform = 'scale(0.9)';
+                quizContainer.style.transition = 'transform 0.3s ease';
+                
+                setTimeout(() => {
+                    modal.style.opacity = '1';
+                    quizContainer.style.transform = 'scale(1)';
+                }, 10);
+            }
             
             return modal;
         }
@@ -2105,15 +2128,18 @@ document.addEventListener('DOMContentLoaded', function() {
                             margin-bottom: 12px;
                             border: 2px solid #e0e0e0;
                             border-radius: 12px;
-                            background: white;
+                            background: white !important;
                             text-align: left;
                             cursor: pointer;
-                            font-size: 14px;
+                            font-size: ${isMobileDevice() ? '13px' : '14px'};
                             font-family: 'Inter', sans-serif;
-                            transition: all 0.3s ease;
+                            transition: ${isMobileDevice() ? 'none' : 'all 0.3s ease'} !important;
+                            animation: none !important;
                             line-height: 1.4;
                             position: relative;
-                        " onmouseover="if(!this.classList.contains('selected')) { this.style.borderColor='#4a90e2'; this.style.background='#f8f9ff'; }" onmouseout="if(!this.classList.contains('selected')) { this.style.borderColor='#e0e0e0'; this.style.background='white'; }">
+                            opacity: 1 !important;
+                            visibility: visible !important;
+                        ">
                             ${option.text}
                         </button>
                     `;
@@ -2192,16 +2218,23 @@ document.addEventListener('DOMContentLoaded', function() {
                             opt.classList.remove('selected');
                             opt.style.borderColor = '#e0e0e0';
                             opt.style.background = 'white';
-                            opt.style.boxShadow = 'none';
-                            opt.style.transform = 'none';
+                            // 手機端不使用陰影和變換效果
+                            if (!isMobileDevice()) {
+                                opt.style.boxShadow = 'none';
+                                opt.style.transform = 'none';
+                            }
                         });
                         
-                        // Select current option with strong visual feedback
+                        // Select current option with appropriate feedback
                         option.classList.add('selected');
                         option.style.borderColor = '#4a90e2';
                         option.style.background = 'linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%)';
-                        option.style.boxShadow = '0 4px 12px rgba(74, 144, 226, 0.2)';
-                        option.style.transform = 'translateY(-2px)';
+                        
+                        // 只在桌面端使用視覺效果
+                        if (!isMobileDevice()) {
+                            option.style.boxShadow = '0 4px 12px rgba(74, 144, 226, 0.2)';
+                            option.style.transform = 'translateY(-2px)';
+                        }
                         
                         // Add checkmark visual indicator
                         const existingCheck = option.querySelector('.checkmark');
@@ -2216,6 +2249,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 color: #4a90e2;
                                 font-weight: bold;
                                 font-size: 18px;
+                                opacity: 1 !important;
+                                visibility: visible !important;
                             `;
                             option.appendChild(checkmark);
                         }
@@ -2235,6 +2270,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         // Store answer
                         this.quizData.answers[question.id] = option.dataset.value;
+                        
+                        console.log('📱 Quiz option selected:', option.dataset.value);
                     });
                 });
                 

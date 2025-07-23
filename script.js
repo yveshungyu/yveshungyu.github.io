@@ -1,5 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     
+    // --- Mobile Detection (First Priority) ---
+    function isMobileDevice() {
+        return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    }
+    
+    // 手機端立即移除動畫元素
+    if (isMobileDevice()) {
+        const particlesContainer = document.querySelector('.particles-container');
+        if (particlesContainer) particlesContainer.remove();
+        
+        const breathingGlow = document.querySelector('.breathing-glow');
+        if (breathingGlow) breathingGlow.remove();
+        
+        console.log('📱 Mobile device detected - animations disabled');
+    }
+    
     // --- Element Selection ---
     const imageStack = document.getElementById('image-stack');
     const colorSwatches = document.querySelectorAll('.color-swatch');
@@ -95,8 +111,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // 防止重复点击
             if (this.classList.contains('loading')) return;
             
-            // 添加优化的涟漪效果
-            addEnhancedRippleEffect(this, event);
+            // 添加优化的涟漪效果（僅桌面端）
+            if (!isMobileDevice() && window.enableRipple) {
+                addEnhancedRippleEffect(this, event);
+            }
             
             // 添加加载状态
             this.classList.add('loading');
@@ -111,8 +129,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 增加購物車數量
                 cartItemCount++;
                 
-                // 显示购物车飞入动画
-                showCartFlyAnimation(this);
+                // 显示购物车飞入动画（僅桌面端）
+                if (!isMobileDevice()) {
+                    showCartFlyAnimation(this);
+                }
                 
                 // 更新購物車徽章
                 setTimeout(() => {
@@ -122,12 +142,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 获取當前選中的顏色名稱
                 const colorName = currentColorGroup.charAt(0).toUpperCase() + currentColorGroup.slice(1);
                 
-                // 显示优化的成功动画
-                showEnhancedSuccessAnimation(this);
+                // 显示优化的成功动画（僅桌面端）
+                if (!isMobileDevice()) {
+                    showEnhancedSuccessAnimation(this);
+                }
                 
-                // 显示优雅的成功通知
+                // 显示成功通知（手機端簡化版）
                 setTimeout(() => {
-                    showSuccessNotification(`${colorName} DIFFUSER added to cart!`, cartItemCount);
+                    if (isMobileDevice()) {
+                        alert(`${colorName} DIFFUSER added to cart!`);
+                    } else {
+                        showSuccessNotification(`${colorName} DIFFUSER added to cart!`, cartItemCount);
+                    }
                 }, 200);
                 
             }, 800); // 优化为0.8秒加载时间
@@ -244,8 +270,8 @@ document.addEventListener('DOMContentLoaded', function() {
             imageStack.appendChild(img);
         });
         
-        // 生成移動端指示器
-        generateMobileIndicators(images.length);
+        // 生成移動端指示器（固定為4個）
+        generateMobileIndicators(4);
         
         // 圖片生成後立即重置位置（特別是第一張圖片）
         if (isMobileDevice()) {
@@ -273,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // 生成移動端指示器
+    // 生成移動端指示器 - 始終生成4個點
     function generateMobileIndicators(imageCount) {
         const indicatorsContainer = document.getElementById('mobile-indicators');
         if (!indicatorsContainer) return;
@@ -283,8 +309,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 只在移動端顯示指示器
         if (isMobileDevice()) {
-            // 為每張圖片創建指示器
-            for (let i = 0; i < imageCount; i++) {
+            // 確保始終顯示4個點（對應4張圖片）
+            const totalDots = 4;
+            for (let i = 0; i < totalDots; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'indicator-dot';
                 if (i === 0) dot.classList.add('active');
@@ -298,17 +325,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 indicatorsContainer.appendChild(dot);
             }
             indicatorsContainer.style.display = 'flex';
+            console.log('📱 Generated 4 indicators for mobile');
         } else {
             indicatorsContainer.style.display = 'none';
         }
     }
     
-    // 更新指示器狀態
+    // 更新指示器狀態 - 確保4個點都存在
     function updateIndicators(activeIndex) {
         if (!isMobileDevice()) return; // 只在移動端更新指示器
         
-        const indicators = document.querySelectorAll('.indicator-dot');
-        if (indicators.length === 0) return; // 如果沒有指示器就返回
+        const indicatorsContainer = document.getElementById('mobile-indicators');
+        if (!indicatorsContainer) return;
+        
+        // 確保始終有4個指示器
+        let indicators = document.querySelectorAll('.indicator-dot');
+        if (indicators.length !== 4) {
+            generateMobileIndicators(4);
+            indicators = document.querySelectorAll('.indicator-dot');
+        }
         
         indicators.forEach((dot, index) => {
             if (index === activeIndex) {
@@ -320,6 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 確保當前圖片索引與指示器同步
         currentImageIndex = activeIndex;
+        console.log('📱 Updated indicators, active:', activeIndex);
     }
     
 
@@ -379,12 +415,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 窗口大小調整時重新初始化
     window.addEventListener('resize', function() {
         setTimeout(() => {
-            if (imageStack) {
-                const currentImages = imageGroups[currentColorGroup];
-                if (currentImages) {
-                    generateMobileIndicators(currentImages.length);
-                    resetImageIndex();
-                }
+            if (imageStack && isMobileDevice()) {
+                // 固定生成4個指示器
+                generateMobileIndicators(4);
+                resetImageIndex();
             }
         }, 100);
     });
@@ -583,9 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Mobile Image Swipe Navigation ---
-    function isMobileDevice() {
-        return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-    }
+    // isMobileDevice函數已在頂部定義
 
     function scrollToImageIndex(index) {
         if (!imageStack || !isMobileDevice()) return;
@@ -611,12 +643,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 觸摸滑動功能
     let touchStartX = 0;
+    let touchStartY = 0;
     let touchEndX = 0;
     let isScrolling = false;
 
     function handleTouchStart(e) {
         if (!isMobileDevice()) return;
         touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
         isScrolling = false;
     }
 
@@ -626,19 +660,16 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 檢測是否在水平滑動
         const touchDiffX = Math.abs(touchEndX - touchStartX);
+        const touchDiffY = Math.abs(e.touches[0].clientY - touchStartY);
         
-        if (touchDiffX > 10) {
+        // 只有在明確的水平滑動且超過垂直滑動時才處理
+        if (touchDiffX > 15 && touchDiffX > touchDiffY * 2) {
             isScrolling = true;
-            // 阻止默認滾動行為，完全由我們控制
-            e.preventDefault();
-            
-            // 限制滑動距離，防止一次滑動多張圖片
-            const container = imageStack.parentElement;
-            const maxSwipe = container.offsetWidth * 0.3; // 最多只能滑動30%的容器寬度
-            const swipeDistance = touchEndX - touchStartX;
-            
-            if (Math.abs(swipeDistance) > maxSwipe) {
-                touchEndX = touchStartX + (swipeDistance > 0 ? maxSwipe : -maxSwipe);
+            // 只在圖片區域內阻止默認行為
+            const rect = imageStack.getBoundingClientRect();
+            const touchY = e.touches[0].clientY;
+            if (touchY >= rect.top && touchY <= rect.bottom) {
+                e.preventDefault();
             }
         }
     }
@@ -646,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleTouchEnd(e) {
         if (!isMobileDevice() || !isScrolling) return;
         
-        const swipeThreshold = 30; // 降低滑動閾值，讓滑動更敏感
+        const swipeThreshold = 50; // 適中的滑動閾值
         const swipeDistance = touchEndX - touchStartX;
         
         if (Math.abs(swipeDistance) > swipeThreshold) {
@@ -656,31 +687,32 @@ document.addEventListener('DOMContentLoaded', function() {
             let newIndex = currentImageIndex;
             
             if (swipeDistance > 0 && currentImageIndex > 0) {
-                // 向右滑動 - 上一張（不管滑動力度多大，只移動一張）
+                // 向右滑動 - 上一張
                 newIndex = currentImageIndex - 1;
             } else if (swipeDistance < 0 && currentImageIndex < currentImages.length - 1) {
-                // 向左滑動 - 下一張（不管滑動力度多大，只移動一張）
+                // 向左滑動 - 下一張
                 newIndex = currentImageIndex + 1;
             }
             
-            // 確保只滑動一張圖片，防止跳躍式滑動
+            // 滑動到新圖片
             if (newIndex !== currentImageIndex) {
-                e.preventDefault(); // 防止默認滑動行為
                 scrollToImageIndex(newIndex);
             }
         } else {
-            // 如果滑動距離不夠，回彈到當前圖片
+            // 回彈到當前圖片
             scrollToImageIndex(currentImageIndex);
         }
         
         isScrolling = false;
+        console.log('📱 Touch end, current image:', currentImageIndex);
     }
 
-    // 添加觸摸事件監聽器
-    if (imageStack) {
-        imageStack.addEventListener('touchstart', handleTouchStart, { passive: false });
-        imageStack.addEventListener('touchmove', handleTouchMove, { passive: false });
-        imageStack.addEventListener('touchend', handleTouchEnd, { passive: false });
+    // 添加觸摸事件監聽器（只在需要時）
+    if (imageStack && isMobileDevice()) {
+        imageStack.addEventListener('touchstart', handleTouchStart, { passive: true });
+        imageStack.addEventListener('touchmove', handleTouchMove, { passive: true });
+        imageStack.addEventListener('touchend', handleTouchEnd, { passive: true });
+        console.log('📱 Touch events added for image navigation');
         
         // 禁用原生滑動行為，完全由我們控制
         imageStack.parentElement.addEventListener('scroll', function(e) {
@@ -986,13 +1018,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 通用按钮交互增强
+    // 通用按钮交互增强 - 只在桌面端執行
     function enhanceButtons() {
+        if (isMobileDevice()) {
+            console.log('📱 Skipping button enhancement on mobile');
+            return;
+        }
+        
         const allButtons = document.querySelectorAll('.btn, .color-swatch, .info-header, .section-header');
         
         allButtons.forEach(btn => {
             btn.addEventListener('click', function(e) {
-                // 添加点击反馈
+                // 添加点击反馈（僅桌面端）
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     this.style.transform = '';
@@ -1001,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 初始化按钮增强
+    // 初始化按钮增强（僅桌面端）
     enhanceButtons();
 
     // --- Parallax and Scroll Effects ---
@@ -1231,8 +1268,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 600);
     }
     
-    // 增强鼠标交互
+    // 增强鼠标交互（僅桌面端）
     function enhanceMouseInteractions() {
+        if (isMobileDevice()) {
+            console.log('📱 Skipping mouse interactions on mobile');
+            return;
+        }
+        
         let lastParticleTime = 0;
         
         document.addEventListener('mousemove', (e) => {
@@ -1286,8 +1328,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000);
     }
     
-    // 启动粒子系统
-    initParticleSystem();
+    // 启动粒子系统（僅桌面端）
+    if (!isMobileDevice()) {
+        initParticleSystem();
+    } else {
+        console.log('📱 Particle system disabled on mobile');
+    }
 
     // --- Real-time User Feedback System ---
     
@@ -1409,10 +1455,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }, duration);
         }
         
-        // 监听各种用户行为
-        document.addEventListener('click', () => {
-            showStatus('✨ Click detected');
-        });
+        // 监听各种用户行为（僅桌面端）
+        if (!isMobileDevice()) {
+            document.addEventListener('click', () => {
+                showStatus('✨ Click detected');
+            });
+        }
         
         // 监听颜色变化
         const colorSwatches = document.querySelectorAll('.color-swatch');
@@ -1527,8 +1575,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 2000);
     }
     
-    // 启动用户反馈系统
-    initUserFeedbackSystem();
+    // 启动用户反馈系统（僅桌面端）
+    if (!isMobileDevice()) {
+        initUserFeedbackSystem();
+    } else {
+        console.log('📱 User feedback system disabled on mobile');
+    }
 
     // --- Smart Interactive System & User Behavior Tracking ---
     
@@ -2781,8 +2833,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof updateWishlistHeart === 'function') updateWishlistHeart(colorGroup);
             if (typeof updateCartBadge === 'function') updateCartBadge();
         }
-        // 模擬主頁按鈕的動畫和邏輯
-        if (button) {
+        // 模擬主頁按鈕的動畫和邏輯（僅桌面端）
+        if (button && !isMobileDevice()) {
             if (button.classList.contains('loading')) return;
             addEnhancedRippleEffect(button, event || { clientX: 0, clientY: 0 });
             button.classList.add('loading');
@@ -2801,11 +2853,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     showSuccessNotification(`${colorName} DIFFUSER added to cart!`, window.cartItemCount);
                 }, 200);
             }, 800);
+        } else if (button && isMobileDevice()) {
+            // 手機端簡化版，只更新數據
+            window.cartItemCount = (window.cartItemCount || 0) + 1;
+            updateCartBadge();
+            const colorName = window.currentColorGroup.charAt(0).toUpperCase() + window.currentColorGroup.slice(1);
+            alert(`${colorName} DIFFUSER added to cart!`);
         }
     }
 
-    // 粒子、呼吸光效、滑鼠跟隨、涟漪動畫初始化前加判斷
+    // 動畫效果初始化 - 只在桌面端執行
     if (!isMobileDevice()) {
+        console.log('🖥️ Desktop device - enabling animations');
+        // 啟動所有動畫效果
         if (typeof startParticleSystem === 'function') startParticleSystem();
         if (typeof createMouseFollower === 'function') createMouseFollower();
         if (typeof createAdvancedMouseFollower === 'function') createAdvancedMouseFollower();
@@ -2816,47 +2876,81 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof initParallaxEffects === 'function') initParallaxEffects();
         if (typeof addRippleEffect === 'function') window.enableRipple = true;
     } else {
-        // 手機端移除動畫相關DOM
-        const particles = document.querySelector('.particles-container');
-        if (particles) particles.remove();
-        const glow = document.querySelector('.breathing-glow');
-        if (glow) glow.remove();
+        console.log('📱 Mobile device - all animations disabled');
+        // 手機端禁用所有動畫功能
+        window.enableRipple = false;
+        // 移除所有可能的動畫DOM元素
+        const elementsToRemove = [
+            '.particles-container',
+            '.breathing-glow', 
+            '.mouse-follower',
+            '.mouse-follower-primary',
+            '.mouse-follower-secondary'
+        ];
+        elementsToRemove.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) element.remove();
+        });
     }
 
     // 進入頁面時自動生成圖片堆疊與愛心狀態
     if (typeof generateImageStack === 'function') generateImageStack(currentColorGroup);
     if (typeof updateWishlistHeart === 'function') updateWishlistHeart(currentColorGroup);
 
-    // 指示器優化：每次圖片切換都更新4個點，且每張圖片下方都顯示
-    function updateIndicators(activeIndex) {
-        const indicatorsContainer = document.getElementById('mobile-indicators');
-        if (!indicatorsContainer) return;
-        indicatorsContainer.innerHTML = '';
-        const images = imageStack ? imageStack.querySelectorAll('img') : [];
-        const total = images.length || 4;
-        for (let i = 0; i < total; i++) {
-            const dot = document.createElement('div');
-            dot.className = 'indicator-dot' + (i === activeIndex ? ' active' : '');
-            dot.addEventListener('click', () => {
-                scrollToImageIndex(i);
-            });
-            indicatorsContainer.appendChild(dot);
-        }
-        indicatorsContainer.style.display = 'flex';
-    }
+    // updateIndicators函數已在上方定義，此處移除重複定義
 
-    // 移除/修正touchmove阻止滾動的事件
-    // 在image-stack和product-image-container上不再阻止touchmove
-    if (imageStack) {
-        imageStack.ontouchmove = null;
-        imageStack.ontouchstart = null;
-        imageStack.ontouchend = null;
-    }
-    const picContainer = document.querySelector('.product-image-container');
-    if (picContainer) {
-        picContainer.ontouchmove = null;
-        picContainer.ontouchstart = null;
-        picContainer.ontouchend = null;
+    // 手機端滾動優化
+    if (isMobileDevice()) {
+        // 移除所有可能阻止滾動的touch事件
+        const elementsToFix = [
+            imageStack,
+            document.querySelector('.product-image-container'),
+            document.body,
+            document.documentElement
+        ];
+        
+        elementsToFix.forEach(element => {
+            if (element) {
+                element.ontouchmove = null;
+                element.ontouchstart = null;
+                element.ontouchend = null;
+                // 移除可能存在的事件監聽器
+                element.style.touchAction = 'auto';
+                element.style.overflowY = 'auto';
+            }
+        });
+        
+        // 確保頁面可以正常滾動
+        document.body.style.overflow = 'auto';
+        document.body.style.overscrollBehavior = 'auto';
+        
+        console.log('📱 Mobile scrolling optimized');
+        
+        // 強制清理所有可能的動畫DOM元素
+        const animationElements = [
+            '.particles-container',
+            '.breathing-glow',
+            '.mouse-follower',
+            '.mouse-follower-primary', 
+            '.mouse-follower-secondary',
+            '.interaction-particle',
+            '.click-ripple',
+            '.enhanced-ripple'
+        ];
+        
+        animationElements.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(el => el.remove());
+        });
+        
+        // 禁用所有點擊動畫函數
+        window.createClickRipple = function() { console.log('📱 Click ripple disabled on mobile'); };
+        window.createInteractionParticle = function() { console.log('📱 Interaction particle disabled on mobile'); };
+        window.addEnhancedRippleEffect = function() { console.log('📱 Enhanced ripple disabled on mobile'); };
+        window.showCartFlyAnimation = function() { console.log('📱 Cart fly animation disabled on mobile'); };
+        window.showEnhancedSuccessAnimation = function() { console.log('📱 Success animation disabled on mobile'); };
+        
+        console.log('📱 All animation functions disabled on mobile');
     }
 
 });

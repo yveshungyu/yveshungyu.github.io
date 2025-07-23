@@ -1687,7 +1687,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const isMobile = window.innerWidth <= 768;
             const panelWidth = isMobile ? Math.min(320, window.innerWidth - 40) : 280;
             const panelRight = isMobile ? 10 : 20;
-            
             panel.style.cssText = `
                 position: fixed;
                 top: 50%;
@@ -1708,31 +1707,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 overflow-y: auto;
                 box-sizing: border-box;
             `;
-            
             document.body.appendChild(panel);
-            console.log('📦 Recommendation panel added to DOM');
-            
-            // 显示动画
             setTimeout(() => {
                 panel.style.opacity = '1';
                 panel.style.transform = 'translateY(-50%) translateX(0)';
-                console.log('🎬 Panel animation started - should be visible now!');
             }, 100);
-            
-            // 30秒後自動隱藏
-            setTimeout(() => {
-                if (panel.parentNode) {
-                    panel.style.opacity = '0';
-                    panel.style.transform = 'translateY(-50%) translateX(300px)';
-                    setTimeout(() => {
-                        if (panel.parentNode) {
-                            panel.remove();
-                        }
-                    }, 500);
-                }
-            }, 30000); // 30秒 = 0.5分鐘
-            
-            console.log('🏗️ Panel created successfully');
+            // 30秒後自動隱藏（桌面）
+            if (!isMobile) {
+                setTimeout(() => {
+                    if (panel.parentNode) {
+                        panel.style.opacity = '0';
+                        panel.style.transform = 'translateY(-50%) translateX(300px)';
+                        setTimeout(() => {
+                            if (panel.parentNode) {
+                                panel.remove();
+                            }
+                        }, 500);
+                    }
+                }, 30000);
+            } else {
+                // 手機端5秒自動隱藏，且點擊按鈕時清除
+                let mobileTimer = setTimeout(() => {
+                    if (panel.parentNode) {
+                        panel.style.opacity = '0';
+                        panel.style.transform = 'translateY(-50%) translateX(300px)';
+                        setTimeout(() => {
+                            if (panel.parentNode) {
+                                panel.remove();
+                            }
+                        }, 500);
+                    }
+                }, 5000);
+                panel.addEventListener('click', function handler(e) {
+                    if (e.target.classList.contains('quiz-trigger-btn')) {
+                        clearTimeout(mobileTimer);
+                        panel.removeEventListener('click', handler);
+                    }
+                });
+            }
             return panel;
         }
         
@@ -2814,5 +2826,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // 進入頁面時自動生成圖片堆疊與愛心狀態
     if (typeof generateImageStack === 'function') generateImageStack(currentColorGroup);
     if (typeof updateWishlistHeart === 'function') updateWishlistHeart(currentColorGroup);
+
+    // 指示器優化：每次圖片切換都更新4個點，且每張圖片下方都顯示
+    function updateIndicators(activeIndex) {
+        const indicatorsContainer = document.getElementById('mobile-indicators');
+        if (!indicatorsContainer) return;
+        indicatorsContainer.innerHTML = '';
+        const images = imageStack ? imageStack.querySelectorAll('img') : [];
+        const total = images.length || 4;
+        for (let i = 0; i < total; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'indicator-dot' + (i === activeIndex ? ' active' : '');
+            dot.addEventListener('click', () => {
+                scrollToImageIndex(i);
+            });
+            indicatorsContainer.appendChild(dot);
+        }
+        indicatorsContainer.style.display = 'flex';
+    }
+
+    // 移除/修正touchmove阻止滾動的事件
+    // 在image-stack和product-image-container上不再阻止touchmove
+    if (imageStack) {
+        imageStack.ontouchmove = null;
+        imageStack.ontouchstart = null;
+        imageStack.ontouchend = null;
+    }
+    const picContainer = document.querySelector('.product-image-container');
+    if (picContainer) {
+        picContainer.ontouchmove = null;
+        picContainer.ontouchstart = null;
+        picContainer.ontouchend = null;
+    }
 
 });

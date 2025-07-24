@@ -1368,25 +1368,31 @@ body {
         bottom: 20px; /* 距離圖片底部20px */
         left: 50%;
         transform: translateX(-50%);
-        gap: 8px;
-        z-index: 10;
+        gap: 10px;
+        z-index: 100;
         pointer-events: auto;
         background-color: transparent;
-        padding: 8px 12px;
-        border-radius: 16px;
+        padding: 10px 14px;
+        border-radius: 18px;
         backdrop-filter: blur(8px);
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0, 0, 0, 0.3);
     }
     
     .indicator-dot {
-        width: 8px;
-        height: 8px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
         background-color: rgba(255, 255, 255, 0.6);
         cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
+        transition: all 0.3s ease;
         border: 1px solid rgba(0, 0, 0, 0.4);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+        pointer-events: auto;
+        position: relative;
+        z-index: 101;
+        /* 增加点击区域 */
+        padding: 4px;
+        margin: -4px;
     }
     
     .indicator-dot.active {
@@ -1394,6 +1400,22 @@ body {
         transform: scale(1.3);
         border: 1px solid rgba(0, 0, 0, 0.6);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* 确保指示器在移动端可见且可点击 */
+    @media (max-width: 768px) {
+        .mobile-image-indicators {
+            z-index: 200 !important;
+            pointer-events: auto !important;
+        }
+        
+        .indicator-dot {
+            pointer-events: auto !important;
+            touch-action: manipulation !important;
+            z-index: 201 !important;
+            min-width: 20px;
+            min-height: 20px;
+        }
     }
     
     /* 確保指示器只在移動端顯示 */
@@ -1765,6 +1787,12 @@ body {
     .mobile-search-container {
         touch-action: manipulation;
         -webkit-overflow-scrolling: touch;
+    }
+    
+    /* 确保指示器不受全局 touch-action 影响 */
+    .mobile-image-indicators,
+    .mobile-image-indicators * {
+        touch-action: manipulation !important;
     }
     
     /* 強力禁用手機端所有動畫效果 */

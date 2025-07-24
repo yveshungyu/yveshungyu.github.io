@@ -264,7 +264,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         // 生成移動端指示器（固定為4個）
-        generateMobileIndicators(4);
+        if (isMobileDevice()) {
+            generateMobileIndicators(4);
+            console.log('📱 Generating mobile indicators after images');
+        }
         
         // 簡化移動端圖片位置重置
         if (isMobileDevice()) {
@@ -286,25 +289,51 @@ document.addEventListener('DOMContentLoaded', function() {
     // 生成移動端指示器 - 始終生成4個點
     function generateMobileIndicators(imageCount) {
         const indicatorsContainer = document.getElementById('mobile-indicators');
-        if (!indicatorsContainer) return;
+        if (!indicatorsContainer) {
+            console.log('📱 Error: mobile-indicators container not found');
+            return;
+        }
         
         if (isMobileDevice()) {
             indicatorsContainer.style.display = 'flex';
             indicatorsContainer.innerHTML = '';
             
+            console.log('📱 Creating mobile indicators...');
+            
             // 生成指示器點
             for (let i = 0; i < 4; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'indicator-dot';
+                dot.setAttribute('data-index', i);
                 if (i === 0) dot.classList.add('active');
                 
-                // 添加點擊事件
-                dot.addEventListener('click', () => {
-                    scrollToImageIndex(i);
-                });
+                // 创建闭包来捕获正确的索引值
+                (function(index) {
+                    // 添加多种事件类型确保兼容性
+                    dot.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('📱 Indicator CLICK:', index + 1);
+                        scrollToImageIndex(index);
+                    }, { passive: false });
+                    
+                    dot.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        console.log('📱 Indicator TOUCH START:', index + 1);
+                    }, { passive: false });
+                    
+                    dot.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('📱 Indicator TOUCH END:', index + 1);
+                        scrollToImageIndex(index);
+                    }, { passive: false });
+                })(i);
                 
                 indicatorsContainer.appendChild(dot);
             }
+            
+            console.log('📱 Successfully generated 4 indicator dots with events');
         } else {
             indicatorsContainer.style.display = 'none';
         }
@@ -353,6 +382,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化圖片
     setTimeout(() => {
         initializeImages();
+        
+        // 调试：检查指示器是否正确创建
+        if (isMobileDevice()) {
+            setTimeout(() => {
+                const indicatorsContainer = document.getElementById('mobile-indicators');
+                if (indicatorsContainer) {
+                    const dots = indicatorsContainer.querySelectorAll('.indicator-dot');
+                    console.log('📱 Found', dots.length, 'indicator dots');
+                    
+                    // 添加一个测试按钮（仅调试）
+                    if (window.location.search.includes('debug')) {
+                        const testBtn = document.createElement('button');
+                        testBtn.textContent = 'Test Scroll to Image 2';
+                        testBtn.style.position = 'fixed';
+                        testBtn.style.top = '10px';
+                        testBtn.style.right = '10px';
+                        testBtn.style.zIndex = '999';
+                        testBtn.onclick = () => scrollToImageIndex(1);
+                        document.body.appendChild(testBtn);
+                    }
+                } else {
+                    console.log('📱 Error: indicators container not found');
+                }
+            }, 200);
+        }
     }, 100);
     
     // 窗口大小調整時重新初始化
@@ -563,14 +617,39 @@ document.addEventListener('DOMContentLoaded', function() {
     // isMobileDevice函數已在頂部定義
 
     function scrollToImageIndex(index) {
-        if (!imageStack || !isMobileDevice()) return;
+        console.log('📱 scrollToImageIndex called with index:', index);
+        
+        if (!imageStack) {
+            console.log('📱 Error: imageStack not found');
+            return;
+        }
+        
+        if (!isMobileDevice()) {
+            console.log('📱 Error: not mobile device');
+            return;
+        }
         
         const images = imageStack.querySelectorAll('img');
-        if (images.length === 0 || index < 0 || index >= images.length) return;
+        if (images.length === 0) {
+            console.log('📱 Error: no images found');
+            return;
+        }
+        
+        if (index < 0 || index >= images.length) {
+            console.log('📱 Error: index out of range:', index, 'images length:', images.length);
+            return;
+        }
         
         const container = imageStack.parentElement;
+        if (!container) {
+            console.log('📱 Error: container not found');
+            return;
+        }
+        
         const containerWidth = container.offsetWidth;
         const scrollLeft = index * containerWidth;
+        
+        console.log('📱 Container width:', containerWidth, 'Target scroll:', scrollLeft);
         
         // 立即更新指示器狀態和當前索引
         currentImageIndex = index;
@@ -582,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
             behavior: 'smooth'
         });
         
-        console.log('📱 Scrolled to image:', index + 1, 'ScrollLeft:', scrollLeft, 'ContainerWidth:', containerWidth);
+        console.log('📱 Successfully scrolled to image:', index + 1);
     }
 
     // 觸摸滑動功能

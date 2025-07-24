@@ -39,10 +39,14 @@ document.addEventListener('DOMContentLoaded', function() {
         swatch.addEventListener('click', function() {
             const newColorName = this.dataset.colorName;
             const newPrice = this.dataset.price;
+            const newSku = this.dataset.sku;
+            const newTitle = this.dataset.title;
+            const newMaterial = this.dataset.material;
 
             // 切換到對應的圖片組
-            if (imageGroups[newColorName]) {
-                currentColorGroup = newColorName;
+            const imageGroupKey = newColorName === 'RÜC' ? 'origin' : newColorName === 'BÜB' ? 'aether' : 'prism';
+            if (imageGroups[imageGroupKey]) {
+                currentColorGroup = imageGroupKey;
                 
                 // 立即重置圖片索引到第一張
                 currentImageIndex = 0;
@@ -51,8 +55,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 generateImageStack(currentColorGroup);
 
                 // 更新顯示文字
-                if (colorNameDisplay) colorNameDisplay.textContent = newColorName;
+                if (colorNameDisplay) colorNameDisplay.textContent = newMaterial;
                 if (priceDisplay) priceDisplay.textContent = newPrice;
+                
+                // 更新產品編號
+                const skuDisplay = document.getElementById('product-sku');
+                if (skuDisplay) skuDisplay.textContent = newSku;
+                
+                // 更新產品標題
+                const titleDisplay = document.getElementById('product-title');
+                if (titleDisplay) titleDisplay.textContent = newTitle;
 
                 // 更新 Wishlist 愛心狀態
                 updateWishlistHeart(currentColorGroup);

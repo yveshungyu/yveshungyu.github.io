@@ -2015,78 +2015,84 @@ document.addEventListener('DOMContentLoaded', function() {
             questions: [
                 {
                     id: 1,
-                    question: "When do you most often use aromatherapy diffusers?",
+                    question: "⏰🏠 When and where do you usually use aromatherapy diffusers?",
                     options: [
-                        { id: 'morning', text: '🌅 Morning time - Helps me wake up and start a great day', value: 'morning' },
-                        { id: 'work', text: '💼 Work focus - Enhance concentration and work efficiency', value: 'work' },
-                        { id: 'relax', text: '🏠 Home relaxation - After-work stress relief time', value: 'relax' },
-                        { id: 'sleep', text: '🌙 Bedtime preparation - Helps me relax and fall asleep', value: 'sleep' }
+                        { id: 'home_relax', text: '🏠 After work at home relaxation', value: 'home_relax' },
+                        { id: 'bedroom_sleep', text: '🛏️ Bedtime in bedroom for sleep aid', value: 'bedroom_sleep' },
+                        { id: 'office_work', text: '💼 Work time in office/study room', value: 'office_work' },
+                        { id: 'whole_home', text: '🏡 Throughout the entire home', value: 'whole_home' }
                     ]
                 },
                 {
                     id: 2,
-                    question: "What kind of feeling do you want aromatherapy to bring you?",
+                    question: "🎯 What effect do you most want to achieve through aromatherapy?",
                     options: [
-                        { id: 'calm', text: '✨ Calm & Relaxed - Stress relief, meditation, inner peace', value: 'calm' },
-                        { id: 'energetic', text: '⚡ Energetic & Vibrant - Refreshing, motivating, positive energy', value: 'energetic' },
-                        { id: 'focused', text: '🧘 Focused & Balanced - Concentration, mental tranquility', value: 'focused' },
-                        { id: 'cozy', text: '💕 Warm & Comfortable - Feeling of home, cozy atmosphere', value: 'cozy' }
+                        { id: 'relax_stress', text: '💆 Relaxation / Stress relief', value: 'relax_stress' },
+                        { id: 'focus_enhance', text: '🧠 Enhance focus', value: 'focus_enhance' },
+                        { id: 'sleep_help', text: '😴 Help with sleep', value: 'sleep_help' },
+                        { id: 'air_purify', text: '🌿 Air purification', value: 'air_purify' }
                     ]
                 },
                 {
                     id: 3,
-                    question: "Which scent profile appeals to you most?",
+                    question: "🌸 Which scent profile appeals to you most?",
                     options: [
-                        { id: 'fresh', text: '🌿 Fresh & Natural - Mint, eucalyptus, tea tree, lemon', value: 'fresh' },
-                        { id: 'floral', text: '🌸 Floral & Elegant - Lavender, rose, jasmine, orange blossom', value: 'floral' },
-                        { id: 'woody', text: '🌲 Woody & Grounding - Sandalwood, cedar, amber, patchouli', value: 'woody' },
-                        { id: 'citrus', text: '🍊 Citrus & Vibrant - Orange, bergamot, grapefruit, sweet orange', value: 'citrus' }
+                        { id: 'fresh', text: '🌿 Fresh & Natural (mint, eucalyptus, tea tree, lemon)', value: 'fresh' },
+                        { id: 'floral', text: '🌸 Floral & Elegant (lavender, rose, jasmine, orange blossom)', value: 'floral' },
+                        { id: 'woody', text: '🌲 Woody & Grounding (sandalwood, cedar, amber, patchouli)', value: 'woody' },
+                        { id: 'citrus', text: '🍊 Citrus & Vibrant (sweet orange, bergamot, grapefruit, orange)', value: 'citrus' }
                     ]
                 },
                 {
                     id: 4,
-                    question: "Which space do you primarily use the diffuser in?",
+                    question: "🎨 Which lifestyle best describes you?",
                     options: [
-                        { id: 'bedroom', text: '🛏️ Bedroom - Private resting space (15-20 sqm)', value: 'bedroom' },
-                        { id: 'living', text: '🛋️ Living room - Open public area (20-30 sqm)', value: 'living' },
-                        { id: 'office', text: '💼 Study/Office - Focused work space (10-15 sqm)', value: 'office' },
-                        { id: 'whole_home', text: '🏡 Entire home - Whole house aromatherapy (30+ sqm)', value: 'whole_home' }
+                        { id: 'natural', text: '🌱 Natural wellness advocate', value: 'natural' },
+                        { id: 'remote', text: '💻 Remote work from home', value: 'remote' },
+                        { id: 'efficient', text: '🎯 Efficiency expert', value: 'efficient' },
+                        { id: 'aesthetic', text: '🎨 Aesthetic lifestyle enthusiast', value: 'aesthetic' },
+                        { id: 'spiritual', text: '🧘 Mind‑body‑spirit explorer', value: 'spiritual' }
                     ]
                 },
                 {
                     id: 5,
-                    question: "Which lifestyle best describes you?",
+                    question: "💨 What intensity of aromatherapy do you prefer?",
                     options: [
-                        { id: 'natural', text: '🌱 Natural wellness advocate - Values organic, natural, eco-friendly', value: 'natural' },
-                        { id: 'remote', text: '💻 Remote work from home - Home-based work, needs focus & relaxation balance', value: 'remote' },
-                        { id: 'efficient', text: '🎯 Efficiency expert - Pursues high efficiency, simplicity, practicality', value: 'efficient' },
-                        { id: 'aesthetic', text: '🎨 Aesthetic lifestyle - Focus on taste, design, beauty', value: 'aesthetic' },
-                        { id: 'spiritual', text: '🧘 Mind-body-spirit explorer - Focus on meditation, yoga, spiritual growth', value: 'spiritual' }
+                        { id: 'light', text: '🪶 Light & Subtle', value: 'light' },
+                        { id: 'medium', text: '🌼 Medium & Moderate', value: 'medium' },
+                        { id: 'strong', text: '🌹 Rich & Intense', value: 'strong' },
+                        { id: 'adjustable', text: '🎛️ Adjustable', value: 'adjustable' }
                     ]
                 },
                 {
                     id: 6,
-                    question: "What is your preferred aromatherapy intensity?",
+                    question: "🎵 What type of music/playlist do you usually play?",
                     options: [
-                        { id: 'light', text: '🪶 Light & Subtle - Barely perceptible gentle fragrance', value: 'light' },
-                        { id: 'medium', text: '🌼 Medium & Moderate - Noticeable but not overwhelming', value: 'medium' },
-                        { id: 'strong', text: '🌹 Rich & Intense - Like obvious aromatic presence', value: 'strong' },
-                        { id: 'adjustable', text: '🎛️ Adjustable - Adjust according to mood and occasion', value: 'adjustable' }
+                        { id: 'lofi_chill', text: '🎧 Lo‑fi Chill / Relaxing vibes', value: 'lofi_chill' },
+                        { id: 'upbeat_pop', text: '🚀 Upbeat Pop / Energizing tunes', value: 'upbeat_pop' },
+                        { id: 'instrumental', text: '🎹 Instrumental Focus / Study music', value: 'instrumental' },
+                        { id: 'ambient_meditation', text: '🌌 Ambient Meditation / Mindful sounds', value: 'ambient_meditation' },
+                        { id: 'classical', text: '🎻 Classical / Orchestral music', value: 'classical' },
+                        { id: 'jazz_soul', text: '🎷 Jazz & Soul / Smooth rhythms', value: 'jazz_soul' },
+                        { id: 'electronic', text: '💽 Electronic / Digital beats', value: 'electronic' },
+                        { id: 'nature_sounds', text: '🌿 Nature sounds (birds, ocean waves)', value: 'nature_sounds' },
+                        { id: 'podcast', text: '🎙️ Podcast / Audio broadcasts', value: 'podcast' },
+                        { id: 'silence', text: '🤫 Silence / No sound', value: 'silence' }
                     ]
                 },
                 {
                     id: 7,
-                    question: "What do you most need AI aromatherapy to help you solve?",
+                    question: "🍂 What is your favorite season?",
                     options: [
-                        { id: 'sleep', text: '😴 Improve sleep - Deep sleep, quick sleep onset, sleep quality', value: 'sleep' },
-                        { id: 'purify', text: '🤧 Purify air - Antibacterial deodorization, fresh air, healthy environment', value: 'purify' },
-                        { id: 'focus', text: '🧠 Enhance focus - Work efficiency, memory, creativity', value: 'focus' },
-                        { id: 'stress', text: '💆 Stress relief - Anxiety relief, emotional balance, mental health', value: 'stress' }
+                        { id: 'spring', text: '🌸 Spring', value: 'spring' },
+                        { id: 'summer', text: '☀️ Summer', value: 'summer' },
+                        { id: 'autumn', text: '🍁 Autumn', value: 'autumn' },
+                        { id: 'winter', text: '❄️ Winter', value: 'winter' }
                     ]
                 },
                 {
                     id: 8,
-                    question: "Do you have any allergens or scents you dislike? (Optional)",
+                    question: "🚫 Do you have any scents you dislike or are allergic to? (Optional)",
                     type: 'text',
                     placeholder: "lavender, citrus, woody, floral",
                     note: "Optional: Enter in English, separate multiple items with commas. Leave blank if none. Common allergens: eucalyptus, peppermint, sandalwood, rose"
@@ -2430,10 +2436,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 'bergamot': ['Bergamot'],
                 'lemon': ['Lemon'],
                 'orange': ['Sweet Orange', 'Blood Orange'],
+                'sweet orange': ['Sweet Orange', 'Blood Orange'],
                 'jasmine': ['Jasmine'],
                 'vanilla': ['Vanilla'],
                 'cinnamon': ['Cinnamon'],
-                'ginger': ['Ginger']
+                'ginger': ['Ginger'],
+                'cedar': ['Cedarwood'],
+                'pine': ['Pine'],
+                'sage': ['Sage', 'Clary Sage'],
+                'chamomile': ['Chamomile', 'White Chamomile'],
+                'neroli': ['Neroli'],
+                'ylang ylang': ['Ylang Ylang'],
+                'geranium': ['Geranium'],
+                'frankincense': ['Frankincense'],
+                'myrrh': ['Myrrh'],
+                'patchouli': ['Patchouli'],
+                'thyme': ['Thyme'],
+                'basil': ['Basil'],
+                'rosemary': ['Rosemary'],
+                'cypress': ['Cypress'],
+                'juniper': ['Juniper']
             };
             
             const excludedIngredients = [];
@@ -2442,29 +2464,36 @@ document.addEventListener('DOMContentLoaded', function() {
             inputAllergens.forEach(allergen => {
                 if (allergenMap[allergen]) {
                     excludedIngredients.push(...allergenMap[allergen]);
+                } else {
+                    // Check for partial keyword matches
+                    Object.keys(allergenMap).forEach(key => {
+                        if (allergen.includes(key) || key.includes(allergen)) {
+                            excludedIngredients.push(...allergenMap[key]);
+                        }
+                    });
                 }
             });
             
-            return excludedIngredients;
+            return [...new Set(excludedIngredients)]; // Remove duplicates
         }
         
         calculatePersonalizedProfile(answers, allergens) {
-            // Base formula selection based on primary scent preference
-            const primaryCategory = answers[3]; // Question 3: scent profile
-            const needsPrimary = answers[7]; // Question 7: special needs
-            const feeling = answers[2]; // Question 2: expected feeling
-            const usage = answers[1]; // Question 1: usage time
-            const lifestyle = answers[5]; // Question 5: lifestyle
-            const intensity = answers[6]; // Question 6: intensity
-            const space = answers[4]; // Question 4: space
+            // New question mapping for 7-question structure
+            const usageSpace = answers[1]; // Question 1: 使用時機和空間
+            const targetEffect = answers[2]; // Question 2: 想達到的效果
+            const scentProfile = answers[3]; // Question 3: 香調偏好
+            const lifestyle = answers[4]; // Question 4: 生活風格
+            const intensity = answers[5]; // Question 5: 香氛強度
+            const musicStyle = answers[6]; // Question 6: 音樂偏好
+            const season = answers[7]; // Question 7: 季節偏好
             
             // Get available ingredients (excluding allergens)
             const availableIngredients = this.getAvailableIngredients(allergens);
             
-            // Calculate profile name
-            const profileName = this.generateProfileName(needsPrimary, primaryCategory);
+            // Calculate profile name based on effect and scent
+            const profileName = this.generateProfileName(targetEffect, scentProfile);
             
-            // Generate formula
+            // Generate formula considering all factors
             const formula = this.generateFormula(answers, availableIngredients);
             
             return {
@@ -2491,91 +2520,91 @@ document.addEventListener('DOMContentLoaded', function() {
             return available;
         }
         
-        generateProfileName(needs, scent) {
+        generateProfileName(effect, scent) {
             const profiles = {
-                'focus_fresh': { 
+                'focus_enhance_fresh': { 
                     name: 'FOCUS', 
                     subtitle: 'Ultra Focus Formula',
                     description: 'Cognitive Enhancement Complex'
                 },
-                'focus_floral': { 
+                'focus_enhance_floral': { 
                     name: 'BLOOM', 
                     subtitle: 'Floral Focus Formula',
                     description: 'Elegant Concentration Complex'
                 },
-                'focus_woody': { 
+                'focus_enhance_woody': { 
                     name: 'GROVE', 
                     subtitle: 'Grounded Focus Formula',
                     description: 'Forest Clarity Complex'
                 },
-                'focus_citrus': { 
+                'focus_enhance_citrus': { 
                     name: 'BURST', 
                     subtitle: 'Citrus Focus Formula',
                     description: 'Energetic Concentration Complex'
                 },
-                'sleep_fresh': { 
+                'sleep_help_fresh': { 
                     name: 'DRIFT', 
                     subtitle: 'Fresh Sleep Formula',
                     description: 'Clean Rest Complex'
                 },
-                'sleep_floral': { 
+                'sleep_help_floral': { 
                     name: 'DREAM', 
                     subtitle: 'Floral Sleep Formula',
                     description: 'Peaceful Slumber Complex'
                 },
-                'sleep_woody': { 
+                'sleep_help_woody': { 
                     name: 'NEST', 
                     subtitle: 'Woody Sleep Formula',
                     description: 'Grounding Rest Complex'
                 },
-                'sleep_citrus': { 
+                'sleep_help_citrus': { 
                     name: 'SUNSET', 
                     subtitle: 'Citrus Sleep Formula',
                     description: 'Gentle Evening Complex'
                 },
-                'purify_fresh': { 
+                'air_purify_fresh': { 
                     name: 'PURE', 
                     subtitle: 'Air Purification Formula',
                     description: 'Environmental Cleansing Complex'
                 },
-                'purify_floral': { 
+                'air_purify_floral': { 
                     name: 'BLOOM+', 
                     subtitle: 'Floral Purify Formula',
                     description: 'Elegant Purification Complex'
                 },
-                'purify_woody': { 
+                'air_purify_woody': { 
                     name: 'FOREST', 
                     subtitle: 'Woody Purify Formula',
                     description: 'Natural Cleansing Complex'
                 },
-                'purify_citrus': { 
+                'air_purify_citrus': { 
                     name: 'FRESH', 
                     subtitle: 'Citrus Purify Formula',
                     description: 'Zesty Cleansing Complex'
                 },
-                'stress_fresh': { 
+                'relax_stress_fresh': { 
                     name: 'CALM', 
                     subtitle: 'Fresh Relief Formula',
                     description: 'Stress Release Complex'
                 },
-                'stress_floral': { 
+                'relax_stress_floral': { 
                     name: 'PEACE', 
                     subtitle: 'Floral Relief Formula',
                     description: 'Tranquil Balance Complex'
                 },
-                'stress_woody': { 
+                'relax_stress_woody': { 
                     name: 'ZEN', 
                     subtitle: 'Woody Relief Formula',
                     description: 'Grounding Balance Complex'
                 },
-                'stress_citrus': { 
+                'relax_stress_citrus': { 
                     name: 'JOY', 
                     subtitle: 'Citrus Relief Formula',
                     description: 'Uplifting Balance Complex'
                 }
             };
             
-            const key = `${needs}_${scent}`;
+            const key = `${effect}_${scent}`;
             return profiles[key] || { 
                 name: 'CUSTOM', 
                 subtitle: 'Personalized Formula',
@@ -2584,30 +2613,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         generateFormula(answers, availableIngredients) {
-            const primaryCategory = answers[3];
-            const needsCategory = answers[7];
-            const feeling = answers[2];
-            const lifestyle = answers[5];
-            const intensity = answers[6];
+            const usageSpace = answers[1]; // 使用時機和空間
+            const targetEffect = answers[2]; // 想達到的效果
+            const scentProfile = answers[3]; // 香調偏好
+            const lifestyle = answers[4]; // 生活風格
+            const intensity = answers[5]; // 香氛強度
+            const musicStyle = answers[6]; // 音樂偏好
+            const season = answers[7]; // 季節偏好
             
-            // Start with base ingredients from primary category
-            const baseIngredients = this.selectBaseIngredients(primaryCategory, availableIngredients);
+            // Start with base ingredients from primary scent category
+            const baseIngredients = this.selectBaseIngredients(scentProfile, availableIngredients);
             
-            // Add functional ingredients based on needs
-            const functionalIngredients = this.selectFunctionalIngredients(needsCategory, availableIngredients);
+            // Add functional ingredients based on target effect
+            const functionalIngredients = this.selectFunctionalIngredients(targetEffect, availableIngredients);
             
-            // Add feeling-based ingredients
-            const feelingIngredients = this.selectFeelingIngredients(feeling, availableIngredients);
+            // Add usage space modifiers
+            const usageIngredients = this.selectUsageIngredients(usageSpace, availableIngredients);
             
             // Add lifestyle modifiers
             const lifestyleIngredients = this.selectLifestyleIngredients(lifestyle, availableIngredients);
+            
+            // Add music-based modifiers
+            const musicIngredients = this.selectMusicIngredients(musicStyle, availableIngredients);
+            
+            // Add seasonal modifiers
+            const seasonalIngredients = this.selectSeasonalIngredients(season, availableIngredients);
             
             // Combine and calculate percentages
             const combinedIngredients = this.combineIngredients([
                 ...baseIngredients,
                 ...functionalIngredients,
-                ...feelingIngredients,
-                ...lifestyleIngredients
+                ...usageIngredients,
+                ...lifestyleIngredients,
+                ...musicIngredients,
+                ...seasonalIngredients
             ]);
             
             // Apply intensity modifier
@@ -2639,18 +2678,18 @@ document.addEventListener('DOMContentLoaded', function() {
             return selected;
         }
         
-        selectFunctionalIngredients(needs, available) {
-            const needsMap = {
-                'focus': ['Rosemary', 'Lemon', 'Peppermint', 'Basil'],
-                'sleep': ['Lavender', 'Chamomile', 'Sandalwood', 'Marjoram'],
-                'purify': ['Tea Tree', 'Eucalyptus', 'Lemon', 'Thyme', 'Sage'],
-                'stress': ['Bergamot', 'Lavender', 'Neroli', 'Ylang Ylang', 'Marjoram']
+        selectFunctionalIngredients(targetEffect, available) {
+            const effectMap = {
+                'focus_enhance': ['Rosemary', 'Lemon', 'Peppermint', 'Basil'],
+                'sleep_help': ['Lavender', 'Chamomile', 'Sandalwood', 'Marjoram'],
+                'air_purify': ['Tea Tree', 'Eucalyptus', 'Lemon', 'Thyme', 'Sage'],
+                'relax_stress': ['Bergamot', 'Lavender', 'Neroli', 'Ylang Ylang', 'Marjoram']
             };
             
-            const targetIngredients = needsMap[needs] || [];
+            const targetIngredients = effectMap[targetEffect] || [];
             const selected = [];
             
-            // Find available ingredients from the needs list
+            // Find available ingredients from the effect list
             Object.keys(available).forEach(category => {
                 Object.keys(available[category]).forEach(ingredient => {
                     if (targetIngredients.includes(ingredient)) {
@@ -2667,15 +2706,15 @@ document.addEventListener('DOMContentLoaded', function() {
             return selected.slice(0, 3); // Limit to 3 functional ingredients
         }
         
-        selectFeelingIngredients(feeling, available) {
-            const feelingMap = {
-                'calm': ['Chamomile', 'White Chamomile', 'Violet', 'Marjoram'],
-                'energetic': ['Ginger', 'Black Pepper', 'Lemongrass', 'Blood Orange'],
-                'focused': ['Frankincense', 'Sage', 'Thyme', 'Juniper'],
-                'cozy': ['Vanilla', 'Cinnamon', 'Clove', 'Nutmeg']
+        selectUsageIngredients(usageSpace, available) {
+            const usageMap = {
+                'home_relax': ['Chamomile', 'Bergamot', 'Sweet Orange', 'Geranium'],
+                'bedroom_sleep': ['Lavender', 'Chamomile', 'Sandalwood', 'White Chamomile'],
+                'office_work': ['Rosemary', 'Peppermint', 'Lemon', 'Basil'],
+                'whole_home': ['Eucalyptus', 'Tea Tree', 'Sweet Orange', 'Lime']
             };
             
-            const targetIngredients = feelingMap[feeling] || [];
+            const targetIngredients = usageMap[usageSpace] || [];
             const selected = [];
             
             Object.keys(available).forEach(category => {
@@ -2685,7 +2724,67 @@ document.addEventListener('DOMContentLoaded', function() {
                             name: ingredient,
                             effect: available[category][ingredient].effect,
                             baseWeight: 8,
-                            source: 'feeling'
+                            source: 'usage'
+                        });
+                    }
+                });
+            });
+            
+            return selected.slice(0, 2);
+        }
+        
+        selectMusicIngredients(musicStyle, available) {
+            const musicMap = {
+                'lofi_chill': ['Lavender', 'Chamomile', 'Vanilla'],
+                'upbeat_pop': ['Sweet Orange', 'Grapefruit', 'Lemon'],
+                'instrumental': ['Frankincense', 'Sandalwood', 'Rosemary'],
+                'ambient_meditation': ['Sage', 'Myrrh', 'White Chamomile'],
+                'classical': ['Rose', 'Neroli', 'Bergamot'],
+                'jazz_soul': ['Ylang Ylang', 'Jasmine', 'Cardamom'],
+                'electronic': ['Peppermint', 'Eucalyptus', 'Lime'],
+                'nature_sounds': ['Pine', 'Cypress', 'Tea Tree'],
+                'podcast': ['Basil', 'Thyme', 'Lemongrass'],
+                'silence': ['Marjoram', 'Violet', 'Clary Sage']
+            };
+            
+            const targetIngredients = musicMap[musicStyle] || [];
+            const selected = [];
+            
+            Object.keys(available).forEach(category => {
+                Object.keys(available[category]).forEach(ingredient => {
+                    if (targetIngredients.includes(ingredient)) {
+                        selected.push({
+                            name: ingredient,
+                            effect: available[category][ingredient].effect,
+                            baseWeight: 5,
+                            source: 'music'
+                        });
+                    }
+                });
+            });
+            
+            return selected.slice(0, 1);
+        }
+        
+        selectSeasonalIngredients(season, available) {
+            const seasonMap = {
+                'spring': ['Jasmine', 'Rose', 'Lemon', 'Neroli'],
+                'summer': ['Sweet Orange', 'Lime', 'Grapefruit', 'Lemongrass'],
+                'autumn': ['Cinnamon', 'Clove', 'Nutmeg', 'Ginger'],
+                'winter': ['Pine', 'Frankincense', 'Myrrh', 'Cedarwood']
+            };
+            
+            const targetIngredients = seasonMap[season] || [];
+            const selected = [];
+            
+            Object.keys(available).forEach(category => {
+                Object.keys(available[category]).forEach(ingredient => {
+                    if (targetIngredients.includes(ingredient)) {
+                        selected.push({
+                            name: ingredient,
+                            effect: available[category][ingredient].effect,
+                            baseWeight: 6,
+                            source: 'seasonal'
                         });
                     }
                 });
@@ -2811,7 +2910,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <div style="background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%); border-radius: 15px; padding: 25px; margin-bottom: 25px;">
                     <div style="text-align: center; margin-bottom: 20px;">
-                        <h3 style="margin: 0 0 5px 0; font-size: 20px; color: #333;">【Main Function Formula】- ${profile.name} ${profile.subtitle}</h3>
+                        <h3 style="margin: 0 0 5px 0; font-size: 20px; color: #333;">Main Function Formula - ${profile.name} ${profile.subtitle}</h3>
                         <p style="margin: 0; font-size: 14px; color: #666;">🧠 ${profile.description}</p>
                     </div>
                     
@@ -2827,7 +2926,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div style="background: #f8f8f8; border-radius: 10px; padding: 20px; text-align: center;">
-                    <h4 style="margin: 0 0 10px 0; color: #333;">【Monthly Optimization Promise】</h4>
+                    <h4 style="margin: 0 0 10px 0; color: #333;">Monthly Optimization Promise</h4>
                     <p style="margin: 0; font-size: 14px; color: #666; line-height: 1.5;">✨ ÔDÔRAI will continuously learn and improve your exclusive formula</p>
                 </div>
                 

@@ -1347,8 +1347,8 @@ body {
     }
     
     .image-stack img {
-        flex: 0 0 100%; /* 每張圖片佔據完整容器寬度 */
-        width: 100%; /* 每張圖片寬度等於容器寬度 */
+        flex: 0 0 25%; /* 每張圖片佔據容器的25% */
+        width: 25%; /* 每張圖片寬度為容器的25%，即視口的100% */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -1496,8 +1496,8 @@ body {
     }
     
     .image-stack img {
-        flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
-        width: 100%; /* 每張圖片寬度等於容器寬度 */
+        flex: 0 0 25%; /* 每張圖片佔據容器的25% */
+        width: 25%; /* 每張圖片寬度為容器的25%，即視口的100% */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -1619,8 +1619,8 @@ body {
     }
     
     .image-stack img {
-        flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
-        width: 100%; /* 每張圖片寬度等於容器寬度 */
+        flex: 0 0 25%; /* 每張圖片佔據容器的25% */
+        width: 25%; /* 每張圖片寬度為容器的25%，即視口的100% */
         height: 100%;
         object-fit: contain;
         object-position: center;
@@ -1709,8 +1709,8 @@ body {
     }
     
     .image-stack img {
-        flex: 0 0 auto; /* 不收縮，根據設置的寬度顯示 */
-        width: 100%; /* 每張圖片寬度等於容器寬度 */
+        flex: 0 0 25%; /* 每張圖片佔據容器的25% */
+        width: 25%; /* 每張圖片寬度為容器的25%，即視口的100% */
         height: 100%;
         object-fit: contain;
         object-position: center;

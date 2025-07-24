@@ -260,21 +260,6 @@ document.addEventListener('DOMContentLoaded', function() {
             img.alt = `ÔDÔRAI AI Diffuser ${colorGroup} ${index + 1}`;
             img.loading = 'lazy'; // 延遲載入優化性能
             
-            // 第一張圖片加載完成後確保位置正確
-            if (index === 0 && isMobileDevice()) {
-                img.onload = function() {
-                    const container = imageStack.parentElement;
-                    if (container) {
-                        setTimeout(() => {
-                            container.scrollLeft = 0;
-                            container.scrollTo({ left: 0, behavior: 'auto' });
-                            currentImageIndex = 0;
-                            updateIndicators(0);
-                        }, 50);
-                    }
-                };
-            }
-            
             imageStack.appendChild(img);
         });
         
@@ -587,19 +572,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.offsetWidth;
         const scrollLeft = index * containerWidth;
         
-        // 立即更新指示器狀態
+        // 立即更新指示器狀態和當前索引
         currentImageIndex = index;
         updateIndicators(index);
         
-        // 確保容器有滑動動畫
-        container.style.scrollBehavior = 'smooth';
-        
+        // 滑動到目標位置
         container.scrollTo({
             left: scrollLeft,
             behavior: 'smooth'
         });
         
-        console.log('📱 Scrolled to image:', index, 'ScrollLeft:', scrollLeft);
+        console.log('📱 Scrolled to image:', index + 1, 'ScrollLeft:', scrollLeft, 'ContainerWidth:', containerWidth);
     }
 
     // 觸摸滑動功能

@@ -151,8 +151,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateCartBadge();
                 }, 300);
                 
-                // 获取當前選中的顏色名稱
-                const colorName = currentColorGroup.charAt(0).toUpperCase() + currentColorGroup.slice(1);
+                // 获取當前選中的產品代號
+                const selectedSwatch = document.querySelector('.color-swatch.selected');
+                const productCode = selectedSwatch ? selectedSwatch.dataset.colorName : 'PRODUCT';
                 
                 // 显示优化的成功动画（僅桌面端）
                 if (!isMobileDevice()) {
@@ -162,9 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 显示成功通知（手機端簡化版）
                 setTimeout(() => {
                     if (isMobileDevice()) {
-                        alert(`${colorName} DIFFUSER added to cart!`);
+                        alert(`ÔFFUSER ${productCode} added to cart!`);
                     } else {
-                        showSuccessNotification(`${colorName} DIFFUSER added to cart!`, cartItemCount);
+                        showSuccessNotification(`ÔFFUSER ${productCode} added to cart!`, cartItemCount);
                     }
                 }, 200);
                 
@@ -1556,8 +1557,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(tooltip);
         
         const tooltipMessages = {
-            '.color-swatch': 'Click to change diffuser color',
-            '.btn-primary': 'Add this diffuser to your cart',
+            '.color-swatch': 'Click to change ÔFFUSER Materials',
+            '.btn-primary': 'Add this ÔFFUSER to your cart',
             '.fa-heart': 'Add to wishlist',
             '.info-header': 'Click to view details',
             '.mobile-search-input': 'Search for products',
@@ -3031,18 +3032,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => {
                     updateCartBadge();
                 }, 300);
-                const colorName = window.currentColorGroup.charAt(0).toUpperCase() + window.currentColorGroup.slice(1);
+                // 获取當前選中的產品代號
+                const selectedSwatch = document.querySelector('.color-swatch.selected');
+                const productCode = selectedSwatch ? selectedSwatch.dataset.colorName : 'PRODUCT';
                 showEnhancedSuccessAnimation(button);
                 setTimeout(() => {
-                    showSuccessNotification(`${colorName} DIFFUSER added to cart!`, window.cartItemCount);
+                    showSuccessNotification(`ÔFFUSER ${productCode} added to cart!`, window.cartItemCount);
                 }, 200);
             }, 800);
         } else if (button && isMobileDevice()) {
             // 手機端簡化版，只更新數據
             window.cartItemCount = (window.cartItemCount || 0) + 1;
             updateCartBadge();
-            const colorName = window.currentColorGroup.charAt(0).toUpperCase() + window.currentColorGroup.slice(1);
-            alert(`${colorName} DIFFUSER added to cart!`);
+            // 获取當前選中的產品代號
+            const selectedSwatch = document.querySelector('.color-swatch.selected');
+            const productCode = selectedSwatch ? selectedSwatch.dataset.colorName : 'PRODUCT';
+            alert(`ÔFFUSER ${productCode} added to cart!`);
         }
     }
 
@@ -3154,8 +3159,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 cartItemCount++;
                 updateCartBadge();
                 
-                const colorName = currentColorGroup.charAt(0).toUpperCase() + currentColorGroup.slice(1);
-                alert(`${colorName} DIFFUSER added to cart!`);
+                                    // 获取當前選中的產品代號  
+                    const selectedSwatch = document.querySelector('.color-swatch.selected');
+                    const productCode = selectedSwatch ? selectedSwatch.dataset.colorName : 'PRODUCT';
+                    alert(`ÔFFUSER ${productCode} added to cart!`);
             });
         }
         

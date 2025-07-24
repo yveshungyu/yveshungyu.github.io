@@ -1371,11 +1371,11 @@ body {
         gap: 8px;
         z-index: 10;
         pointer-events: auto;
-        /* 移除背景色和邊框 */
         background-color: transparent;
-        padding: 0;
-        border-radius: 0;
-        backdrop-filter: none;
+        padding: 8px 12px;
+        border-radius: 16px;
+        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.2);
     }
     
     .indicator-dot {
@@ -1785,21 +1785,35 @@ body {
         pointer-events: none !important;
     }
     
-    /* 禁用所有動畫和過渡效果 */
-    *,
-    *::before,
-    *::after {
+    /* 禁用大部分動畫但保留必要的過渡效果 */
+    .particles-container,
+    .breathing-glow,
+    .mouse-follower,
+    .mouse-follower-primary,
+    .mouse-follower-secondary,
+    .interaction-particle,
+    .click-ripple,
+    .enhanced-ripple,
+    .particle,
+    .particle.large,
+    .particle.medium,
+    .floating-icon {
         animation-duration: 0s !important;
         animation-delay: 0s !important;
-        transition-duration: 0s !important;
-        transition-delay: 0s !important;
     }
     
-    /* 但保留必要的按鈕和指示器過渡效果 */
+    /* 保留必要的UI過渡效果 */
     .btn,
     .color-swatch,
-    .indicator-dot {
-        transition: background-color 0.2s ease !important;
+    .indicator-dot,
+    .info-header,
+    .section-header {
+        transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease !important;
+    }
+    
+    /* 保留图片容器的滚动动画 */
+    .product-image-container {
+        scroll-behavior: smooth !important;
     }
     
     /* 禁用所有hover效果 */
@@ -1867,12 +1881,12 @@ body {
         display: none !important;
     }
     
-    /* 確保指示器始終顯示且固定在圖片底部 */
+    /* 確保指示器在移動端正確顯示 */
     .mobile-image-indicators {
-        display: none !important; /* 手機端不再顯示指示器點 */
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
     }
-    
-    /* 移除指示器點樣式 */
     
     /* 確保測驗彈窗在手機端正常顯示 */
     #scent-quiz-modal,

@@ -76,16 +76,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 強制重置到第一張圖片（所有設備）
                 resetImageIndex();
                 
-                // 額外確保移動端位置正確
+                // 確保移動端位置重置
                 if (isMobileDevice()) {
                     setTimeout(() => {
-                        const container = imageStack?.parentElement;
-                        if (container) {
-                            container.scrollLeft = 0;
-                            container.scrollTo({ left: 0, behavior: 'auto' });
-                            updateIndicators(0);
-                        }
-                    }, 100);
+                        resetImageIndex();
+                    }, 50);
                 }
                 
                 // 滾動回頂部
@@ -286,63 +281,69 @@ document.addEventListener('DOMContentLoaded', function() {
         // 生成移動端指示器（固定為4個）
         generateMobileIndicators(4);
         
-        // 圖片生成後立即重置位置（特別是第一張圖片）
+        // 簡化移動端圖片位置重置
         if (isMobileDevice()) {
             const container = imageStack.parentElement;
             if (container) {
-                // 確保圖片索引重置
                 currentImageIndex = 0;
-                
-                // 立即重置位置，不等待
                 container.style.scrollBehavior = 'auto';
                 container.scrollLeft = 0;
                 
-                // 強制重置到開始位置
                 setTimeout(() => {
-                    container.scrollLeft = 0;
-                    container.scrollTo({ left: 0, behavior: 'auto' });
-                    container.scrollTo(0, container.scrollTop);
-                    
-                    // 更新指示器到第一個
                     updateIndicators(0);
-                    
-                    console.log('📱 Images generated - forced to first image');
-                    
-                    // 恢復smooth滑動動畫
-                    setTimeout(() => {
-                        container.style.scrollBehavior = 'smooth';
-                    }, 100);
-                }, 10);
-                
-                // 額外保障，再次檢查位置
-                setTimeout(() => {
-                    if (container.scrollLeft !== 0) {
-                        container.scrollLeft = 0;
-                        container.scrollTo({ left: 0, behavior: 'auto' });
-                        console.log('📱 Additional reset performed');
-                    }
-                }, 200);
+                    container.style.scrollBehavior = 'smooth';
+                    console.log('📱 Images generated and reset to first image');
+                }, 50);
             }
         }
     }
     
     // 生成移動端指示器 - 始終生成4個點
     function generateMobileIndicators(imageCount) {
-        // 手機端不再顯示指示器點
         const indicatorsContainer = document.getElementById('mobile-indicators');
-        if (indicatorsContainer && isMobileDevice()) {
-            indicatorsContainer.style.display = 'none';
+        if (!indicatorsContainer) return;
+        
+        if (isMobileDevice()) {
+            indicatorsContainer.style.display = 'flex';
             indicatorsContainer.innerHTML = '';
+            
+            // 生成指示器點
+            for (let i = 0; i < 4; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 0) dot.classList.add('active');
+                
+                // 添加點擊事件
+                dot.addEventListener('click', () => {
+                    scrollToImageIndex(i);
+                });
+                
+                indicatorsContainer.appendChild(dot);
+            }
+        } else {
+            indicatorsContainer.style.display = 'none';
         }
     }
     
-    // 更新指示器狀態 - 手機端不再需要
+    // 更新指示器狀態
     function updateIndicators(activeIndex) {
         if (!isMobileDevice()) return; // 只在移動端更新指示器
         
-        // 手機端不再顯示指示器點，只更新當前圖片索引
         currentImageIndex = activeIndex;
         console.log('📱 Current image index:', activeIndex);
+        
+        // 更新指示器點的活跃状态
+        const indicatorsContainer = document.getElementById('mobile-indicators');
+        if (indicatorsContainer) {
+            const dots = indicatorsContainer.querySelectorAll('.indicator-dot');
+            dots.forEach((dot, index) => {
+                if (index === activeIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
     }
     
 
@@ -358,44 +359,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 確保移動端從第一張圖片開始
         if (isMobileDevice()) {
-            // 立即重置位置
-            const container = imageStack?.parentElement;
-            if (container) {
-                container.scrollLeft = 0;
-                container.style.scrollBehavior = 'auto';
-            }
-            
-            // 延遲確保位置正確
             setTimeout(() => {
                 resetImageIndex();
             }, 100);
-            
-            // 額外確保位置穩定
-            setTimeout(() => {
-                if (container) {
-                    container.scrollLeft = 0;
-                    container.scrollTo({ left: 0, behavior: 'auto' });
-                    updateIndicators(0);
-                }
-            }, 300);
         }
     }
     
-    // 立即初始化位置（防止第一張圖片顯示問題）
-    const immediateInit = () => {
-        const container = document.querySelector('.product-image-container');
-        if (container && isMobileDevice()) {
-            container.scrollLeft = 0;
-            container.style.scrollBehavior = 'auto';
-        }
-    };
-    
-    // 立即執行一次
-    immediateInit();
-    
-    // 延遲初始化
+    // 初始化圖片
     setTimeout(() => {
-        immediateInit(); // 再次確保位置正確
         initializeImages();
     }, 100);
     
@@ -652,29 +623,21 @@ document.addEventListener('DOMContentLoaded', function() {
         touchEndX = e.touches[0].clientX;
         const touchEndY = e.touches[0].clientY;
         
-        // 檢測滑動方向
+        // 簡化滑動檢測
         const touchDiffX = Math.abs(touchEndX - touchStartX);
         const touchDiffY = Math.abs(touchEndY - touchStartY);
         
-        // 判斷主要滑動方向
-        const isHorizontalSwipe = touchDiffX > touchDiffY && touchDiffX > 15;
-        const isVerticalSwipe = touchDiffY > touchDiffX && touchDiffY > 15;
-        
-        // 只有在明確的水平滑動且在圖片區域內時才處理
-        if (isHorizontalSwipe && !isVerticalSwipe) {
+        // 只有在明確的水平滑動且距離足夠時才處理
+        if (touchDiffX > 30 && touchDiffX > touchDiffY * 1.5) {
             const rect = imageStack.getBoundingClientRect();
             const touchY = e.touches[0].clientY;
             
             // 確保觸摸點在圖片容器內
             if (touchY >= rect.top && touchY <= rect.bottom) {
                 isScrolling = true;
-                e.preventDefault(); // 只在圖片區域內阻止默認行為
-                console.log('📱 Horizontal swipe detected in image area');
+                e.preventDefault();
+                console.log('📱 Horizontal swipe detected');
             }
-        } else if (isVerticalSwipe) {
-            // 垂直滑動時確保不阻礙頁面滾動
-            isScrolling = false;
-            console.log('📱 Vertical swipe detected - allowing page scroll');
         }
     }
 
@@ -793,57 +756,31 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isMobileDevice()) {
             const container = imageStack?.parentElement;
             if (container) {
-                // 強制重置位置，多重保障
+                // 简化重置逻辑
                 container.style.scrollBehavior = 'auto';
                 container.scrollLeft = 0;
-                
-                // 使用多種方式確保位置重置
-                container.scrollTo({ left: 0, behavior: 'auto' });
-                container.scrollTo(0, container.scrollTop);
                 
                 // 更新指示器
                 updateIndicators(0);
                 
-                // 再次確認位置
+                // 恢复smooth滚动
                 setTimeout(() => {
-                    if (container.scrollLeft !== 0) {
-                        container.scrollLeft = 0;
-                        console.log('📱 Force reset scroll position');
-                    }
                     container.style.scrollBehavior = 'smooth';
-                }, 50);
+                }, 100);
                 
                 console.log('📱 Image index reset completed');
             }
         }
     }
     
-    // 頁面完全加載後的最終檢查（確保第一張圖片正確顯示）
+    // 頁面完全加載後的最終檢查
     window.addEventListener('load', function() {
-        // 確保初始化時圖片索引為0
         currentImageIndex = 0;
         
         if (isMobileDevice()) {
             setTimeout(() => {
-                const container = document.querySelector('.product-image-container');
-                if (container) {
-                    container.style.scrollBehavior = 'auto';
-                    container.scrollLeft = 0;
-                    container.scrollTo({ left: 0, behavior: 'auto' });
-                    
-                    // 強制更新指示器
-                    updateIndicators(0);
-                    
-                    // 確保圖片索引同步
-                    currentImageIndex = 0;
-                    
-                    console.log('📱 Page loaded - Reset to first image');
-                    
-                    // 恢復smooth滾動
-                    setTimeout(() => {
-                        container.style.scrollBehavior = 'smooth';
-                    }, 50);
-                }
+                resetImageIndex();
+                console.log('📱 Page loaded - Mobile images initialized');
             }, 100);
         }
     });

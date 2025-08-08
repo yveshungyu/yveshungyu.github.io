@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>ÔDÔRAI Products - AI Driven Personal Aromatherapist</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- 3D Model Viewer Web Component -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+        /* 3D Model Modal */
+        #model-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10050;
+            backdrop-filter: blur(4px);
+        }
+        #model-modal {
+            position: relative;
+            width: min(90vw, 1100px);
+            height: min(80vh, 800px);
+            background: #111;
+            border-radius: 14px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        #model-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            background: rgba(0,0,0,0.5);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+        #product-model {
+            width: 100%;
+            height: 100%;
+            --poster-color: transparent;
+        }
+        @media (max-width: 768px) {
+            #model-modal { width: 95vw; height: 70vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- Breathing Glow Background -->
+    <div class="breathing-glow"></div>
+    
+    <!-- Particles Container -->
+    <div class="particles-container" id="particles-container"></div>
+
+    <div class="container">
+        <header class="main-header">
+            <div class="header-left">
+                <a href="index.html" class="header-nav" title="Home"><i class="fas fa-home"></i> <span>Home</span></a>
+            </div>
+            <a href="index.html" class="logo" title="ÔDÔRAI Home">ÔDÔRAI</a>
+            <div class="header-right">
+                <a href="#" class="btn-subscribe d-none-mobile" title="">Subscription</a>
+                <a href="#" class="d-none-mobile" title="">Contact Us</a>
+                <a href="#" title=""><i class="fas fa-user"></i></a>
+                <a href="#" class="cart-icon-wrapper" title="">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Mobile Search Bar removed -->
+
+        <main class="product-grid">
+            <div class="product-image-container">
+                <div class="image-stack" id="image-stack">
+                    <!-- 圖片會動態生成 -->
+                </div>
+                <div class="mobile-image-indicators" id="mobile-indicators">
+                    <!-- 指示器會動態生成 -->
+                </div>
+                
+                <!-- Floating Background Icons -->
+                <div class="parallax-element floating-icon" style="top: 15%; left: 10%;">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="parallax-element floating-icon" style="top: 60%; right: 15%;">
+                    <i class="fas fa-spa"></i>
+                </div>
+                <div class="parallax-element floating-icon" style="top: 80%; left: 20%;">
+                    <i class="fas fa-wind"></i>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <div class="product-info-content">
+                    <p class="product-sku" id="product-sku">PMAL721</p>
+                <div class="product-title-header">
+        <h1 class="product-title" id="product-title">ÔFFUSER RÜC - AI Driven Personal Aromatherapist</h1>
+        <i class="far fa-heart" id="wishlist-heart"></i>
+    </div>
+    <p class="product-price" id="product-price">$ 599.00</p>
+
+    <div class="color-selector">
+        <div class="color-label">
+            <span>Materials</span>
+            <span class="color-name" id="color-name">Rock</span>
+        </div>
+        <div class="color-swatches">
+            <div class="color-swatch selected" 
+                 data-main-image="images/diffuser-main.png" 
+                 data-color-name="RÜC" 
+                 data-price="$ 599.00"
+                 data-sku="PMAL721"
+                 data-title="ÔFFUSER RÜC - AI Driven Personal Aromatherapist"
+                 data-material="Rock">
+                 <img src="images/swatch-origin.jpg" alt="Color Swatch RÜC">
+            </div>
+            <div class="color-swatch" 
+                 data-main-image="images/diffuser-aether.png" 
+                 data-color-name="BÜB" 
+                 data-price="$ 629.00"
+                 data-sku="PMAL722"
+                 data-title="ÔFFUSER BÜB - AI Driven Personal Aromatherapist"
+                 data-material="TPU">
+                 <img src="images/swatch-aether.jpg" alt="Color Swatch BÜB">
+            </div>
+            <div class="color-swatch" 
+                 data-main-image="images/diffuser-prism.png" 
+                 data-color-name="ALÜN" 
+                 data-price="$ 649.00"
+                 data-sku="PMAL723"
+                 data-title="ÔFFUSER ALÜN - AI Driven Personal Aromatherapist"
+                 data-material="Aluminium">
+                 <img src="images/swatch-prism.jpg" alt="Color Swatch ALÜN">
+            </div>
+        </div>
+    </div>
+
+
+
+                <div class="action-buttons">
+                    <a href="#" class="btn btn-primary" id="place-in-cart">Place in Cart</a>
+                    <a href="#" class="contact-advisor">Contact an Advisor</a>
+                </div>
+
+                <p class="delivery-info">Complimentary Standard Delivery or Collect-in-Store.</p>
+
+                <div class="product-description collapsed">
+                    <p>Evoking the poetics of breath and presence, ÔDÔRAI recognizes scent as the primordial language. Within its quiet, sculptural form lies its true emotion recognition and spatial behavior. This intelligent diffuser weaves personalized aromas into daily rituals, inspired by biophilic designs, ÔDÔRAI's presence forges a living dialogue between humans and nature.</p>
+                    <a href="#" class="read-more" id="read-more-btn">Read more</a>
+                </div>
+                <div class="info-sections">
+                    <div class="info-item expandable">
+                        <div class="info-header">
+                            <span>Sustainability</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="info-content">
+                            <p>ÔDÔRAI is committed to sustainable practices through eco-friendly materials and responsible manufacturing. Our diffusers are crafted with recyclable components and energy-efficient technology, minimizing environmental impact while maximizing aromatic experiences.</p>
+                        </div>
+                    </div>
+                    <div class="info-item expandable">
+                        <div class="info-header">
+                            <span>Product Care</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="info-content">
+                            <p>To maintain optimal performance, clean your ÔDÔRAI diffuser weekly with a soft, damp cloth. Use only ÔDÔRAI certified essential oils and replace filters every 3 months. Store in a cool, dry place when not in use.</p>
+                        </div>
+                    </div>
+                    <div class="info-item expandable">
+                        <div class="info-header">
+                            <span>In-Store Service</span>
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="info-content">
+                            <p>Visit our flagship stores for personalized scent consultations, device setup assistance, and exclusive in-store experiences. Our aromatherapy specialists provide customized recommendations based on your lifestyle and preferences.</p>
+                        </div>
+                    </div>
+                    <div class="info-item arrow" id="delivery-returns-trigger">
+                        <div class="info-header">
+                            <span>Delivery & Returns</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    <div class="info-item arrow" id="gifting-trigger">
+                        <div class="info-header">
+                            <span>Gifting</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 3D Model Modal -->
+        <div id="model-modal-overlay" aria-hidden="true">
+            <div id="model-modal" role="dialog" aria-label="3D Model Viewer">
+                <button id="model-close" aria-label="Close 3D Model">✕</button>
+                <model-viewer id="product-model"
+                              src=""
+                              ar
+                              ar-modes="webxr scene-viewer quick-look"
+                              camera-controls
+                              auto-rotate
+                              auto-rotate-delay="0"
+                              camera-orbit="auto auto auto"
+                              camera-target="auto"
+                              bounds="tight"
+                              exposure="1.1"
+                              environment-image="neutral"
+                              shadow-intensity="0.7"
+                              touch-action="pan-y"
+                              interaction-prompt="none"
+                              style="background: linear-gradient(180deg,#0b0b0b,#151515)">
+                </model-viewer>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Delivery & Returns Sidebar -->
+    <div class="sidebar delivery-sidebar" id="delivery-sidebar">
+        <div class="sidebar-header">
+            <h2>Delivery & Returns</h2>
+            <button class="sidebar-close" id="delivery-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="section-item">
+                <div class="section-header">
+                    <span>Delivery Options</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="section-details">
+                    <p>• Standard Delivery (3-5 business days): Complimentary</p>
+                    <p>• Express Delivery (1-2 business days): $15</p>
+                    <p>• Same-Day Delivery (select cities): $25</p>
+                    <p>• International Shipping: Available to 50+ countries</p>
+                </div>
+            </div>
+            <div class="section-item">
+                <div class="section-header">
+                    <span>Return Policy</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="section-details">
+                    <p>• 30-day return window for all products</p>
+                    <p>• Free returns for ÔDÔRAI members</p>
+                    <p>• Products must be in original condition</p>
+                    <p>• Personalized scents cannot be returned</p>
+                </div>
+            </div>
+            <div class="section-item">
+                <div class="section-header">
+                    <span>Order Tracking</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="section-details">
+                    <p>• Real-time tracking via SMS and email</p>
+                    <p>• Delivery notifications with photo confirmation</p>
+                    <p>• Track orders in your ÔDÔRAI account</p>
+                    <p>• Customer service available 24/7</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gifting Sidebar -->
+    <div class="sidebar gifting-sidebar" id="gifting-sidebar">
+        <div class="sidebar-header">
+            <h2>Gifting</h2>
+            <button class="sidebar-close" id="gifting-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-content">
+            <div class="section-item">
+                <div class="section-header">
+                    <span>Gift Wrapping</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="section-details">
+                    <p>• Complimentary luxury gift wrapping</p>
+                    <p>• Personalized gift messages</p>
+                    <p>• Premium ÔDÔRAI gift boxes</p>
+                    <p>• Eco-friendly wrapping options</p>
+                </div>
+            </div>
+            <div class="section-item">
+                <div class="section-header">
+                    <span>Gift Cards</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="section-details">
+                    <p>• Digital gift cards from $50 to $1000</p>
+                    <p>• No expiration date</p>
+                    <p>• Instant email delivery</p>
+                    <p>• Custom gift card designs available</p>
+                </div>
+            </div>
+            <div class="section-item">
+                <div class="section-header">
+                    <span>Corporate Gifting</span>
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="section-details">
+                    <p>• Bulk ordering discounts available</p>
+                    <p>• Custom corporate branding</p>
+                    <p>• Dedicated account management</p>
+                    <p>• Flexible delivery scheduling</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="navigation.js"></script>
+    <script>
+        // Pre-select product before page renders
+        (function() {
+            const selectedProductData = sessionStorage.getItem('selectedProduct');
+            
+            if (selectedProductData) {
+                try {
+                    const productSelection = JSON.parse(selectedProductData);
+                    const { index, product } = productSelection;
+                    
+                    console.log(`📦 Pre-selecting product from homepage: ${product.name}`);
+                    
+                    // Store the target index for immediate use
+                    window.targetProductIndex = index;
+                    window.targetProduct = product;
+                    
+                } catch (error) {
+                    console.error('Error parsing product selection:', error);
+                }
+            }
+        })();
+
+        // Apply selection immediately when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectedProductData = sessionStorage.getItem('selectedProduct');
+            
+            if (selectedProductData && window.targetProductIndex !== undefined) {
+                // Clear the stored selection
+                sessionStorage.removeItem('selectedProduct');
+                
+                // Simply trigger the click on the correct swatch to let the main script handle everything
+                const colorSwatches = document.querySelectorAll('.color-swatch');
+                
+                const selectedIndex = window.targetProductIndex;
+                const selectedProductName = window.targetProduct?.name || '';
+                if (colorSwatches && colorSwatches[selectedIndex]) {
+                    console.log(`📦 Auto-clicking swatch ${selectedIndex} for ${selectedProductName}`);
+                    
+                    // Wait for script.js to fully load, then trigger the swatch click
+                    setTimeout(() => {
+                        const swatchesNow = document.querySelectorAll('.color-swatch');
+                        const target = swatchesNow[selectedIndex];
+                        if (target && typeof target.click === 'function') {
+                            target.click();
+                            console.log(`✅ Successfully triggered swatch selection for ${selectedProductName}`);
+                        } else {
+                            console.warn('⚠️ Target swatch not found when attempting auto-click');
+                        }
+                        
+                        // Scroll to product section
+                        setTimeout(() => {
+                            const productSection = document.querySelector('.product-grid');
+                            if (productSection) {
+                                productSection.scrollIntoView({ 
+                                    behavior: 'smooth', 
+                                    block: 'start' 
+                                });
+                            }
+                        }, 500);
+                        // Clean up globals only after work done
+                        delete window.targetProductIndex;
+                        delete window.targetProduct;
+                    }, 900); // ensure script.js and listeners ready
+                }
+                
+                // If not found, still clean after a while
+                setTimeout(() => {
+                    delete window.targetProductIndex;
+                    delete window.targetProduct;
+                }, 2000);
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+    <script>
+        // Handle opening 3D model when clicking the first product image of current selection
+        (function initModelModal(){
+            const overlay = document.getElementById('model-modal-overlay');
+            const closeBtn = document.getElementById('model-close');
+            const model = document.getElementById('product-model');
+            const imageStack = document.getElementById('image-stack');
+
+            if (!overlay || !closeBtn || !model || !imageStack) return;
+
+            const materialToGlb = {
+                'RÜC': 'RUC.glb',
+                'BÜB': 'BUB.glb',
+                'ALÜN': 'ALUN.glb'
+            };
+
+            function getCurrentMaterial() {
+                const selected = document.querySelector('.color-swatch.selected');
+                // Map display names to keys
+                const name = selected ? selected.dataset.colorName : 'RÜC';
+                if (name === 'RÜC') return 'RÜC';
+                if (name === 'BÜB') return 'BÜB';
+                if (name === 'ALÜN' || name === 'ALÜN ') return 'ALÜN';
+                return 'RÜC';
+            }
+
+            function showModel() {
+                const material = getCurrentMaterial();
+                const file = materialToGlb[material] || 'RUC.glb';
+                console.log('🔧 Opening 3D model:', material, file);
+                
+                // Models are now under ./images/
+                const modelPath = `images/${file}`;
+                console.log('📁 Model path:', modelPath);
+                
+                model.setAttribute('src', modelPath);
+                model.setAttribute('camera-controls', '');
+                model.setAttribute('auto-rotate', '');
+                model.setAttribute('environment-image', 'neutral');
+                model.setAttribute('tone-mapping', 'neutral');
+                model.setAttribute('shadow-intensity', '1');
+                model.setAttribute('shadow-softness', '1');
+                model.setAttribute('exposure', '1');
+                model.setAttribute('ar', '');
+                model.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
+                // Remove any existing poster to prevent blocking
+                model.removeAttribute('poster');
+                
+                const onLoad = ()=>{
+                    console.log('✅ 3D model loaded successfully');
+                    // Reset camera to good defaults
+                    model.cameraOrbit = 'auto auto auto';
+                    model.cameraTarget = 'auto';
+                    model.fieldOfView = '30deg';
+                    // Ensure proper lighting
+                    model.exposure = '1.1';
+                    model.shadowIntensity = '0.7';
+                    console.log('📷 Camera and lighting configured');
+                };
+                
+                const onError = (e) => {
+                    console.error('❌ Failed to load 3D model:', e);
+                    console.error('📍 Model path that failed:', modelPath);
+                };
+                
+                model.addEventListener('load', onLoad, { once: true });
+                model.addEventListener('error', onError, { once: true });
+                
+                overlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                overlay.setAttribute('aria-hidden', 'false');
+                console.log('🔄 Modal opened, loading model...');
+            }
+
+            function hideModel() {
+                overlay.style.display = 'none';
+                document.body.style.overflow = '';
+                overlay.setAttribute('aria-hidden', 'true');
+                // release GPU resource by resetting src after a tick
+                const current = model.getAttribute('src');
+                model.removeAttribute('src');
+                setTimeout(()=> model.setAttribute('src', current), 0);
+            }
+
+            // Delegate click: if click falls within first image bounds, open
+            imageStack.addEventListener('click', (e) => {
+                console.log('🖱️ Image stack clicked');
+                const imgs = imageStack.querySelectorAll('img');
+                console.log('🖼️ Found images:', imgs.length);
+                if (!imgs.length) return;
+                const first = imgs[0];
+                const targetImg = e.target.closest('img');
+                console.log('🎯 Target image:', targetImg === first ? 'first image' : 'other image');
+                if (targetImg === first) {
+                    console.log('✅ Clicked on first image, opening 3D model');
+                    e.preventDefault();
+                    showModel();
+                    return;
+                }
+                const rect = first.getBoundingClientRect();
+                const x = e.clientX, y = e.clientY;
+                console.log('📍 Click coordinates:', x, y, 'First image bounds:', rect);
+                if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                    console.log('✅ Click within first image bounds, opening 3D model');
+                    e.preventDefault();
+                    showModel();
+                } else {
+                    console.log('❌ Click outside first image bounds');
+                }
+            });
+
+            // Also allow double-click anywhere on image stack to open
+            imageStack.addEventListener('dblclick', (e)=>{
+                e.preventDefault();
+                showModel();
+            });
+
+            // Close handlers
+            overlay.addEventListener('click', (e)=>{
+                if (e.target === overlay) hideModel();
+                else e.stopPropagation();
+            });
+            closeBtn.addEventListener('click', hideModel);
+            document.addEventListener('keydown', (e)=>{
+                if (e.key === 'Escape') hideModel();
+            });
+
+            // Preload models lightly to warm cache
+            ['RUC.glb','BUB.glb','ALUN.glb'].forEach(f => {
+                const link = document.createElement('link');
+                link.rel = 'prefetch';
+                link.href = `images/${f}`;
+                document.head.appendChild(link);
+            });
+        })();
+    </script>
+
+</body>
+</html>

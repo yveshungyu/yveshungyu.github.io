@@ -1785,91 +1785,56 @@ body {
         pointer-events: none !important;
     }
     
-    /* 禁用所有動畫和過渡效果 */
-    *,
-    *::before,
-    *::after {
+    /* 精確禁用桌面端動畫效果，保留必要的UI過渡 */
+    .particles-container *,
+    .breathing-glow,
+    .mouse-follower *,
+    .interaction-particle,
+    .click-ripple,
+    .enhanced-ripple {
         animation-duration: 0s !important;
         animation-delay: 0s !important;
         transition-duration: 0s !important;
         transition-delay: 0s !important;
     }
     
-    /* 但保留必要的按鈕和指示器過渡效果 */
+    /* 保留必要的UI過渡效果 */
     .btn,
     .color-swatch,
-    .indicator-dot {
-        transition: background-color 0.2s ease !important;
+    .indicator-dot,
+    .info-content,
+    .section-details,
+    .sidebar,
+    .sidebar-overlay {
+        transition: all 0.3s ease !important;
     }
     
-    /* 禁用所有hover效果 */
-    *:hover,
-    *:focus,
-    *:active {
-        transform: none !important;
-        box-shadow: none !important;
-        filter: none !important;
-        background-color: inherit !important;
-        color: inherit !important;
-        border-color: inherit !important;
-        opacity: inherit !important;
-        scale: none !important;
+    /* 使用@media (hover: none)為觸摸設備提供適當的反饋 */
+    @media (hover: none) and (pointer: coarse) {
+        /* 為觸摸設備提供:active狀態而非hover */
+        .btn:active,
+        .color-swatch:active,
+        .header-nav:active,
+        .cart-icon-wrapper:active {
+            transform: scale(0.95) !important;
+            opacity: 0.8 !important;
+        }
     }
     
-    /* 具體禁用按鈕hover效果 */
-    .btn:hover,
-    .btn:focus,
-    .btn:active,
-    .color-swatch:hover,
-    .color-swatch:focus,
-    .color-swatch:active,
-    button:hover,
-    button:focus,
-    button:active,
-    .info-header:hover,
-    .info-header:focus,
-    .info-header:active,
-    .section-header:hover,
-    .section-header:focus,
-    .section-header:active,
-    .contact-advisor:hover,
-    .contact-advisor:focus,
-    .contact-advisor:active,
-    .header-nav:hover,
-    .header-nav:focus,
-    .header-nav:active,
-    .cart-icon-wrapper:hover,
-    .cart-icon-wrapper:focus,
-    .cart-icon-wrapper:active,
-    .fa-heart:hover,
-    .fa-heart:focus,
-    .fa-heart:active {
-        transform: none !important;
-        scale: none !important;
-        box-shadow: none !important;
-        filter: none !important;
-        background-color: inherit !important;
-        color: inherit !important;
-        border-color: inherit !important;
-        opacity: inherit !important;
-        text-decoration: none !important;
-    }
-    
-    /* 禁用偽元素hover效果 */
-    .btn:hover::after,
-    .btn:focus::after,
-    .btn:active::after,
-    .contact-advisor:hover::after,
-    .contact-advisor:focus::after,
-    .contact-advisor:active::after {
-        width: 0 !important;
-        opacity: 0 !important;
-        display: none !important;
-    }
-    
-    /* 確保指示器始終顯示且固定在圖片底部 */
+    /* 恢復手機端圖片指示器顯示 */
     .mobile-image-indicators {
-        display: none !important; /* 手機端不再顯示指示器點 */
+        display: flex !important;
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        gap: 8px;
+        z-index: 10;
+        pointer-events: auto;
+        background-color: transparent;
+        padding: 0;
+        border-radius: 0;
+        backdrop-filter: none;
     }
     
     /* 移除指示器點樣式 */

@@ -12,6 +12,1679 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 10-Section Homepage Styles */
+        
+        /* Common Section Styles */
+        section[class^="section-"] {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-content {
+            width: 100%;
+            max-width: 1920px;
+            padding: 0 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            height: 100%;
+        }
+
+        /* Section 1: Hero Carousel - 1098px @ 1920px width */
+        .section-1 {
+            height: calc(100vw * (1098 / 1920));
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-carousel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-carousel-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            cursor: pointer;
+            filter: url(#heroLiquid);
+        }
+
+        .hero-carousel-image.active {
+            opacity: 1;
+        }
+
+        .hero-overlay-content {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Reveal on scroll */
+        .reveal-init {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 700ms ease, transform 700ms ease;
+            will-change: opacity, transform;
+        }
+        .reveal-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Tilt */
+        .tilt-on-hover {
+            transform-style: preserve-3d;
+            transition: transform 160ms ease;
+            will-change: transform;
+        }
+
+        /* Magnetic buttons */
+        .magnetic {
+            position: relative;
+            display: inline-block;
+            will-change: transform;
+            transition: transform 120ms ease;
+        }
+
+        /* Video progress */
+        .video-container { position: relative; }
+        .video-progress {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            overflow: hidden;
+        }
+        .video-progress-fill {
+            width: 0%; height: 100%;
+            background: #ff6b00;
+            transition: width 80ms linear;
+        }
+
+        /* Back to top */
+        #back-to-top {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 44px; height: 44px;
+            display: none;
+            align-items: center; justify-content: center;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            z-index: 10000;
+            backdrop-filter: blur(6px);
+            cursor: pointer;
+        }
+        #back-to-top.show { display: flex; }
+
+        .launch-announcement {
+            text-align: center;
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+            pointer-events: all;
+        }
+
+        .launch-text {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .shop-now-link {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #fff;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .shop-now-link:hover {
+            color: #e0e0e0;
+            text-decoration: underline;
+        }
+
+        .carousel-click-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+            cursor: pointer;
+        }
+
+        /* Carousel Indicators */
+        .carousel-indicators {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 15;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: #fff;
+            transform: scale(1.2);
+        }
+
+        /* Section 2: Brand Introduction - 1080px @ 1920px width */
+        .section-2 {
+            height: calc(100vw * (1080 / 1920));
+            min-height: 500px;
+            background-image: url('images/section2.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-2-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .section-2-title {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: 8rem;
+            font-weight: 400;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Section 3: Product Showcase - 1623px @ 1920px width */
+        .section-3 {
+            height: calc(100vw * (1623 / 1920));
+            min-height: 800px;
+            background: #f8f9fa;
+            position: relative;
+        }
+
+        .section-3-text-content {
+            position: absolute;
+            top: calc(100vw * (300 / 1920));
+            left: 0;
+            width: 100%;
+            padding: 0 60px;
+            z-index: 2; /* ensure above bottom images */
+        }
+
+        .section-3-description {
+            max-width: 1920px;
+            margin: 0 auto;
+            text-align: center;
+            pointer-events: none; /* prevent accidental hit test with images */
+        }
+
+        .section-3-line1,
+        .section-3-line2,
+        .section-3-line3,
+        .section-3-line4 {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (48 / 1920));
+            font-weight: 400;
+            color: #000;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        /* Prevent overlap between bottom images and the paragraph above */
+        .section-3-line3,
+        .section-3-line4 {
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-3-line1 {
+            margin-bottom: 0;
+        }
+
+        .section-3-line2 {
+            margin-bottom: calc(100vw * (48 / 1920)); /* Empty line spacing */
+        }
+
+        .section-3-line3 {
+            margin-bottom: 0;
+        }
+
+        .section-3-line4 {
+            margin-bottom: 0;
+        }
+
+        .spatial-scents {
+            color: #ff0000;
+        }
+
+        .section-3-products {
+            position: absolute;
+            bottom: 0;
+            left: calc(100vw * (210 / 1920));
+            right: calc(100vw * (210 / 1920));
+            height: calc(100vw * (740 / 1920));
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: end; /* stick children to the bottom */
+            padding-bottom: 0;
+            gap: 40px;
+        }
+
+        .transparent-product-image {
+            width: auto;
+            height: calc(100% - var(--img-lift, calc(100vw * (80 / 1920))));
+            max-height: calc(100% - var(--img-lift, calc(100vw * (80 / 1920))));
+            display: block;
+            object-fit: contain;
+            align-self: end;
+            margin-bottom: var(--img-lift, calc(100vw * (80 / 1920)));
+        }
+
+        .section-3-product-left,
+        .section-3-product-right {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .section-3-product-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* center column content near bottom as images */
+        }
+
+        .section-3-product-center {
+            text-align: center;
+            padding: 0 40px;
+            margin-bottom: calc(100vw * (420 / 1920)); /* lift text */
+        }
+
+        .product-center-line1 {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (16 / 1920));
+            color: #000;
+            margin: 0 0 8px 0;
+        }
+
+        .product-center-line2 {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (48 / 1920));
+            color: #000;
+            margin: 0 0 8px 0;
+            font-weight: 400;
+        }
+
+        .product-center-line3 {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (10 / 1920));
+            color: #000;
+            margin: 0 0 16px 0;
+            background: #fff;
+            border: 1px solid #000;
+            border-radius: calc(100vw * (8 / 1920));
+            padding: calc(100vw * (8 / 1920)) calc(100vw * (16 / 1920));
+            display: inline-block;
+        }
+
+        .product-center-line4 {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (20 / 1920));
+            color: #ff6600;
+            margin: 0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .product-center-line4:hover {
+            color: #ff4400;
+        }
+
+        /* Section 4: Data Analysis - 1080px @ 1920px width */
+        .section-4 {
+            height: calc(100vw * (1080 / 1920));
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-4-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .section-4-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .section-4-title {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (48 / 1920));
+            color: #fff;
+            margin: 0 0 calc(100vw * (40 / 1920)) 0;
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .data-image {
+            max-width: calc(100vw * (1650 / 1920));
+            height: auto;
+            margin-bottom: calc(100vw * (40 / 1920));
+            min-width: 200px;
+        }
+
+        .section-4-text {
+            color: #fff;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-4-description {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (20 / 1920));
+            color: #fff;
+            margin: 0 0 calc(100vw * (120 / 1920)) 0;
+            line-height: 1.4;
+            font-weight: 400;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .section-4-learn-more {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (10 / 1920));
+            color: #fff;
+            margin: 0;
+            font-weight: 400;
+            background: #ff6600;
+            padding: calc(100vw * (12 / 1920)) calc(100vw * (24 / 1920));
+            border-radius: calc(100vw * (12 / 1920));
+            display: inline-block;
+        }
+
+        /* Section 5: Advertisement Videos - 1150px @ 1920px width */
+        .section-5 {
+            height: calc(100vw * (1150 / 1920));
+            min-height: 700px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-5-content {
+            position: absolute;
+            top: calc(100vw * (78 / 1920));
+            left: 0;
+            right: 0;
+            height: calc(100% - calc(100vw * (78 / 1920)));
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: calc(100vw * (40 / 1920));
+            padding: 0;
+        }
+
+        .video-container {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 0;
+            transform: translateZ(0);
+            transition: transform 300ms ease, box-shadow 300ms ease;
+        }
+
+        .video-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(255,255,255,0.08);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .video-container::after {
+            content: '';
+            position: absolute;
+            top: -150%;
+            left: -50%;
+            width: 60%;
+            height: 400%;
+            background: linear-gradient(120deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.25) 45%, rgba(255,255,255,0.0) 100%);
+            transform: rotate(15deg);
+            opacity: 0;
+            transition: opacity 300ms ease, transform 800ms ease;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .video-container:hover {
+            transform: scale(1.04);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .video-container:hover::after, .video-container.hovering::after {
+            opacity: 1;
+            transform: translateY(20%) rotate(15deg);
+        }
+
+        .video-container.center-video {
+            margin: 0 calc(100vw * (20 / 1920));
+        }
+
+        .advertise-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(1.05) contrast(1.05);
+        }
+
+        /* Audio-reactive bar overlay */
+        .audio-bars {
+            position: absolute;
+            left: 12px;
+            bottom: 12px;
+            height: 30px;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .audio-bar {
+            width: 3px;
+            height: 10px;
+            background: linear-gradient(180deg, #ff8a00, #ff3d00);
+            border-radius: 2px;
+            opacity: 0.9;
+            transform: scaleY(0.6);
+            transform-origin: bottom;
+            transition: transform 80ms linear;
+        }
+
+        /* Section 6: Custom Scent Profile Quiz - 1150px @ 1920px width */
+        .section-6 {
+            height: calc(100vw * (1150 / 1920));
+            min-height: 700px;
+            background: #000;
+            color: #fff;
+        }
+
+        .section-6-content {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 calc(100vw * (60 / 1920));
+        }
+
+        .quiz-intro-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(100vw * (80 / 1920));
+            width: 100%;
+            max-width: calc(100vw * (1200 / 1920));
+            align-items: center;
+        }
+
+        .quiz-text-content {
+            text-align: left;
+        }
+
+        .quiz-main-title {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (48 / 1920));
+            color: #fff;
+            margin: 0 0 calc(100vw * (30 / 1920)) 0;
+            font-weight: 400;
+        }
+
+        .quiz-description {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (18 / 1920));
+            color: #ccc;
+            margin: 0 0 calc(100vw * (40 / 1920)) 0;
+            line-height: 1.5;
+        }
+
+        .start-quiz-btn {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (16 / 1920));
+            background: #ff6600;
+            color: #fff;
+            border: none;
+            padding: calc(100vw * (16 / 1920)) calc(100vw * (40 / 1920));
+            border-radius: calc(100vw * (12 / 1920));
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.3s ease;
+            font-weight: 400;
+        }
+
+        .start-quiz-btn:hover {
+            background: #ff4400;
+            transform: translateY(-2px);
+        }
+
+        .quiz-visual-content {
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-preview-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: calc(100vw * (30 / 1920));
+            width: 100%;
+        }
+
+        .quiz-preview-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: calc(100vw * (30 / 1920));
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: calc(100vw * (16 / 1920));
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .quiz-preview-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .preview-icon {
+            font-size: calc(100vw * (32 / 1920));
+            margin-bottom: calc(100vw * (16 / 1920));
+        }
+
+        .quiz-preview-item span {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (14 / 1920));
+            color: #fff;
+            font-weight: 400;
+        }
+
+        /* Quiz Content Styles */
+        .quiz-content-section {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: calc(100vw * (120 / 1920)) calc(100vw * (60 / 1920)) calc(100vw * (60 / 1920));
+            max-width: calc(100vw * (1400 / 1920));
+            margin: 0 auto;
+            min-height: calc(100vw * (1150 / 1920));
+            box-sizing: border-box;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: calc(100vw * (40 / 1920));
+        }
+
+        .quiz-question-title {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (16 / 1920));
+            color: #ccc;
+            margin: 0 0 calc(100vw * (20 / 1920)) 0;
+        }
+
+        .quiz-progress-bar {
+            width: 100%;
+            height: calc(100vw * (8 / 1920));
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: calc(100vw * (4 / 1920));
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background: #ff6600;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-question-content {
+            text-align: center;
+            margin-bottom: calc(100vw * (40 / 1920));
+        }
+
+        .quiz-question-text {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (32 / 1920));
+            color: #fff;
+            margin: 0 0 calc(100vw * (40 / 1920)) 0;
+            line-height: 1.4;
+            max-width: calc(100vw * (1200 / 1920));
+            white-space: nowrap;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, calc(100vw * (380 / 1920)));
+            gap: calc(100vw * (25 / 1920));
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: calc(100vw * (12 / 1920));
+            padding: calc(100vw * (25 / 1920));
+            color: #fff;
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (18 / 1920));
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-height: calc(100vw * (80 / 1920));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(100vw * (380 / 1920));
+            box-sizing: border-box;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .quiz-option.selected {
+            background: rgba(255, 102, 0, 0.2);
+            border-color: #ff6600;
+        }
+
+        /* Navigation styles removed - auto advance on selection */
+
+        /* Quiz Results Styles - Match Product Page */
+        .quiz-results-section {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(100vw * (60 / 1920));
+            padding-top: calc(100vw * (160 / 1920));
+            box-sizing: border-box;
+            min-height: calc(100vw * (1150 / 1920));
+        }
+
+        .results-content {
+            max-width: calc(100vw * (800 / 1920));
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: calc(100vw * (15 / 1920));
+            padding: calc(100vw * (30 / 1920));
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: calc(100vw * (25 / 1920));
+        }
+
+        .results-icon {
+            font-size: calc(100vw * (32 / 1920));
+            margin-bottom: calc(100vw * (10 / 1920));
+        }
+
+        .results-title {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (24 / 1920));
+            color: #333;
+            margin: 0;
+        }
+
+        .results-profile-section {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%);
+            border-radius: calc(100vw * (12 / 1920));
+            padding: calc(100vw * (25 / 1920));
+            margin-bottom: calc(100vw * (20 / 1920));
+        }
+
+        .results-profile-title {
+            text-align: center;
+            margin-bottom: calc(100vw * (15 / 1920));
+        }
+
+        .results-profile-name {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (20 / 1920));
+            color: #333;
+            margin: 0 0 calc(100vw * (5 / 1920)) 0;
+        }
+
+        .results-profile-desc {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (14 / 1920));
+            color: #666;
+            margin: 0;
+        }
+
+        .results-formula-container {
+            background: white;
+            border-radius: calc(100vw * (10 / 1920));
+            padding: calc(100vw * (20 / 1920));
+        }
+
+        .results-ingredient {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(100vw * (8 / 1920)) 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .results-ingredient:last-child {
+            border-bottom: none;
+        }
+
+        .results-ingredient-name {
+            font-family: 'NCTTorin', sans-serif;
+            font-weight: 600;
+            color: #333;
+            font-size: calc(100vw * (14 / 1920));
+        }
+
+        .results-ingredient-percentage {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (12 / 1920));
+            color: #666;
+            margin-left: calc(100vw * (8 / 1920));
+        }
+
+        .results-ingredient-effect {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (11 / 1920));
+            color: #888;
+        }
+
+        .results-ai-balance {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(100vw * (12 / 1920)) 0;
+            border-top: 2px solid #ff6600;
+            margin-top: calc(100vw * (10 / 1920));
+        }
+
+        .results-ai-balance-text {
+            font-family: 'NCTTorin', sans-serif;
+            font-weight: 600;
+            color: #ff6600;
+            font-size: calc(100vw * (14 / 1920));
+        }
+
+        .results-promise {
+            background: #f8f8f8;
+            border-radius: calc(100vw * (10 / 1920));
+            padding: calc(100vw * (20 / 1920));
+            text-align: center;
+            margin-bottom: calc(100vw * (20 / 1920));
+        }
+
+        .results-promise-title {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (16 / 1920));
+            color: #333;
+            margin: 0 0 calc(100vw * (10 / 1920)) 0;
+        }
+
+        .results-promise-text {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (14 / 1920));
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .results-buttons {
+            display: flex;
+            justify-content: center;
+            gap: calc(100vw * (15 / 1920));
+        }
+
+        .results-restart-btn, .results-save-btn {
+            font-family: 'NCTTorin', sans-serif;
+            font-size: calc(100vw * (16 / 1920));
+            border: none;
+            padding: calc(100vw * (15 / 1920)) calc(100vw * (30 / 1920));
+            border-radius: calc(100vw * (25 / 1920));
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 600;
+        }
+
+        .results-restart-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: #666;
+            border: 2px solid #ddd;
+        }
+
+        .results-restart-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .results-save-btn {
+            background: #ff6600;
+            color: #fff;
+        }
+
+        .results-save-btn:hover {
+            background: #ff4400;
+        }
+
+        /* Section 7: White Background - 940px @ 1920px width */
+        .section-7 {
+            height: calc(100vw * (940 / 1920));
+            min-height: 500px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-7-content {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .section-7-text {
+            max-width: calc(100vw * (1200 / 1920));
+            color: #000;
+            font-family: 'NCTTorin', sans-serif;
+            text-align: center;
+        }
+
+        /* Dynamic text reveal */
+        .split-line span {
+            display: inline-block;
+            transform: translateY(36px) scale(0.98);
+            opacity: 0;
+            filter: blur(3px);
+            transition: transform 700ms cubic-bezier(.2,.8,.2,1), opacity 700ms ease, filter 700ms ease;
+            will-change: transform, opacity;
+        }
+        .split-line.revealed span {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            filter: blur(0px);
+        }
+
+        .section-7-line1 {
+            font-size: calc(100vw * (48 / 1920));
+            margin: 0 0 calc(100vw * (48 / 1920)) 0;
+            line-height: 1.3;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .section-7-line2 {
+            font-size: calc(100vw * (48 / 1920));
+            margin: 0 0 calc(100vw * (12 / 1920)) 0;
+            line-height: 1.3;
+            white-space: nowrap;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section-7-line3 {
+            font-size: calc(100vw * (48 / 1920));
+            margin: 0 0 calc(100vw * (48 / 1920)) 0;
+            line-height: 1.3;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .section-7-line4 {
+            font-size: calc(100vw * (48 / 1920));
+            margin: 0;
+            line-height: 1.3;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* Section 8: Customer Experience - 1080px @ 1920px width */
+        .section-8 {
+            height: calc(100vw * (1080 / 1920));
+            min-height: 600px;
+            background: #fff;
+        }
+
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 3rem;
+        }
+
+        .experience-item {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .experience-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .experience-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #e8f5e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .experience-icon i {
+            font-size: 2rem;
+            color: #4caf50;
+        }
+
+        /* Section 9: Call to Action - 1156px @ 1920px width */
+        .section-9 {
+            height: calc(100vw * (1156 / 1920));
+            min-height: 650px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+        }
+
+        .cta-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #fff;
+        }
+
+        .cta-description {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #667eea;
+        }
+
+        .btn-primary:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #fff;
+            color: #667eea;
+        }
+
+        .floating-products {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .floating-product {
+            max-width: 150px;
+            height: auto;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease;
+        }
+
+        .floating-product:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+
+        /* Section 10: Footer */
+        .section-10 {
+            background: #2c3e50;
+            color: #fff;
+            padding: 60px 0 30px 0;
+            min-height: 400px;
+        }
+
+        .footer-content {
+            max-width: 1920px;
+            padding: 0 60px;
+            width: 100%;
+        }
+
+        .footer-main {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 60px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-column a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 30px;
+            border-top: 1px solid #34495e;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-social a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #34495e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .footer-social a:hover {
+            background: #3498db;
+        }
+
+        .footer-legal-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-legal-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-legal-links a:hover {
+            color: #fff;
+        }
+
+        /* Particle System Styles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .section-content {
+                padding: 0 20px;
+            }
+            
+            /* Hero Carousel Mobile Styles */
+            .hero-overlay-content {
+                bottom: 30px;
+            }
+            
+            .launch-announcement {
+                padding: 0;
+                margin: 0;
+            }
+            
+            .launch-text {
+                font-size: 0.8rem;
+                margin-bottom: 0.3rem;
+                letter-spacing: 0.5px;
+            }
+            
+            .shop-now-link {
+                font-size: 0.8rem;
+                text-underline-offset: 2px;
+            }
+            
+            .carousel-indicators {
+                bottom: 20px;
+                gap: 10px;
+            }
+            
+            .carousel-dot {
+                width: 6px;
+                height: 6px;
+            }
+            
+            /* Mobile uses same responsive height calculation */
+            
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .section-2-title {
+                font-size: 4rem;
+                letter-spacing: 2px;
+            }
+            
+            .cta-title {
+                font-size: 2.5rem;
+            }
+            
+            /* Section 3 mobile adjustments */
+            .section-3-text-content {
+                top: 40px;
+                padding: 0 20px;
+            }
+            
+            .section-3-line1,
+            .section-3-line2,
+            .section-3-line3,
+            .section-3-line4 {
+                font-size: 24px;
+            }
+            
+            .section-3-line2 {
+                margin-bottom: 24px;
+            }
+
+            /* Section 3 products mobile adjustments */
+            .section-3-products {
+                top: calc(40px + 24px * 4 + 100px);
+                left: 20px;
+                right: 20px;
+                grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .section-3-product-center {
+                order: -1;
+                padding: 0 20px;
+            }
+
+            .product-center-line1 {
+                font-size: 12px;
+            }
+
+            .product-center-line2 {
+                font-size: 32px;
+            }
+
+            .product-center-line3 {
+                font-size: 8px;
+                border-radius: 6px;
+                padding: 6px 12px;
+                margin-bottom: 12px;
+            }
+
+            .product-center-line4 {
+                font-size: 16px;
+            }
+
+            .transparent-product-image {
+                max-width: 250px;
+            }
+
+            /* Section 4 mobile styles */
+            .section-4-title {
+                font-size: 32px;
+                margin-bottom: 30px;
+            }
+
+            .data-image {
+                max-width: 90%;
+                margin-bottom: 30px;
+            }
+
+            .section-4-description {
+                font-size: 16px;
+                margin-bottom: 70px;
+                padding: 0 20px;
+                white-space: normal;
+            }
+
+            .section-4-learn-more {
+                font-size: 12px;
+                padding: 10px 20px;
+                border-radius: 10px;
+            }
+
+            /* Section 5 mobile styles */
+            .section-5-content {
+                top: 50px;
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 0;
+                height: calc(100% - 50px);
+            }
+
+            .video-container {
+                height: 300px;
+            }
+
+            .video-container.center-video {
+                margin: 0 20px;
+            }
+
+            /* Section 6 mobile styles */
+            .section-6-content {
+                padding: 0 20px;
+            }
+
+            .quiz-intro-section {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
+            }
+
+            .quiz-text-content {
+                text-align: center;
+            }
+
+            .quiz-main-title {
+                font-size: 36px;
+                margin-bottom: 20px;
+            }
+
+            .quiz-description {
+                font-size: 16px;
+                margin-bottom: 30px;
+            }
+
+            .start-quiz-btn {
+                font-size: 16px;
+                padding: 14px 32px;
+                border-radius: 10px;
+            }
+
+            .quiz-preview-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+
+            .quiz-preview-item {
+                padding: 20px 15px;
+                border-radius: 12px;
+            }
+
+            .preview-icon {
+                font-size: 24px;
+                margin-bottom: 12px;
+            }
+
+            .quiz-preview-item span {
+                font-size: 12px;
+            }
+
+            /* Quiz content mobile styles */
+            .quiz-content-section {
+                padding: 30px 20px;
+            }
+
+            .quiz-question-title {
+                font-size: 14px;
+                margin-bottom: 15px;
+            }
+
+            .quiz-progress-bar {
+                height: 6px;
+                border-radius: 3px;
+            }
+
+            .quiz-question-text {
+                font-size: 20px;
+                margin-bottom: 25px;
+                white-space: normal;
+                max-width: 100%;
+            }
+
+            .quiz-options {
+                grid-template-columns: 1fr !important;
+                gap: 15px;
+                max-width: 100%;
+            }
+
+            .quiz-option {
+                padding: 15px;
+                font-size: 14px;
+                border-radius: 8px;
+                min-height: 60px;
+                width: 100% !important;
+            }
+
+            /* Navigation styles removed - auto advance on selection */
+
+            /* Results mobile styles */
+            .quiz-results-section {
+                padding: 40px 20px;
+                padding-top: 90px;
+                min-height: 100vh;
+            }
+
+            .results-content {
+                padding: 25px 20px;
+                border-radius: 12px;
+            }
+
+            .results-title {
+                font-size: 20px;
+                margin: 0;
+            }
+
+            .results-icon {
+                font-size: 28px;
+                margin-bottom: 8px;
+            }
+
+            .results-profile-section {
+                padding: 20px;
+                border-radius: 10px;
+                margin-bottom: 15px;
+            }
+
+            .results-profile-name {
+                font-size: 16px;
+                margin-bottom: 5px;
+            }
+
+            .results-profile-desc {
+                font-size: 12px;
+            }
+
+            .results-formula-container {
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .results-ingredient {
+                padding: 6px 0;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .results-ingredient-name {
+                font-size: 12px;
+            }
+
+            .results-ingredient-percentage {
+                font-size: 11px;
+                margin-left: 5px;
+            }
+
+            .results-ingredient-effect {
+                font-size: 10px;
+            }
+
+            .results-ai-balance {
+                padding: 10px 0;
+                margin-top: 8px;
+            }
+
+            .results-ai-balance-text {
+                font-size: 12px;
+            }
+
+            .results-promise {
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+            }
+
+            .results-promise-title {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+
+            .results-promise-text {
+                font-size: 12px;
+            }
+
+            .results-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .results-restart-btn, .results-save-btn {
+                font-size: 14px;
+                padding: 12px 25px;
+                border-radius: 20px;
+            }
+
+            /* Section 7 mobile styles */
+            .section-7-line1,
+            .section-7-line2,
+            .section-7-line3,
+            .section-7-line4 {
+                font-size: 28px;
+                margin-bottom: 30px;
+                white-space: normal;
+                text-align: center;
+            }
+
+            .section-7-line2 {
+                margin-bottom: 8px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .section-7-line4 {
+                margin-bottom: 0;
+            }
+
+            /* Stack grids vertically on mobile */
+            .tech-focus,
+            .app-showcase {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .lifestyle-grid,
+            .experience-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .brand-features,
+            .sustainability-stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .app-features {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .floating-products {
+                flex-wrap: wrap;
+            }
+            
+            .footer-main {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .footer-links {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -24,13 +1697,20 @@
     <!-- Particles Container -->
     <div class="particles-container" id="particles-container"></div>
 
+    <!-- SVG Filters for Hero Shader Transition -->
+    <svg width="0" height="0" style="position:absolute">
+        <filter id="heroLiquid" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence id="heroTurb" type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="7" result="noise"/>
+            <feDisplacementMap id="heroDisp" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+    </svg>
+
     <div class="container">
         <header class="main-header">
             <div class="header-left">
-                <a href="#" class="header-nav" title=""><i class="fas fa-bars"></i> <span>Menu</span></a>
-                <a href="#" class="header-nav" title=""><i class="fas fa-search"></i> <span>Search</span></a>
+                <a href="index.html" class="header-nav" title="Home"><i class="fas fa-home"></i> <span>Home</span></a>
             </div>
-            <a href="#" class="logo" title="">ÔDÔRAI</a>
+            <a href="index.html" class="logo" title="ÔDÔRAI Home">ÔDÔRAI</a>
             <div class="header-right">
                 <a href="#" class="btn-subscribe d-none-mobile" title="">Subscription</a>
                 <a href="#" class="d-none-mobile" title="">Contact Us</a>
@@ -42,242 +1722,1185 @@
             </div>
         </header>
 
-        <!-- Mobile Search Bar -->
-        <div class="mobile-search-container" id="mobile-search">
-            <div class="mobile-search-bar">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" placeholder="Search for AI Diffusers & Scents" class="mobile-search-input">
-                <button class="search-clear-btn" id="search-clear">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
+        <!-- Mobile Search Bar removed -->
 
-        <main class="product-grid">
-            <div class="product-image-container">
-                <div class="image-stack" id="image-stack">
-                    <!-- 圖片會動態生成 -->
+        <!-- Section 1: Hero - 1098px -->
+        <section class="section-1" id="section-1">
+            <div class="hero-carousel-container">
+                <div class="hero-carousel" id="hero-carousel">
+                    <img src="images/header1.png" alt="ÔDÔRAI Header 1" class="hero-carousel-image active" data-index="0">
+                    <img src="images/header2.png" alt="ÔDÔRAI Header 2" class="hero-carousel-image" data-index="1">
+                    <img src="images/header3.png" alt="ÔDÔRAI Header 3" class="hero-carousel-image" data-index="2">
+            </div>
+                <div class="hero-overlay-content">
+                    <div class="launch-announcement">
+                        <p class="launch-text">NEW LAUNCH : SS26 COLLECTION</p>
+                        <a href="products.html" class="shop-now-link">Shop now</a>
+        </div>
                 </div>
-                <div class="mobile-image-indicators" id="mobile-indicators">
-                    <!-- 指示器會動態生成 -->
+                <div class="carousel-click-area" id="carousel-click-area"></div>
+                <div class="carousel-indicators" id="carousel-indicators">
+                    <div class="carousel-dot active" data-index="0"></div>
+                    <div class="carousel-dot" data-index="1"></div>
+                    <div class="carousel-dot" data-index="2"></div>
                 </div>
+                </div>
+        </section>
+
+        <!-- Section 2: Brand Introduction - 1080px -->
+        <section class="section-2" id="section-2">
+            <div class="section-2-content">
+                <h2 class="section-2-title">ÔDÔRAI</h2>
+                </div>
+        </section>
+
+        <!-- Section 3: Product Showcase - 1623px -->
+        <section class="section-3" id="section-3">
+            <div class="section-3-text-content">
+                <div class="section-3-description">
+                    <p class="section-3-line1">ÔDÔRAI is AI-driven system that modulates</p>
+                    <p class="section-3-line2"><span class="spatial-scents">spatial scents</span> by predicting user behavior.</p>
+                    <p class="section-3-line3">It adapts in real-time to shape your mood,</p>
+                    <p class="section-3-line4">sharpen your focus, and spark your creativity.</p>
+                </div>
+                </div>
+            
+            <div class="section-3-products">
+                <div class="section-3-product-left">
+                    <img src="images/TRANSPARENTRUC.png" alt="ÔDÔRAI RÜC Transparent" class="transparent-product-image">
+            </div>
+
+                <div class="section-3-product-center">
+                    <p class="product-center-line1">ÔDÔRAI DIFFUSER</p>
+                    <p class="product-center-line2">ÔFFUSER</p>
+                    <p class="product-center-line3">+ Take a closer look</p>
+                    <a href="products.html" class="product-center-line4">explore now ></a>
+    </div>
                 
-                <!-- Floating Background Icons -->
-                <div class="parallax-element floating-icon" style="top: 15%; left: 10%;">
-                    <i class="fas fa-leaf"></i>
-                </div>
-                <div class="parallax-element floating-icon" style="top: 60%; right: 15%;">
-                    <i class="fas fa-spa"></i>
-                </div>
-                <div class="parallax-element floating-icon" style="top: 80%; left: 20%;">
-                    <i class="fas fa-wind"></i>
-                </div>
-            </div>
-
-            <div class="product-info">
-                <div class="product-info-content">
-                    <p class="product-sku" id="product-sku">PMAL721</p>
-                <div class="product-title-header">
-        <h1 class="product-title" id="product-title">ÔFFUSER RÜC - AI Driven Personal Aromatherapist</h1>
-        <i class="far fa-heart" id="wishlist-heart"></i>
-    </div>
-    <p class="product-price" id="product-price">$ 599.00</p>
-
-    <div class="color-selector">
-        <div class="color-label">
-            <span>Materials</span>
-            <span class="color-name" id="color-name">Rock</span>
+                <div class="section-3-product-right">
+                    <img src="images/TRANSPARENTBUB.png" alt="ÔDÔRAI BÜB Transparent" class="transparent-product-image">
         </div>
-        <div class="color-swatches">
-            <div class="color-swatch selected" 
-                 data-main-image="images/diffuser-main.png" 
-                 data-color-name="RÜC" 
-                 data-price="$ 599.00"
-                 data-sku="PMAL721"
-                 data-title="ÔFFUSER RÜC - AI Driven Personal Aromatherapist"
-                 data-material="Rock">
-                 <img src="images/swatch-origin.jpg" alt="Color Swatch RÜC">
             </div>
-            <div class="color-swatch" 
-                 data-main-image="images/diffuser-aether.png" 
-                 data-color-name="BÜB" 
-                 data-price="$ 629.00"
-                 data-sku="PMAL722"
-                 data-title="ÔFFUSER BÜB - AI Driven Personal Aromatherapist"
-                 data-material="TPU">
-                 <img src="images/swatch-aether.jpg" alt="Color Swatch BÜB">
+        </section>
+
+        <!-- Section 4: Data Analysis - 1080px -->
+        <section class="section-4" id="section-4">
+            <video class="section-4-video" autoplay muted loop playsinline>
+                <source src="images/section4.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="section-4-content">
+                <h2 class="section-4-title">Data Record & Analysis</h2>
+                <img src="images/data.png" alt="Data Analysis" class="data-image">
+                <div class="section-4-text">
+                    <p class="section-4-description">ÔFFUSER continuously analyzes your physiological and environmental data to create the perfect scent experience</p>
+                    <p class="section-4-learn-more">+ Learn more about mechanism</p>
             </div>
-            <div class="color-swatch" 
-                 data-main-image="images/diffuser-prism.png" 
-                 data-color-name="ALÜN" 
-                 data-price="$ 649.00"
-                 data-sku="PMAL723"
-                 data-title="ÔFFUSER ALÜN - AI Driven Personal Aromatherapist"
-                 data-material="Aluminium">
-                 <img src="images/swatch-prism.jpg" alt="Color Swatch ALÜN">
             </div>
+        </section>
+
+        <!-- Section 5: Advertisement Videos - 1150px -->
+        <section class="section-5" id="section-5">
+            <div class="section-5-content">
+                <div class="video-container left-video">
+                    <div class="audio-bars"></div>
+                    <video class="advertise-video" muted loop playsinline>
+                        <source src="images/Advertise_02.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
         </div>
+                <div class="video-container center-video">
+                    <div class="audio-bars"></div>
+                    <video class="advertise-video" muted loop playsinline>
+                        <source src="images/Advertise_01.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
     </div>
-
-
-
-                <div class="action-buttons">
-                    <a href="#" class="btn btn-primary" id="place-in-cart">Place in Cart</a>
-                    <a href="#" class="contact-advisor">Contact an Advisor</a>
+                <div class="video-container right-video">
+                    <div class="audio-bars"></div>
+                    <video class="advertise-video" muted loop playsinline>
+                        <source src="images/Advertise_03.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
+                    </div>
+        </section>
 
-                <p class="delivery-info">Complimentary Standard Delivery or Collect-in-Store.</p>
-
-                <div class="product-description collapsed">
-                    <p>Evoking the poetics of breath and presence, ÔDÔRAI recognizes scent as the primordial language. Within its quiet, sculptural form lies its true emotion recognition and spatial behavior. This intelligent diffuser weaves personalized aromas into daily rituals, inspired by biophilic designs, ÔDÔRAI’s presence forges a living dialogue between humans and nature.</p>
-                    <a href="#" class="read-more" id="read-more-btn">Read more</a>
+                <!-- Section 6: Custom Scent Profile Quiz - 1150px -->
+        <section class="section-6" id="section-6">
+            <div class="section-6-content">
+                <!-- Quiz Introduction (Initial View) -->
+                <div class="quiz-intro-section" id="quiz-intro">
+                    <div class="quiz-text-content">
+                        <h2 class="quiz-main-title">Custom Scent Profile</h2>
+                        <p class="quiz-description">Create your personalized aromatherapy experience with our AI-driven scent analysis</p>
+                        <button class="start-quiz-btn" id="start-quiz-button">Start Your Profile Quiz</button>
                 </div>
-                <div class="info-sections">
-                    <div class="info-item expandable">
-                        <div class="info-header">
-                            <span>Sustainability</span>
-                            <i class="fas fa-plus"></i>
+                    <div class="quiz-visual-content">
+                        <div class="quiz-preview-container">
+                            <div class="quiz-preview-item">
+                                <div class="preview-icon">🧠</div>
+                                <span>Lifestyle Analysis</span>
                         </div>
-                        <div class="info-content">
-                            <p>ÔDÔRAI is committed to sustainable practices through eco-friendly materials and responsible manufacturing. Our diffusers are crafted with recyclable components and energy-efficient technology, minimizing environmental impact while maximizing aromatic experiences.</p>
+                            <div class="quiz-preview-item">
+                                <div class="preview-icon">🌿</div>
+                                <span>Scent Preferences</span>
+                        </div>
+                            <div class="quiz-preview-item">
+                                <div class="preview-icon">⚗️</div>
+                                <span>Custom Formula</span>
+                    </div>
+                            <div class="quiz-preview-item">
+                                <div class="preview-icon">🎯</div>
+                                <span>Personalized Results</span>
+                        </div>
                         </div>
                     </div>
-                    <div class="info-item expandable">
-                        <div class="info-header">
-                            <span>Product Care</span>
-                            <i class="fas fa-plus"></i>
                         </div>
-                        <div class="info-content">
-                            <p>To maintain optimal performance, clean your ÔDÔRAI diffuser weekly with a soft, damp cloth. Use only ÔDÔRAI certified essential oils and replace filters every 3 months. Store in a cool, dry place when not in use.</p>
-                        </div>
-                    </div>
-                    <div class="info-item expandable">
-                        <div class="info-header">
-                            <span>In-Store Service</span>
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="info-content">
-                            <p>Visit our flagship stores for personalized scent consultations, device setup assistance, and exclusive in-store experiences. Our aromatherapy specialists provide customized recommendations based on your lifestyle and preferences.</p>
+
+                <!-- Quiz Content (Hidden Initially) -->
+                <div class="quiz-content-section" id="quiz-content" style="display: none;">
+                    <div class="quiz-header">
+                        <h3 class="quiz-question-title" id="quiz-question-title">Question 1 of 15</h3>
+                        <div class="quiz-progress-bar">
+                            <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
                         </div>
                     </div>
-                    <div class="info-item arrow" id="delivery-returns-trigger">
-                        <div class="info-header">
-                            <span>Delivery & Returns</span>
-                            <i class="fas fa-chevron-right"></i>
+                    
+                    <div class="quiz-question-content">
+                        <h2 class="quiz-question-text" id="quiz-question-text">Loading question...</h2>
+                        <div class="quiz-options" id="quiz-options">
+                            <!-- Options will be dynamically generated -->
                         </div>
                     </div>
-                    <div class="info-item arrow" id="gifting-trigger">
-                        <div class="info-header">
-                            <span>Gifting</span>
-                            <i class="fas fa-chevron-right"></i>
+
+                                        <!-- Navigation removed - auto advance on selection -->
                         </div>
+
+                                <!-- Quiz Results (Hidden Initially) -->
+                <div class="quiz-results-section" id="quiz-results" style="display: none;">
+                    <div class="results-content">
+                        <div class="results-header">
+                            <div class="results-icon">🌟</div>
+                            <h2 class="results-title">Your ÔDÔRAI Custom Scent Profile</h2>
                     </div>
+                        
+                        <div class="results-profile-section">
+                            <div class="results-profile-title">
+                                <h3 class="results-profile-name" id="results-profile-name">Profile Name</h3>
+                                <p class="results-profile-desc" id="results-profile-desc">Profile Description</p>
                 </div>
+                            
+                            <div class="results-formula-container" id="results-formula">
+                                <!-- Formula will be dynamically generated -->
                 </div>
+                            
+                            <div class="results-ai-balance">
+                                <div>
+                                    <span class="results-ai-balance-text">AI Intelligent Balance Factor</span>
+                                    <span class="results-ingredient-percentage" id="ai-balance-percentage">15.3%</span>
             </div>
-        </main>
+                        </div>
     </div>
 
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+                        <div class="results-promise">
+                            <h4 class="results-promise-title">Monthly Optimization Promise</h4>
+                            <p class="results-promise-text">✨ ÔDÔRAI will continuously learn and improve your exclusive formula</p>
+                    </div>
+                        
+                        <div class="results-buttons">
+                            <button class="results-restart-btn" id="results-restart-btn">Create Another Profile</button>
+                            <button class="results-save-btn" id="results-save-btn">Save My Profile</button>
+        </div>
+                </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Delivery & Returns Sidebar -->
-    <div class="sidebar delivery-sidebar" id="delivery-sidebar">
-        <div class="sidebar-header">
-            <h2>Delivery & Returns</h2>
-            <button class="sidebar-close" id="delivery-close">
-                <i class="fas fa-times"></i>
-            </button>
+        <!-- Section 7 -->
+        <section class="section-7" id="section-7">
+            <div class="section-7-content">
+                <div class="section-7-text">
+                    <p class="section-7-line1">ÔDÔRAI doesn't guess what scent to use.</p>
+                    <p class="section-7-line2">It matches your current state with a scent that supports you—</p>
+                    <p class="section-7-line3">using science-backed personalization.</p>
+                    <p class="section-7-line4">Long-term impact meets daily precision.</p>
+                </div>
+                </div>
+        </section>
+
+        <!-- Section 8: Customer Experience - 1080px -->
+        <section class="section-8" id="section-8">
+            <div class="section-content">
+                <h2 class="section-title">Customer Experience</h2>
+                <div class="experience-grid">
+                    <div class="experience-item">
+                        <div class="experience-icon">
+                            <i class="fas fa-shipping-fast"></i>
+            </div>
+                        <h3>Fast Delivery</h3>
+                        <p>Complimentary standard delivery or collect in-store options available.</p>
+                </div>
+                    <div class="experience-item">
+                        <div class="experience-icon">
+                            <i class="fas fa-user-tie"></i>
+                </div>
+                        <h3>Expert Support</h3>
+                        <p>Personal aromatherapy consultations with our certified specialists.</p>
+            </div>
+                    <div class="experience-item">
+                        <div class="experience-icon">
+                            <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="sidebar-content">
-            <div class="section-item">
-                <div class="section-header">
-                    <span>Delivery Options</span>
-                    <i class="fas fa-plus"></i>
+                        <h3>Quality Guarantee</h3>
+                        <p>30-day return policy with comprehensive product warranty coverage.</p>
+    </div>
+            </div>
                 </div>
-                <div class="section-details">
-                    <p>• Standard Delivery (3-5 business days): Complimentary</p>
-                    <p>• Express Delivery (1-2 business days): $15</p>
-                    <p>• Same-Day Delivery (select cities): $25</p>
-                    <p>• International Shipping: Available to 50+ countries</p>
+        </section>
+
+        <!-- Section 9: Call to Action - 1156px -->
+        <section class="section-9" id="section-9">
+            <div class="section-content">
+                <div class="cta-container">
+                    <h2 class="cta-title">Ready to Transform Your Space?</h2>
+                    <p class="cta-description">
+                        Begin your personalized aromatherapy journey with ÔDÔRAI's intelligent diffusion technology.
+                    </p>
+                    <div class="cta-buttons">
+                        <a href="products.html" class="btn-primary">Shop Now</a>
+                        <a href="#" class="btn-secondary">Learn More</a>
+        </div>
+                    <div class="cta-visual">
+                        <div class="floating-products">
+                            <img src="images/diffuser-main.png" alt="Product 1" class="floating-product">
+                            <img src="images/diffuser-aether.png" alt="Product 2" class="floating-product">
+                            <img src="images/diffuser-prism.png" alt="Product 3" class="floating-product">
+                </div>
                 </div>
             </div>
-            <div class="section-item">
-                <div class="section-header">
-                    <span>Return Policy</span>
-                    <i class="fas fa-plus"></i>
                 </div>
-                <div class="section-details">
-                    <p>• 30-day return window for all products</p>
-                    <p>• Free returns for ÔDÔRAI members</p>
-                    <p>• Products must be in original condition</p>
-                    <p>• Personalized scents cannot be returned</p>
+        </section>
+
+        <!-- Section 10: Footer -->
+        <footer class="section-10" id="section-10">
+            <div class="footer-content">
+                <div class="footer-main">
+                    <div class="footer-brand">
+                        <h3>ÔDÔRAI</h3>
+                        <p>AI Driven Personal Aromatherapist</p>
                 </div>
+                    <div class="footer-links">
+                        <div class="footer-column">
+                            <h4>Products</h4>
+                            <ul>
+                                <li><a href="products.html">All Diffusers</a></li>
+                                <li><a href="#">Essential Oils</a></li>
+                                <li><a href="#">Accessories</a></li>
+                                <li><a href="#">Gift Sets</a></li>
+                            </ul>
             </div>
-            <div class="section-item">
-                <div class="section-header">
-                    <span>Order Tracking</span>
-                    <i class="fas fa-plus"></i>
+                        <div class="footer-column">
+                            <h4>Support</h4>
+                            <ul>
+                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="#">Help Center</a></li>
+                                <li><a href="#">Shipping Info</a></li>
+                                <li><a href="#">Returns</a></li>
+                            </ul>
                 </div>
-                <div class="section-details">
-                    <p>• Real-time tracking via SMS and email</p>
-                    <p>• Delivery notifications with photo confirmation</p>
-                    <p>• Track orders in your ÔDÔRAI account</p>
-                    <p>• Customer service available 24/7</p>
+                        <div class="footer-column">
+                            <h4>Company</h4>
+                            <ul>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Careers</a></li>
+                                <li><a href="#">Press</a></li>
+                                <li><a href="#">Sustainability</a></li>
+                            </ul>
                 </div>
             </div>
         </div>
+                <div class="footer-bottom">
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+                    <div class="footer-legal">
+                        <p>&copy; 2024 ÔDÔRAI. All rights reserved.</p>
+                        <div class="footer-legal-links">
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Cookie Policy</a>
+                </div>
+                </div>
+            </div>
+        </div>
+        </footer>
     </div>
 
-    <!-- Gifting Sidebar -->
-    <div class="sidebar gifting-sidebar" id="gifting-sidebar">
-        <div class="sidebar-header">
-            <h2>Gifting</h2>
-            <button class="sidebar-close" id="gifting-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="sidebar-content">
-            <div class="section-item">
-                <div class="section-header">
-                    <span>Gift Wrapping</span>
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="section-details">
-                    <p>• Complimentary luxury gift wrapping</p>
-                    <p>• Personalized gift messages</p>
-                    <p>• Premium ÔDÔRAI gift boxes</p>
-                    <p>• Eco-friendly wrapping options</p>
-                </div>
-            </div>
-            <div class="section-item">
-                <div class="section-header">
-                    <span>Gift Cards</span>
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="section-details">
-                    <p>• Digital gift cards from $50 to $1000</p>
-                    <p>• No expiration date</p>
-                    <p>• Instant email delivery</p>
-                    <p>• Custom gift card designs available</p>
-                </div>
-            </div>
-            <div class="section-item">
-                <div class="section-header">
-                    <span>Corporate Gifting</span>
-                    <i class="fas fa-plus"></i>
-                </div>
-                <div class="section-details">
-                    <p>• Bulk ordering discounts available</p>
-                    <p>• Custom corporate branding</p>
-                    <p>• Dedicated account management</p>
-                    <p>• Flexible delivery scheduling</p>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script src="script.js"></script>
+
+    <script src="navigation.js"></script>
+    <script>
+        // Simplified script for homepage
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Mobile Detection (First Priority) ---
+            function isMobileDevice() {
+                return window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+            }
+            
+            // 手機端立即移除動畫元素
+            if (isMobileDevice()) {
+                const particlesContainer = document.querySelector('.particles-container');
+                if (particlesContainer) particlesContainer.remove();
+                
+                const breathingGlow = document.querySelector('.breathing-glow');
+                if (breathingGlow) breathingGlow.remove();
+                
+                console.log('📱 Mobile device detected - animations disabled');
+            }
+
+            // --- Header Functionality (Search removed) ---
+
+            // --- Scroll Progress ---
+            function updateScrollProgress() {
+                const scrollProgress = document.getElementById('scroll-progress');
+                if (scrollProgress) {
+                    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    const scrolled = (winScroll / height) * 100;
+                    scrollProgress.style.width = scrolled + '%';
+                }
+            }
+
+            window.addEventListener('scroll', updateScrollProgress);
+
+            // --- Particle System (Desktop Only) ---
+            if (!isMobileDevice()) {
+                const particlesContainer = document.getElementById('particles-container');
+                
+                if (particlesContainer) {
+                    function createParticle() {
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        
+                        const size = Math.random() * 4 + 2;
+                        particle.style.width = size + 'px';
+                        particle.style.height = size + 'px';
+                        particle.style.left = Math.random() * 100 + '%';
+                        particle.style.background = `rgba(${Math.random() * 100 + 100}, ${Math.random() * 100 + 100}, ${Math.random() * 100 + 150}, 0.6)`;
+                        particle.style.animationDuration = (Math.random() * 20 + 10) + 's';
+                        particle.style.animationDelay = Math.random() * 5 + 's';
+                        
+                        particlesContainer.appendChild(particle);
+                        
+                        setTimeout(() => {
+                            if (particle.parentNode) {
+                                particle.parentNode.removeChild(particle);
+                            }
+                        }, 25000);
+                    }
+                    
+                    function startParticleSystem() {
+                        createParticle();
+                        setTimeout(startParticleSystem, Math.random() * 3000 + 1000);
+                    }
+                    
+                    startParticleSystem();
+                }
+            }
+
+            // --- Mouse Effects (Desktop Only) ---
+            if (!isMobileDevice()) {
+                function createAdvancedMouseFollower() {
+                    const primaryFollower = document.createElement('div');
+                    const secondaryFollower = document.createElement('div');
+
+                    primaryFollower.className = 'mouse-follower-primary';
+                    secondaryFollower.className = 'mouse-follower-secondary';
+
+                    primaryFollower.style.cssText = `
+                        position: fixed;
+                        width: 8px;
+                        height: 8px;
+                        background: #4a90e2;
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 9999;
+                        transition: transform 0.1s ease;
+                        mix-blend-mode: difference;
+                    `;
+                    secondaryFollower.style.cssText = `
+                        position: fixed;
+                        width: 30px;
+                        height: 30px;
+                        border: 2px solid rgba(74, 144, 226, 0.3);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 9998;
+                        transition: all 0.3s ease;
+                        background: transparent;
+                    `;
+
+                    document.body.appendChild(primaryFollower);
+                    document.body.appendChild(secondaryFollower);
+
+                    let mouseX = 0, mouseY = 0;
+                    let secondaryX = 0, secondaryY = 0;
+
+                    document.addEventListener('mousemove', (e) => {
+                        mouseX = e.clientX;
+                        mouseY = e.clientY;
+                        primaryFollower.style.left = `${mouseX - 4}px`;
+                        primaryFollower.style.top = `${mouseY - 4}px`;
+                    });
+
+                    function updateSecondaryFollower() {
+                        secondaryX += (mouseX - secondaryX) * 0.1;
+                        secondaryY += (mouseY - secondaryY) * 0.1;
+                        secondaryFollower.style.left = `${secondaryX - 15}px`;
+                        secondaryFollower.style.top = `${secondaryY - 15}px`;
+                        requestAnimationFrame(updateSecondaryFollower);
+                    }
+                    updateSecondaryFollower();
+
+                    const interactiveSelectors = 'button, .btn, .color-swatch, .info-header, a, .cart-icon-wrapper, .section-header, .contact-advisor, .header-nav';
+                    const interactiveElements = document.querySelectorAll(interactiveSelectors);
+                    interactiveElements.forEach(element => {
+                        element.addEventListener('mouseenter', () => {
+                            primaryFollower.style.transform = 'scale(2)';
+                            primaryFollower.style.background = '#ff6b6b';
+                            secondaryFollower.style.transform = 'scale(1.5)';
+                            secondaryFollower.style.borderColor = 'rgba(255, 107, 107, 0.8)';
+                        });
+                        element.addEventListener('mouseleave', () => {
+                            primaryFollower.style.transform = 'scale(1)';
+                            primaryFollower.style.background = '#4a90e2';
+                            secondaryFollower.style.transform = 'scale(1)';
+                            secondaryFollower.style.borderColor = 'rgba(74, 144, 226, 0.3)';
+                        });
+                    });
+                }
+
+                function createInteractionParticle(x, y) {
+                    const particle = document.createElement('div');
+                    particle.className = 'interaction-particle';
+                    particle.style.cssText = `
+                        position: fixed;
+                        left: ${x - 3}px;
+                        top: ${y - 3}px;
+                        width: 6px; height: 6px;
+                        background: rgba(255, 107, 107, 0.8);
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 9998;
+                        transform: scale(1);
+                        opacity: 1;
+                        transition: transform 0.8s ease, opacity 0.8s ease;
+                    `;
+                    document.body.appendChild(particle);
+                    requestAnimationFrame(() => {
+                        particle.style.transform = 'scale(2)';
+                        particle.style.opacity = '0';
+                    });
+                    setTimeout(() => particle.remove(), 800);
+                }
+
+                function createClickRipple(x, y) {
+                    const ripple = document.createElement('div');
+                    ripple.className = 'click-ripple';
+                    ripple.style.cssText = `
+                        position: fixed;
+                        left: ${x - 100}px;
+                        top: ${y - 100}px;
+                        width: 200px; height: 200px;
+                        border-radius: 50%;
+                        background: radial-gradient(circle, rgba(74, 144, 226, 0.25), rgba(74, 144, 226, 0));
+                        pointer-events: none;
+                        z-index: 9997;
+                        transform: scale(0.6);
+                        opacity: 0.9;
+                        transition: transform 0.6s ease, opacity 0.6s ease;
+                    `;
+                    document.body.appendChild(ripple);
+                    requestAnimationFrame(() => {
+                        ripple.style.transform = 'scale(1.4)';
+                        ripple.style.opacity = '0';
+                    });
+                    setTimeout(() => ripple.remove(), 600);
+                }
+
+                function enhanceMouseInteractions() {
+                    let lastParticleTime = 0;
+                    document.addEventListener('mousemove', (e) => {
+                        const now = Date.now();
+                        if (now - lastParticleTime > 100 && Math.random() < 0.3) {
+                            createInteractionParticle(e.clientX, e.clientY);
+                            lastParticleTime = now;
+                        }
+                    });
+                    document.addEventListener('click', (e) => {
+                        createClickRipple(e.clientX, e.clientY);
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => {
+                                const offsetX = (Math.random() - 0.5) * 40;
+                                const offsetY = (Math.random() - 0.5) * 40;
+                                createInteractionParticle(e.clientX + offsetX, e.clientY + offsetY);
+                            }, i * 50);
+                        }
+                    });
+                }
+
+                // Initialize mouse effects
+                createAdvancedMouseFollower();
+                enhanceMouseInteractions();
+            }
+
+            // --- Smooth scrolling for anchor links ---
+            const heroButtons = document.querySelectorAll('a[href^="#"], .hero-cta');
+            heroButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href && href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+
+            // --- Hero Carousel Functionality ---
+            let currentImageIndex = 0;
+            const totalImages = 3; // header1.png to header3.png
+            const carouselImages = document.querySelectorAll('.hero-carousel-image');
+            const carouselDots = document.querySelectorAll('.carousel-dot');
+            const carouselClickArea = document.getElementById('carousel-click-area');
+
+            function showImage(index) {
+                // Hide all images
+                carouselImages.forEach(img => img.classList.remove('active'));
+                carouselDots.forEach(dot => dot.classList.remove('active'));
+                
+                // Animate hero shader displacement
+                try {
+                    const turb = document.getElementById('heroTurb');
+                    const disp = document.getElementById('heroDisp');
+                    if (turb && disp) {
+                        let frame = 0;
+                        const frames = 20;
+                        const startScale = 0;
+                        const endScale = 40; // strength of distortion
+                        const startFreq = 0.02;
+                        const endFreq = 0.12;
+                        const animate = () => {
+                            const t = frame/frames;
+                            const s = startScale + (endScale - startScale) * Math.sin(Math.PI * t);
+                            const f = startFreq + (endFreq - startFreq) * Math.sin(Math.PI * t);
+                            disp.setAttribute('scale', s.toFixed(2));
+                            turb.setAttribute('baseFrequency', f.toFixed(3));
+                            frame++;
+                            if (frame <= frames) requestAnimationFrame(animate);
+                            else disp.setAttribute('scale', '0');
+                        };
+                        requestAnimationFrame(animate);
+                    }
+                } catch(e) { console.warn('Hero shader animation skipped', e); }
+
+                // Show current image
+                carouselImages[index].classList.add('active');
+                carouselDots[index].classList.add('active');
+                
+                currentImageIndex = index;
+            }
+
+            function nextImage() {
+                const nextIndex = (currentImageIndex + 1) % totalImages;
+                showImage(nextIndex);
+            }
+
+            // Click on carousel area to go to next image
+            if (carouselClickArea) {
+                carouselClickArea.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    nextImage();
+                    console.log(`🖼️ Switched to image ${currentImageIndex + 1}`);
+                });
+            }
+
+            // Click on dots to go to specific image
+            carouselDots.forEach((dot, index) => {
+                dot.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevent carousel click area from firing
+                    showImage(index);
+                    console.log(`🎯 Switched to image ${index + 1} via indicator`);
+                });
+            });
+
+            // Auto-advance carousel every 5 seconds (optional)
+            let autoAdvanceInterval = setInterval(nextImage, 5000);
+
+            // Pause auto-advance when user interacts
+            const heroSection = document.getElementById('section-1');
+            if (heroSection) {
+                heroSection.addEventListener('mouseenter', () => {
+                    clearInterval(autoAdvanceInterval);
+                });
+                
+                heroSection.addEventListener('mouseleave', () => {
+                    autoAdvanceInterval = setInterval(nextImage, 5000);
+                });
+            }
+
+            // Track Shop Now clicks with dynamic product navigation
+            const shopNowLink = document.querySelector('.shop-now-link');
+            if (shopNowLink) {
+                shopNowLink.addEventListener('click', function(e) {
+                    e.preventDefault(); // Prevent default link behavior
+                    
+                    // Define product mapping based on header image
+                    const productMapping = {
+                        0: { // header1.png
+                            name: 'ÔFFUSER RÜC',
+                            material: 'Rock',
+                            price: '$ 599.00',
+                            sku: 'PMAL721',
+                            colorGroup: 'origin'
+                        },
+                        1: { // header2.png
+                            name: 'ÔFFUSER BÜB',
+                            material: 'TPU',
+                            price: '$ 629.00',
+                            sku: 'PMAL722',
+                            colorGroup: 'aether'
+                        },
+                        2: { // header3.png
+                            name: 'ÔFFUSER ALÜN',
+                            material: 'Aluminium',
+                            price: '$ 649.00',
+                            sku: 'PMAL723',
+                            colorGroup: 'prism'
+                        }
+                    };
+                    
+                    const currentProduct = productMapping[currentImageIndex];
+                    
+                    // Store product selection in sessionStorage for the products page
+                    if (currentProduct) {
+                        sessionStorage.setItem('selectedProduct', JSON.stringify({
+                            index: currentImageIndex,
+                            product: currentProduct
+                        }));
+                        
+                        console.log(`🛒 Shop Now clicked - navigating to ${currentProduct.name} (${currentProduct.material})`);
+                    }
+                    
+                    // Navigate to products page
+                    window.location.href = 'products.html';
+                });
+            }
+
+            // --- Section 3 Explore Now Link ---
+            const exploreNowLink = document.querySelector('.product-center-line4');
+            if (exploreNowLink) {
+                exploreNowLink.addEventListener('click', function(e) {
+                    console.log('🔍 Explore Now clicked - navigating to products page');
+                });
+            }
+
+            // Section 4 scrub disabled per request
+
+            // --- Section 5: Scroll-triggered Video Playback ---
+            const advertiseVideos = document.querySelectorAll('.advertise-video');
+            
+            function checkVideoVisibility() {
+                advertiseVideos.forEach(video => {
+                    const rect = video.getBoundingClientRect();
+                    const videoTop = rect.top;
+                    const videoBottom = rect.bottom;
+                    const windowHeight = window.innerHeight;
+                    
+                    // Check if video is in viewport (at least 50% visible)
+                    const isVisible = videoTop < windowHeight * 0.5 && videoBottom > windowHeight * 0.5;
+                    
+                    if (isVisible && video.paused) {
+                        video.play().catch(e => console.log('Video play failed:', e));
+                        console.log('🎬 Advertisement video started playing');
+                    }
+
+                    // Update audio-reactive bars visually based on frame brightness
+                    const bars = video.parentElement.querySelectorAll('.audio-bar');
+                    if (bars.length) {
+                        // Use time and per-bar phase to fake audio-reactive movement
+                        const base = (video.currentTime || 0);
+                        bars.forEach((bar, i) => {
+                            const amp = 0.5 + 0.5 * Math.sin(base * (1.6 + i*0.35) + i);
+                            bar.style.transform = `scaleY(${0.3 + amp * 0.9})`;
+                        });
+                    }
+                });
+            }
+            
+            // Initial check when page loads
+            setTimeout(checkVideoVisibility, 500);
+            
+            // Check on scroll
+            window.addEventListener('scroll', checkVideoVisibility);
+            
+            // Check on resize
+            window.addEventListener('resize', checkVideoVisibility);
+
+            // Build audio bars DOM and hover listeners
+            (function setupVideoOverlays(){
+                document.querySelectorAll('.video-container').forEach(container => {
+                    const barHost = container.querySelector('.audio-bars');
+                    if (barHost && !barHost.children.length) {
+                        for (let i=0;i<24;i++) {
+                            const b = document.createElement('div');
+                            b.className = 'audio-bar';
+                            barHost.appendChild(b);
+                        }
+                    }
+                    // Add hover scan sweep reset
+                    container.addEventListener('mouseenter', ()=>{
+                        const after = getComputedStyle(container, '::after');
+                        // trigger reflow to restart transition
+                        container.classList.remove('hovering');
+                        void container.offsetWidth;
+                        container.classList.add('hovering');
+                        setTimeout(()=> container.classList.remove('hovering'), 900);
+                    });
+                });
+            })();
+
+            // --- Section 7: Dynamic split text and mouse ripple ---
+            (function setupSection7Text(){
+                const lines = [
+                    document.querySelector('.section-7-line1'),
+                    document.querySelector('.section-7-line2'),
+                    document.querySelector('.section-7-line3'),
+                    document.querySelector('.section-7-line4')
+                ].filter(Boolean);
+                if (!lines.length) return;
+                lines.forEach(line => {
+                    if (!line.classList.contains('split-line')) {
+                        const text = line.textContent.trim();
+                        line.classList.add('split-line');
+                        const words = text.split(' ').filter(Boolean);
+                        line.innerHTML = words.map((w,i)=>`<span style="transition-delay:${i*40}ms">${w}&nbsp;</span>`).join('');
+                    }
+                });
+                const io = new IntersectionObserver((entries)=>{
+                    entries.forEach(entry=>{
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('revealed');
+                            io.unobserve(entry.target);
+                        }
+                    })
+                },{ threshold: 0.2 });
+                lines.forEach(l => io.observe(l));
+
+                // mouse ripple on hover (desktop only)
+                if (!isMobileDevice()) {
+                    const container = document.querySelector('#section-7');
+                    if (container) {
+                        container.addEventListener('mousemove', (e)=>{
+                            if (Math.random() > 0.2) return;
+                            const r = document.createElement('div');
+                            r.style.cssText = `position: fixed; left:${e.clientX-60}px; top:${e.clientY-60}px; width:120px; height:120px; border-radius:50%; pointer-events:none; background: radial-gradient(circle, rgba(255,136,0,0.18), rgba(255,136,0,0)); z-index:2; transform: scale(0.6); opacity:0.9; transition: transform .6s ease, opacity .6s ease;`;
+                            document.body.appendChild(r);
+                            requestAnimationFrame(()=>{ r.style.transform='scale(1.4)'; r.style.opacity='0'; });
+                            setTimeout(()=> r.remove(), 600);
+                        });
+                    }
+                }
+            })();
+
+            // --- Section 6: Inline Quiz System ---
+            let currentQuestion = 0;
+            let quizAnswers = {};
+            
+            const quizQuestions = [
+                {
+                    question: "⏰🏠 When and where do you usually use aromatherapy diffusers?",
+                    options: [
+                        "🏠 After work at home relaxation",
+                        "🛏️ Bedtime in bedroom for sleep aid",
+                        "💼 Work time in office/study room",
+                        "🏡 Throughout the entire home"
+                    ]
+                },
+                {
+                    question: "🎯 What effect do you most want to achieve through aromatherapy?",
+                    options: [
+                        "💆 Relaxation / Stress relief",
+                        "🧠 Enhance focus",
+                        "😴 Help with sleep",
+                        "🌿 Air purification"
+                    ]
+                },
+                {
+                    question: "🌸 Which scent profile appeals to you most?",
+                    options: [
+                        "🌿 Fresh & Natural (mint, eucalyptus, tea tree, lemon)",
+                        "🌸 Floral & Elegant (lavender, rose, jasmine, orange blossom)",
+                        "🌲 Woody & Grounding (sandalwood, cedar, amber, patchouli)",
+                        "🍊 Citrus & Vibrant (sweet orange, bergamot, grapefruit, orange)"
+                    ]
+                },
+                {
+                    question: "🎨 Which lifestyle best describes you?",
+                    options: [
+                        "🌱 Natural wellness advocate",
+                        "💻 Remote work from home",
+                        "🎯 Efficiency expert",
+                        "🎨 Aesthetic lifestyle enthusiast",
+                        "🧘 Mind‑body‑spirit explorer"
+                    ]
+                },
+                {
+                    question: "💨 What intensity of aromatherapy do you prefer?",
+                    options: [
+                        "🪶 Light & Subtle",
+                        "🌼 Medium & Moderate", 
+                        "🌹 Rich & Intense",
+                        "🎛️ Adjustable"
+                    ]
+                },
+                {
+                    question: "🎵 What type of music/playlist do you usually play?",
+                    options: [
+                        "🎧 Lo‑fi Chill / Relaxing vibes",
+                        "🚀 Upbeat Pop / Energizing tunes",
+                        "🎹 Instrumental Focus / Study music",
+                        "🌌 Ambient Meditation / Mindful sounds",
+                        "🎻 Classical / Orchestral music",
+                        "🎷 Jazz & Soul / Smooth rhythms",
+                        "💽 Electronic / Digital beats",
+                        "🌿 Nature sounds (birds, ocean waves)",
+                        "🎙️ Podcast / Audio broadcasts",
+                        "🤫 Silence / No sound"
+                    ]
+                },
+                {
+                    question: "🍂 What is your favorite season?",
+                    options: [
+                        "🌸 Spring",
+                        "☀️ Summer",
+                        "🍁 Autumn",
+                        "❄️ Winter"
+                    ]
+                },
+                {
+                    question: "🚫 Do you have any scents you dislike or are allergic to?",
+                    type: "text",
+                    placeholder: "lavender, citrus, woody, floral (optional)",
+                    note: "Optional: Enter in English, separate multiple items with commas. Leave blank if none."
+                }
+            ];
+
+            const startQuizButton = document.getElementById('start-quiz-button');
+            const quizIntro = document.getElementById('quiz-intro');
+            const quizContent = document.getElementById('quiz-content');
+            const quizResults = document.getElementById('quiz-results');
+            
+            if (startQuizButton) {
+                startQuizButton.addEventListener('click', function() {
+                    console.log('🧪 Starting Inline Custom Scent Profile Quiz');
+                    startInlineQuiz();
+                });
+            }
+            
+            function startInlineQuiz() {
+                quizIntro.style.display = 'none';
+                quizContent.style.display = 'block';
+                currentQuestion = 0;
+                quizAnswers = {};
+                showQuestion();
+            }
+            
+            function showQuestion() {
+                const question = quizQuestions[currentQuestion];
+                const questionTitle = document.getElementById('quiz-question-title');
+                const questionText = document.getElementById('quiz-question-text');
+                const optionsContainer = document.getElementById('quiz-options');
+                const progressFill = document.getElementById('quiz-progress-fill');
+                const backBtn = document.getElementById('quiz-back-btn');
+                const nextBtn = document.getElementById('quiz-next-btn');
+                
+                // Update progress
+                const progress = ((currentQuestion + 1) / quizQuestions.length) * 100;
+                progressFill.style.width = progress + '%';
+                
+                // Update question info
+                questionTitle.textContent = `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
+                questionText.textContent = question.question;
+                
+                // Create options or text input
+                optionsContainer.innerHTML = '';
+                
+                if (question.type === 'text') {
+                    // Create text input for allergy question
+                    const textContainer = document.createElement('div');
+                    textContainer.style.gridColumn = '1 / -1';
+                    textContainer.style.textAlign = 'center';
+                    
+                    const textInput = document.createElement('input');
+                    textInput.type = 'text';
+                    textInput.placeholder = question.placeholder;
+                    textInput.style.cssText = `
+                        width: 100%;
+                        max-width: 400px;
+                        padding: 15px;
+                        border: 2px solid rgba(255,255,255,0.3);
+                        border-radius: 8px;
+                        background: rgba(255,255,255,0.1);
+                        color: #fff;
+                        font-family: 'NCTTorin', sans-serif;
+                        font-size: 16px;
+                        margin-bottom: 10px;
+                    `;
+                    
+                    const noteText = document.createElement('p');
+                    noteText.textContent = question.note;
+                    noteText.style.cssText = `
+                        color: #ccc;
+                        font-size: 14px;
+                        margin: 0;
+                        font-family: 'NCTTorin', sans-serif;
+                    `;
+                    
+                    textInput.addEventListener('input', () => {
+                        quizAnswers[currentQuestion] = textInput.value;
+                    });
+                    
+                    textInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            quizAnswers[currentQuestion] = textInput.value;
+                            // Auto advance on Enter or after a delay
+                            setTimeout(() => {
+                                if (currentQuestion < quizQuestions.length - 1) {
+                                    currentQuestion++;
+                                    showQuestion();
+                                } else {
+                                    showResults();
+                                }
+                            }, 100);
+                        }
+                    });
+                    
+                    // Restore previous answer if exists
+                    if (quizAnswers[currentQuestion] !== undefined) {
+                        textInput.value = quizAnswers[currentQuestion];
+                    }
+                    
+                    // Add a continue button for text input
+                    const continueBtn = document.createElement('button');
+                    continueBtn.textContent = 'Continue';
+                    continueBtn.style.cssText = `
+                        margin-top: 20px;
+                        padding: 12px 30px;
+                        background: #ff6600;
+                        color: #fff;
+                        border: none;
+                        border-radius: 8px;
+                        font-family: 'NCTTorin', sans-serif;
+                        font-size: 16px;
+                        cursor: pointer;
+                        transition: background 0.3s ease;
+                    `;
+                    
+                    continueBtn.addEventListener('click', () => {
+                        quizAnswers[currentQuestion] = textInput.value;
+                        if (currentQuestion < quizQuestions.length - 1) {
+                            currentQuestion++;
+                            showQuestion();
+                        } else {
+                            showResults();
+                        }
+                    });
+                    
+                    continueBtn.addEventListener('mouseenter', () => {
+                        continueBtn.style.background = '#ff4400';
+                    });
+                    
+                    continueBtn.addEventListener('mouseleave', () => {
+                        continueBtn.style.background = '#ff6600';
+                    });
+                    
+                    textContainer.appendChild(textInput);
+                    textContainer.appendChild(noteText);
+                    textContainer.appendChild(continueBtn);
+                    optionsContainer.appendChild(textContainer);
+                    
+                } else {
+                    // Create regular options - always use 2 columns with fixed width
+                    optionsContainer.style.gridTemplateColumns = 'repeat(2, calc(100vw * (380 / 1920)))';
+                    optionsContainer.style.justifyContent = 'center';
+                    optionsContainer.style.gap = 'calc(100vw * (25 / 1920))';
+                    
+                    question.options.forEach((option, index) => {
+                        const optionElement = document.createElement('div');
+                        optionElement.className = 'quiz-option';
+                        optionElement.textContent = option;
+                        optionElement.style.cursor = 'pointer';
+                        optionElement.style.userSelect = 'none';
+                        optionElement.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            selectOption(index, optionElement);
+                            
+                            // Auto advance to next question after selection
+                            setTimeout(() => {
+                                if (currentQuestion < quizQuestions.length - 1) {
+                                    currentQuestion++;
+                                    showQuestion();
+                                } else {
+                                    showResults();
+                                }
+                            }, 300); // Small delay to show selection
+                        });
+                        
+                        // Restore previous selection if exists
+                        if (quizAnswers[currentQuestion] === index) {
+                            optionElement.classList.add('selected');
+                        }
+                        
+                        optionsContainer.appendChild(optionElement);
+                    });
+                }
+                
+                // No navigation buttons needed - auto advance
+            }
+            
+            function selectOption(optionIndex, optionElement) {
+                // Remove previous selection
+                const allOptions = document.querySelectorAll('.quiz-option');
+                allOptions.forEach(opt => opt.classList.remove('selected'));
+                
+                // Select current option
+                optionElement.classList.add('selected');
+                
+                // Store answer
+                quizAnswers[currentQuestion] = optionIndex;
+                
+                console.log(`Selected option ${optionIndex} for question ${currentQuestion + 1}`);
+            }
+            
+            // No navigation event listeners needed - auto advance
+            
+            function showResults() {
+                quizContent.style.display = 'none';
+                quizResults.style.display = 'block';
+                
+                // Generate personalized results
+                const profile = generateDetailedProfile();
+                
+                // Update profile name and description
+                document.getElementById('results-profile-name').textContent = `Main Function Formula - ${profile.name}`;
+                document.getElementById('results-profile-desc').textContent = `🧠 ${profile.description}`;
+                
+                // Generate formula HTML
+                const formulaContainer = document.getElementById('results-formula');
+                const formulaHtml = profile.formula.map(ingredient => `
+                    <div class="results-ingredient">
+                        <div>
+                            <span class="results-ingredient-name">${ingredient.name}</span>
+                            <span class="results-ingredient-percentage">${ingredient.percentage}%</span>
+                        </div>
+                        <span class="results-ingredient-effect">${ingredient.effect}</span>
+                    </div>
+                `).join('');
+                
+                formulaContainer.innerHTML = formulaHtml;
+                
+                // Calculate AI balance factor
+                const totalVisible = profile.formula.reduce((sum, ing) => sum + ing.percentage, 0);
+                const aiBalanceFactor = Math.round((100 - totalVisible) * 10) / 10;
+                document.getElementById('ai-balance-percentage').textContent = `${aiBalanceFactor}%`;
+            }
+            
+            function generateProfileName() {
+                const profiles = [
+                    "The Zen Minimalist",
+                    "The Creative Energizer", 
+                    "The Sophisticated Connoisseur",
+                    "The Balanced Harmonizer",
+                    "The Natural Purist",
+                    "The Bold Experimenter"
+                ];
+                return profiles[Math.floor(Math.random() * profiles.length)];
+            }
+            
+            function generateDetailedProfile() {
+                const profiles = [
+                    {
+                        name: "The Zen Minimalist",
+                        description: "Balanced aromatherapy for calm and focused living",
+                        formula: [
+                            { name: "Lavender Essential Oil", percentage: 25.4, effect: "Relaxation" },
+                            { name: "Bergamot Extract", percentage: 18.2, effect: "Mood Enhancement" },
+                            { name: "Eucalyptus Mint", percentage: 15.8, effect: "Mental Clarity" },
+                            { name: "Chamomile Compound", percentage: 12.3, effect: "Stress Relief" },
+                            { name: "Lemon Verbena", percentage: 8.9, effect: "Energy Balance" }
+                        ]
+                    },
+                    {
+                        name: "The Creative Energizer",
+                        description: "Dynamic scent blend for inspiration and productivity",
+                        formula: [
+                            { name: "Citrus Bergamot", percentage: 22.7, effect: "Mental Stimulation" },
+                            { name: "Rosemary Extract", percentage: 19.4, effect: "Focus Enhancement" },
+                            { name: "Peppermint Oil", percentage: 16.1, effect: "Alertness" },
+                            { name: "Grapefruit Essence", percentage: 13.5, effect: "Motivation" },
+                            { name: "Basil Compound", percentage: 9.8, effect: "Creativity Boost" }
+                        ]
+                    },
+                    {
+                        name: "The Balanced Harmonizer",
+                        description: "Adaptive aromatherapy for all-day wellness",
+                        formula: [
+                            { name: "Sweet Orange Oil", percentage: 20.6, effect: "Mood Stabilization" },
+                            { name: "Geranium Extract", percentage: 17.9, effect: "Emotional Balance" },
+                            { name: "Frankincense", percentage: 15.2, effect: "Grounding" },
+                            { name: "Ylang Ylang", percentage: 13.8, effect: "Harmony" },
+                            { name: "Cedarwood Base", percentage: 11.4, effect: "Stability" }
+                        ]
+                    }
+                ];
+                
+                const randomProfile = profiles[Math.floor(Math.random() * profiles.length)];
+                return randomProfile;
+            }
+            
+            // Event listeners for results buttons
+            document.getElementById('results-restart-btn').addEventListener('click', () => {
+                quizResults.style.display = 'none';
+                quizIntro.style.display = 'grid';
+                currentQuestion = 0;
+                quizAnswers = {};
+            });
+            
+            document.getElementById('results-save-btn').addEventListener('click', () => {
+                // Save profile to localStorage
+                const profileData = {
+                    name: document.getElementById('results-profile-name').textContent,
+                    description: document.getElementById('results-profile-desc').textContent,
+                    timestamp: new Date().toISOString()
+                };
+                localStorage.setItem('odorai_scent_profile', JSON.stringify(profileData));
+                
+                // Show success message
+                alert('Your custom scent profile has been saved! ÔDÔRAI will use this to personalize your aromatherapy experience.');
+            });
+
+            console.log('🏠 Homepage with carousel, video triggers, and quiz integration initialized successfully');
+        });
+    </script>
 
 </body>
 </html>

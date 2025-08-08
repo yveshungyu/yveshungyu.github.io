@@ -73,20 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 colorSwatches.forEach(s => s.classList.remove('selected'));
                 this.classList.add('selected');
                 
-                // 強制重置到第一張圖片（所有設備）
+                // 統一重置到第一張圖片（避免競爭條件）
                 resetImageIndex();
-                
-                // 額外確保移動端位置正確
-                if (isMobileDevice()) {
-                    setTimeout(() => {
-                        const container = imageStack?.parentElement;
-                        if (container) {
-                            container.scrollLeft = 0;
-                            container.scrollTo({ left: 0, behavior: 'auto' });
-                            updateIndicators(0);
-                        }
-                    }, 100);
-                }
                 
                 // 滾動回頂部
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -268,15 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 第一張圖片加載完成後確保位置正確
             if (index === 0 && isMobileDevice()) {
                 img.onload = function() {
-                    const container = imageStack.parentElement;
-                    if (container) {
-                        setTimeout(() => {
-                            container.scrollLeft = 0;
-                            container.scrollTo({ left: 0, behavior: 'auto' });
-                            currentImageIndex = 0;
-                            updateIndicators(0);
-                        }, 50);
-                    }
+                    resetImageIndex();
                 };
             }
             
@@ -286,63 +266,49 @@ document.addEventListener('DOMContentLoaded', function() {
         // 生成移動端指示器（固定為4個）
         generateMobileIndicators(4);
         
-        // 圖片生成後立即重置位置（特別是第一張圖片）
+        // 圖片生成後統一重置位置
         if (isMobileDevice()) {
-            const container = imageStack.parentElement;
-            if (container) {
-                // 確保圖片索引重置
-                currentImageIndex = 0;
-                
-                // 立即重置位置，不等待
-                container.style.scrollBehavior = 'auto';
-                container.scrollLeft = 0;
-                
-                // 強制重置到開始位置
-                setTimeout(() => {
-                    container.scrollLeft = 0;
-                    container.scrollTo({ left: 0, behavior: 'auto' });
-                    container.scrollTo(0, container.scrollTop);
-                    
-                    // 更新指示器到第一個
-                    updateIndicators(0);
-                    
-                    console.log('📱 Images generated - forced to first image');
-                    
-                    // 恢復smooth滑動動畫
-                    setTimeout(() => {
-                        container.style.scrollBehavior = 'smooth';
-                    }, 100);
-                }, 10);
-                
-                // 額外保障，再次檢查位置
-                setTimeout(() => {
-                    if (container.scrollLeft !== 0) {
-                        container.scrollLeft = 0;
-                        container.scrollTo({ left: 0, behavior: 'auto' });
-                        console.log('📱 Additional reset performed');
-                    }
-                }, 200);
-            }
+            resetImageIndex();
+            console.log('📱 Images generated - reset to first image');
         }
     }
     
     // 生成移動端指示器 - 始終生成4個點
     function generateMobileIndicators(imageCount) {
-        // 手機端不再顯示指示器點
+        if (!isMobileDevice()) return;
+        
         const indicatorsContainer = document.getElementById('mobile-indicators');
-        if (indicatorsContainer && isMobileDevice()) {
-            indicatorsContainer.style.display = 'none';
+        if (indicatorsContainer) {
             indicatorsContainer.innerHTML = '';
+            
+            for (let i = 0; i < imageCount; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 0) dot.classList.add('active');
+                
+                dot.addEventListener('click', () => {
+                    scrollToImageIndex(i);
+                });
+                
+                indicatorsContainer.appendChild(dot);
+            }
+            
+            console.log('📱 Generated', imageCount, 'indicators');
         }
     }
     
-    // 更新指示器狀態 - 手機端不再需要
+    // 更新指示器狀態
     function updateIndicators(activeIndex) {
-        if (!isMobileDevice()) return; // 只在移動端更新指示器
+        if (!isMobileDevice()) return;
         
-        // 手機端不再顯示指示器點，只更新當前圖片索引
         currentImageIndex = activeIndex;
-        console.log('📱 Current image index:', activeIndex);
+        
+        const indicators = document.querySelectorAll('.indicator-dot');
+        indicators.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeIndex);
+        });
+        
+        console.log('📱 Updated indicators, current image:', activeIndex);
     }
     
 
@@ -356,28 +322,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updateWishlistHeart(currentColorGroup); // 初始化愛心狀態
         updateCartBadge(); // 初始化購物車徽章
         
-        // 確保移動端從第一張圖片開始
+        // 確保移動端從第一張圖片開始（統一重置）
         if (isMobileDevice()) {
-            // 立即重置位置
-            const container = imageStack?.parentElement;
-            if (container) {
-                container.scrollLeft = 0;
-                container.style.scrollBehavior = 'auto';
-            }
-            
-            // 延遲確保位置正確
-            setTimeout(() => {
-                resetImageIndex();
-            }, 100);
-            
-            // 額外確保位置穩定
-            setTimeout(() => {
-                if (container) {
-                    container.scrollLeft = 0;
-                    container.scrollTo({ left: 0, behavior: 'auto' });
-                    updateIndicators(0);
-                }
-            }, 300);
+            resetImageIndex();
         }
     }
     
@@ -652,29 +599,37 @@ document.addEventListener('DOMContentLoaded', function() {
         touchEndX = e.touches[0].clientX;
         const touchEndY = e.touches[0].clientY;
         
-        // 檢測滑動方向
+        // 檢測滑動方向 - 提高閾值以更準確判斷
         const touchDiffX = Math.abs(touchEndX - touchStartX);
         const touchDiffY = Math.abs(touchEndY - touchStartY);
         
-        // 判斷主要滑動方向
-        const isHorizontalSwipe = touchDiffX > touchDiffY && touchDiffX > 15;
+        // 確保有足夠的滑動距離才判斷方向
+        if (touchDiffX < 10 && touchDiffY < 10) {
+            return; // 滑動距離太小，不做任何處理
+        }
+        
+        // 判斷主要滑動方向 - 提高水平滑動的判斷標準
+        const isHorizontalSwipe = touchDiffX > touchDiffY && touchDiffX > 30;
         const isVerticalSwipe = touchDiffY > touchDiffX && touchDiffY > 15;
         
         // 只有在明確的水平滑動且在圖片區域內時才處理
         if (isHorizontalSwipe && !isVerticalSwipe) {
             const rect = imageStack.getBoundingClientRect();
             const touchY = e.touches[0].clientY;
+            const touchX = e.touches[0].clientX;
             
-            // 確保觸摸點在圖片容器內
-            if (touchY >= rect.top && touchY <= rect.bottom) {
+            // 確保觸摸點在圖片容器內（包含一些邊距容錯）
+            if (touchY >= (rect.top - 10) && touchY <= (rect.bottom + 10) && 
+                touchX >= rect.left && touchX <= rect.right) {
                 isScrolling = true;
                 e.preventDefault(); // 只在圖片區域內阻止默認行為
                 console.log('📱 Horizontal swipe detected in image area');
             }
-        } else if (isVerticalSwipe) {
+        } else if (isVerticalSwipe || (touchDiffY > touchDiffX)) {
             // 垂直滑動時確保不阻礙頁面滾動
             isScrolling = false;
             console.log('📱 Vertical swipe detected - allowing page scroll');
+            // 不調用preventDefault()，讓瀏覽器處理垂直滾動
         }
     }
 
@@ -793,58 +748,30 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isMobileDevice()) {
             const container = imageStack?.parentElement;
             if (container) {
-                // 強制重置位置，多重保障
+                // 統一的重置流程，避免競爭條件
+                // 1. 暫停平滑滾動
                 container.style.scrollBehavior = 'auto';
+                
+                // 2. 立即跳轉到位置0
                 container.scrollLeft = 0;
                 
-                // 使用多種方式確保位置重置
-                container.scrollTo({ left: 0, behavior: 'auto' });
-                container.scrollTo(0, container.scrollTop);
-                
-                // 更新指示器
+                // 3. 更新指示器
                 updateIndicators(0);
                 
-                // 再次確認位置
-                setTimeout(() => {
-                    if (container.scrollLeft !== 0) {
-                        container.scrollLeft = 0;
-                        console.log('📱 Force reset scroll position');
-                    }
+                // 4. 使用requestAnimationFrame確保DOM更新完成後再恢復smooth
+                requestAnimationFrame(() => {
                     container.style.scrollBehavior = 'smooth';
-                }, 50);
-                
-                console.log('📱 Image index reset completed');
+                    console.log('📱 Image index reset completed');
+                });
             }
         }
     }
     
     // 頁面完全加載後的最終檢查（確保第一張圖片正確顯示）
     window.addEventListener('load', function() {
-        // 確保初始化時圖片索引為0
-        currentImageIndex = 0;
-        
         if (isMobileDevice()) {
-            setTimeout(() => {
-                const container = document.querySelector('.product-image-container');
-                if (container) {
-                    container.style.scrollBehavior = 'auto';
-                    container.scrollLeft = 0;
-                    container.scrollTo({ left: 0, behavior: 'auto' });
-                    
-                    // 強制更新指示器
-                    updateIndicators(0);
-                    
-                    // 確保圖片索引同步
-                    currentImageIndex = 0;
-                    
-                    console.log('📱 Page loaded - Reset to first image');
-                    
-                    // 恢復smooth滾動
-                    setTimeout(() => {
-                        container.style.scrollBehavior = 'smooth';
-                    }, 50);
-                }
-            }, 100);
+            resetImageIndex();
+            console.log('📱 Page loaded - Reset to first image');
         }
     });
 
@@ -1202,15 +1129,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 页面加载完成后的初始化
+    // 页面加载完成后的初始化（只在桌面端）
     function initParallaxEffects() {
+        if (isMobileDevice()) {
+            console.log('📱 Skipping parallax effects on mobile');
+            return;
+        }
+        
         // 添加滚动监听器
         window.addEventListener('scroll', handleScroll, { passive: true });
         
-        // 初始化鼠标跟随效果（仅桌面端）
-        if (window.innerWidth > 992) {
-            createMouseFollower();
-        }
+        // 初始化鼠标跟随效果
+        createMouseFollower();
         
         // 初始化动画元素
         const infoSections = document.querySelectorAll('.info-sections .info-item');
@@ -1224,11 +1154,13 @@ document.addEventListener('DOMContentLoaded', function() {
         handleScrollAnimations();
     }
     
-    // 当页面完全加载后初始化视差效果
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initParallaxEffects);
-    } else {
-        initParallaxEffects();
+    // 当页面完全加载后初始化视差效果（只在桌面端）
+    if (!isMobileDevice()) {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initParallaxEffects);
+        } else {
+            initParallaxEffects();
+        }
     }
 
     // --- Particle System ---
@@ -1386,8 +1318,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Real-time User Feedback System ---
     
-    // 高级鼠标跟随效果
+    // 高级鼠标跟随效果（只在桌面端）
     function createAdvancedMouseFollower() {
+        if (isMobileDevice()) {
+            console.log('📱 Skipping advanced mouse follower on mobile');
+            return;
+        }
         const primaryFollower = document.createElement('div');
         const secondaryFollower = document.createElement('div');
         

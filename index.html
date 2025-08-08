@@ -2362,42 +2362,21 @@
                 shopNowLink.addEventListener('click', function(e) {
                     e.preventDefault(); // Prevent default link behavior
                     
-                    // Define product mapping based on header image
-                    const productMapping = {
-                        0: { // header1.png
-                            name: 'ÔFFUSER RÜC',
-                            material: 'Rock',
-                            price: '$ 599.00',
-                            sku: 'PMAL721',
-                            colorGroup: 'origin'
-                        },
-                        1: { // header2.png
-                            name: 'ÔFFUSER BÜB',
-                            material: 'TPU',
-                            price: '$ 629.00',
-                            sku: 'PMAL722',
-                            colorGroup: 'aether'
-                        },
-                        2: { // header3.png
-                            name: 'ÔFFUSER ALÜN',
-                            material: 'Aluminium',
-                            price: '$ 649.00',
-                            sku: 'PMAL723',
-                            colorGroup: 'prism'
-                        }
-                    };
-                    
-                    const currentProduct = productMapping[currentImageIndex];
-                    
-                    // Store product selection in sessionStorage for the products page
-                    if (currentProduct) {
+                    // Always navigate to RÜC regardless of current image
+                    try {
+                        sessionStorage.removeItem('selectedProduct');
                         sessionStorage.setItem('selectedProduct', JSON.stringify({
-                            index: currentImageIndex,
-                            product: currentProduct
+                            index: 0,
+                            product: {
+                                name: 'ÔFFUSER RÜC',
+                                material: 'Rock',
+                                price: '$ 599.00',
+                                sku: 'PMAL721',
+                                colorGroup: 'origin'
+                            }
                         }));
-                        
-                        console.log(`🛒 Shop Now clicked - navigating to ${currentProduct.name} (${currentProduct.material})`);
-                    }
+                        console.log('🛒 Shop Now clicked - forcing navigation to ÔFFUSER RÜC');
+                    } catch (_) {}
                     
                     // Navigate to products page
                     window.location.href = 'products.html';

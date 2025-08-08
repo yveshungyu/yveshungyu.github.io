@@ -61,6 +61,43 @@
         @media (max-width: 768px) {
             #model-modal { width: 95vw; height: 70vh; }
         }
+
+        /* Inline model host that covers first image area */
+        #inline-model-host {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 50vw; /* match first image height on desktop */
+            display: none;
+            background: #111;
+            z-index: 5; /* above images */
+            border: none;
+        }
+        #inline-model-host .inline-model-viewer {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: #111;
+        }
+        #inline-model-close {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(0,0,0,0.45);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            z-index: 6;
+        }
+        @media (max-width: 768px) {
+            #inline-model-host { height: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -98,6 +135,7 @@
                 <div class="image-stack" id="image-stack">
                     <!-- 圖片會動態生成 -->
                 </div>
+                <div id="inline-model-host" aria-hidden="true"></div>
                 <div class="mobile-image-indicators" id="mobile-indicators">
                     <!-- 指示器會動態生成 -->
                 </div>
@@ -423,6 +461,7 @@
             const closeBtn = document.getElementById('model-close');
             const model = document.getElementById('product-model');
             const imageStack = document.getElementById('image-stack');
+            const inlineHost = document.getElementById('inline-model-host');
 
             if (!overlay || !closeBtn || !model || !imageStack) return;
 
@@ -431,6 +470,14 @@
                 'BÜB': 'BUB.glb',
                 'ALÜN': 'ALUN.glb'
             };
+
+            function hideInlineModel() {
+                if (!inlineHost) return;
+                inlineHost.style.display = 'none';
+                inlineHost.setAttribute('aria-hidden', 'true');
+                inlineHost.innerHTML = '';
+                console.log('⬇️ Inline 3D model closed');
+            }
 
             function getCurrentMaterial() {
                 const selected = document.querySelector('.color-swatch.selected');
@@ -451,43 +498,40 @@
                 const modelPath = `images/${file}`;
                 console.log('📁 Model path:', modelPath);
                 
-                model.setAttribute('src', modelPath);
-                model.setAttribute('camera-controls', '');
-                model.setAttribute('auto-rotate', '');
-                model.setAttribute('environment-image', 'neutral');
-                model.setAttribute('tone-mapping', 'neutral');
-                model.setAttribute('shadow-intensity', '1');
-                model.setAttribute('shadow-softness', '1');
-                model.setAttribute('exposure', '1');
-                model.setAttribute('ar', '');
-                model.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
-                // Remove any existing poster to prevent blocking
-                model.removeAttribute('poster');
+                // Render inline inside host replacing first image visually
+                const host = inlineHost;
+                if (!host) return;
+                host.innerHTML = '';
+                const mv = document.createElement('model-viewer');
+                mv.className = 'inline-model-viewer';
+                mv.setAttribute('src', modelPath);
+                mv.setAttribute('camera-controls', '');
+                mv.setAttribute('auto-rotate', '');
+                mv.setAttribute('environment-image', 'neutral');
+                mv.setAttribute('tone-mapping', 'neutral');
+                mv.setAttribute('shadow-intensity', '1');
+                mv.setAttribute('shadow-softness', '1');
+                mv.setAttribute('exposure', '1.1');
+                mv.setAttribute('ar', '');
+                mv.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
                 
-                const onLoad = ()=>{
-                    console.log('✅ 3D model loaded successfully');
-                    // Reset camera to good defaults
-                    model.cameraOrbit = 'auto auto auto';
-                    model.cameraTarget = 'auto';
-                    model.fieldOfView = '30deg';
-                    // Ensure proper lighting
-                    model.exposure = '1.1';
-                    model.shadowIntensity = '0.7';
-                    console.log('📷 Camera and lighting configured');
-                };
+                const closeBtn = document.createElement('button');
+                closeBtn.id = 'inline-model-close';
+                closeBtn.textContent = 'EXIT';
+                closeBtn.setAttribute('aria-label', 'Exit 3D view');
+                closeBtn.addEventListener('click', hideInlineModel);
                 
-                const onError = (e) => {
-                    console.error('❌ Failed to load 3D model:', e);
-                    console.error('📍 Model path that failed:', modelPath);
-                };
+                mv.addEventListener('load', ()=>{
+                    console.log('✅ Inline 3D model loaded');
+                }, { once: true });
+                mv.addEventListener('error', (e)=>{
+                    console.error('❌ Inline model failed to load', e, modelPath);
+                }, { once: true });
                 
-                model.addEventListener('load', onLoad, { once: true });
-                model.addEventListener('error', onError, { once: true });
-                
-                overlay.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                overlay.setAttribute('aria-hidden', 'false');
-                console.log('🔄 Modal opened, loading model...');
+                host.appendChild(mv);
+                host.appendChild(closeBtn);
+                host.style.display = 'block';
+                host.setAttribute('aria-hidden', 'false');
             }
 
             function hideModel() {
@@ -526,6 +570,26 @@
                     console.log('❌ Click outside first image bounds');
                 }
             });
+
+            // Close inline 3D when switching materials (click swatch)
+            const swatches = document.querySelectorAll('.color-swatch');
+            swatches.forEach(swatch => {
+                swatch.addEventListener('click', () => {
+                    if (inlineHost && inlineHost.style.display === 'block') {
+                        hideInlineModel();
+                    }
+                });
+            });
+
+            // Also observe class changes (selected) to auto-close if changed programmatically
+            if (swatches.length) {
+                const mo = new MutationObserver(() => {
+                    if (inlineHost && inlineHost.style.display === 'block') {
+                        hideInlineModel();
+                    }
+                });
+                swatches.forEach(el => mo.observe(el, { attributes: true, attributeFilter: ['class'] }));
+            }
 
             // Also allow double-click anywhere on image stack to open
             imageStack.addEventListener('dblclick', (e)=>{

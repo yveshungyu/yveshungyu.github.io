@@ -1,3 +1,37 @@
+// --- Section 9 Background Image Cycling (Global Scope) ---
+let section9CurrentImageIndex = 0;
+const section9Images = [
+    'images/section9.png',
+    'images/section9-1.png', 
+    'images/section9-2.png'
+];
+
+function updateSection9Background(imageIndex) {
+    const section9 = document.getElementById('section-9');
+    if (section9) {
+        section9.style.backgroundImage = `url('${section9Images[imageIndex]}')`;
+        console.log(`Section 9 background changed to: ${section9Images[imageIndex]}`);
+        console.log(`Current image index: ${imageIndex}`);
+    } else {
+        console.error('Section 9 element not found!');
+    }
+}
+
+// Global navigation functions for Section 9 image cycling
+window.navigateRight = function() {
+    console.log('Navigate Right clicked!');
+    section9CurrentImageIndex = (section9CurrentImageIndex + 1) % section9Images.length;
+    updateSection9Background(section9CurrentImageIndex);
+    console.log(`Navigate Right: Image ${section9CurrentImageIndex + 1}/${section9Images.length}`);
+};
+
+window.navigateLeft = function() {
+    console.log('Navigate Left clicked!');
+    section9CurrentImageIndex = (section9CurrentImageIndex - 1 + section9Images.length) % section9Images.length;
+    updateSection9Background(section9CurrentImageIndex);
+    console.log(`Navigate Left: Image ${section9CurrentImageIndex + 1}/${section9Images.length}`);
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     
     // --- Mobile Detection (First Priority) ---
@@ -1162,6 +1196,13 @@ document.addEventListener('DOMContentLoaded', function() {
             initParallaxEffects();
         }
     }
+    
+    // Initialize Section 9 with first image when page loads
+    console.log('DOM loaded, initializing Section 9...');
+    setTimeout(() => {
+        updateSection9Background(0);
+        console.log('Section 9 initialized with first image');
+    }, 100);
 
     // --- Particle System ---
     
@@ -1566,6 +1607,8 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log('📱 User feedback system disabled on mobile');
     }
+
+
 
     // --- Smart Interactive System & User Behavior Tracking ---
     

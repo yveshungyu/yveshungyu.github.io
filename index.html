@@ -239,7 +239,7 @@
         .section-3 {
             height: calc(100vw * (1623 / 1920));
             min-height: 800px;
-            background: #f8f9fa;
+            background: #ffffff;
             position: relative;
         }
 
@@ -1130,10 +1130,19 @@
 
         /* Section 10: Footer */
         .section-10 {
-            background: #2c3e50;
+            background: #171717;
             color: #fff;
-            padding: 60px 0 30px 0;
-            min-height: 400px;
+            padding: 24px 0;
+            min-height: 0;
+        }
+        .footer-minimal {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 0 60px;
+            text-align: center;
+            font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            opacity: 0.9;
         }
 
         /* How It Works Modal */
@@ -1234,6 +1243,27 @@
             font-size: clamp(12px, 1.4vw, 18px);
             letter-spacing: 0.5px;
             opacity: 0.95;
+        }
+
+        /* Hover tooltip */
+        .hover-tooltip {
+            position: fixed;
+            left: 0;
+            top: 0;
+            transform: translate(-9999px, -9999px);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1;
+            pointer-events: none;
+            z-index: 10050;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            opacity: 0;
+            transition: opacity 120ms ease;
+            white-space: nowrap;
         }
 
         .footer-content {
@@ -1778,12 +1808,12 @@
     <div class="container">
         <header class="main-header">
             <div class="header-left">
-                <a href="index.html" class="header-nav" title="Home"><i class="fas fa-home"></i> <span>Home</span></a>
+                <a href="products.html" class="header-nav" title="Shop"><i class="fas fa-store"></i> <span>Shop</span></a>
             </div>
             <a href="index.html" class="logo" title="ÔDÔRAI Home">ÔDÔRAI</a>
             <div class="header-right">
                 <a href="#" class="btn-subscribe d-none-mobile" title="">Subscription</a>
-                <a href="#" class="d-none-mobile" title="">Contact Us</a>
+                <a href="mailto:info@theodorai.com" class="d-none-mobile" title="Contact Us">Contact Us</a>
                 <a href="#" title=""><i class="fas fa-user"></i></a>
                 <a href="#" class="cart-icon-wrapper" title="">
                     <i class="fas fa-shopping-bag"></i>
@@ -1840,21 +1870,21 @@
                 <div class="section-3-product-left">
                     <div class="model-slot" id="ruc-slot" data-model="images/RUC.glb">
                         <img id="ruc-image" src="images/TRANSPARENTRUC.png" alt="ÔDÔRAI RÜC Transparent" class="transparent-product-image clickable">
-                    </div>
                 </div>
+            </div>
 
                 <div class="section-3-product-center">
                     <p class="product-center-line1">ÔDÔRAI DIFFUSER</p>
                     <p class="product-center-line2">ÔFFUSER</p>
-                    <p class="product-center-line3">+ Take a closer look</p>
+                    <p class="product-center-line3" id="take-closer-look">+ Take a closer look</p>
                     <a href="products.html" class="product-center-line4">explore now ></a>
-            </div>
+    </div>
 
                 <div class="section-3-product-right">
                     <div class="model-slot" id="bub-slot" data-model="images/BUB.glb">
                         <img id="bub-image" src="images/TRANSPARENTBUB.png" alt="ÔDÔRAI BÜB Transparent" class="transparent-product-image clickable">
-                    </div>
-                </div>
+        </div>
+            </div>
             </div>
         </section>
 
@@ -1867,28 +1897,28 @@
                         <h2 class="quiz-main-title">Custom Scent Profile</h2>
                         <p class="quiz-description">Create your personalized aromatherapy experience with our AI-driven scent analysis</p>
                         <button class="start-quiz-btn" id="start-quiz-button">Start Your Profile Quiz</button>
-        </div>
+            </div>
                     <div class="quiz-visual-content">
                         <div class="quiz-preview-container">
                             <div class="quiz-preview-item">
                                 <div class="preview-icon">🧠</div>
                                 <span>Lifestyle Analysis</span>
-            </div>
+        </div>
                             <div class="quiz-preview-item">
                                 <div class="preview-icon">🌿</div>
                                 <span>Scent Preferences</span>
-            </div>
+    </div>
                             <div class="quiz-preview-item">
                                 <div class="preview-icon">⚗️</div>
                                 <span>Custom Formula</span>
-            </div>
+                </div>
                             <div class="quiz-preview-item">
                                 <div class="preview-icon">🎯</div>
                                 <span>Personalized Results</span>
-        </div>
-    </div>
-                    </div>
                 </div>
+                        </div>
+                        </div>
+                    </div>
 
                 <!-- Quiz Content (Hidden Initially) -->
                 <div class="quiz-content-section" id="quiz-content" style="display: block;">
@@ -1896,15 +1926,15 @@
                         <h3 class="quiz-question-title" id="quiz-question-title">Question 1 of 7</h3>
                         <div class="quiz-progress-bar">
                             <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
-                </div>
+                        </div>
                         </div>
                     
                     <div class="quiz-question-content">
                         <h2 class="quiz-question-text" id="quiz-question-text">Loading question...</h2>
                         <div class="quiz-options" id="quiz-options">
                             <!-- Options will be dynamically generated -->
-                        </div>
                     </div>
+                        </div>
 
                     <!-- Navigation removed - auto advance on selection -->
                         </div>
@@ -1915,17 +1945,17 @@
                         <div class="results-header">
                             <div class="results-icon">🌟</div>
                             <h2 class="results-title">Your ÔDÔRAI Custom Scent Profile</h2>
-                        </div>
+                    </div>
                         
                         <div class="results-profile-section">
                             <div class="results-profile-title">
                                 <h3 class="results-profile-name" id="results-profile-name">Profile Name</h3>
                                 <p class="results-profile-desc" id="results-profile-desc">Profile Description</p>
-                    </div>
+                        </div>
 
                             <div class="results-formula-container" id="results-formula">
                                 <!-- Formula will be dynamically generated -->
-                        </div>
+                    </div>
                             
                             <div class="results-ai-balance">
                                 <div>
@@ -1933,18 +1963,18 @@
                                     <span class="results-ingredient-percentage" id="ai-balance-percentage">15.3%</span>
                         </div>
                     </div>
-                        </div>
+                </div>
 
                         <div class="results-promise">
                             <h4 class="results-promise-title">Monthly Optimization Promise</h4>
                             <p class="results-promise-text">✨ ÔDÔRAI will continuously learn and improve your exclusive formula</p>
-                    </div>
+                </div>
                         
                         <div class="results-buttons">
                             <button class="results-restart-btn" id="results-restart-btn">Create Another Profile</button>
                             <button class="results-save-btn" id="results-save-btn">Save My Profile</button>
-                        </div>
-                    </div>
+            </div>
+    </div>
                 </div>
                 </div>
         </section>
@@ -1981,6 +2011,9 @@
                 </video>
             </div>
                 </div>
+
+        <!-- Global hover tooltip -->
+        <div id="hover-tooltip" class="hover-tooltip" role="tooltip" aria-hidden="true"></div>
 
         <!-- Section 5: Advertisement Videos - 1150px -->
         <section class="section-5" id="section-5">
@@ -2051,59 +2084,9 @@
 
         <!-- Section 10: Footer -->
         <footer class="section-10" id="section-10">
-            <div class="footer-content">
-                <div class="footer-main">
-                    <div class="footer-brand">
-                        <h3>ÔDÔRAI</h3>
-                        <p>AI Driven Personal Aromatherapist</p>
-                </div>
-                    <div class="footer-links">
-                        <div class="footer-column">
-                            <h4>Products</h4>
-                            <ul>
-                                <li><a href="products.html">All Diffusers</a></li>
-                                <li><a href="#">Essential Oils</a></li>
-                                <li><a href="#">Accessories</a></li>
-                                <li><a href="#">Gift Sets</a></li>
-                            </ul>
-                </div>
-                        <div class="footer-column">
-                            <h4>Support</h4>
-                            <ul>
-                                <li><a href="#">Contact Us</a></li>
-                                <li><a href="#">Help Center</a></li>
-                                <li><a href="#">Shipping Info</a></li>
-                                <li><a href="#">Returns</a></li>
-                            </ul>
+            <div class="footer-minimal">
+                <p>&copy; 2025 ÔDÔRAI. All rights reserved.</p>
             </div>
-                        <div class="footer-column">
-                            <h4>Company</h4>
-                            <ul>
-                                <li><a href="#">About Us</a></li>
-                                <li><a href="#">Careers</a></li>
-                                <li><a href="#">Press</a></li>
-                                <li><a href="#">Sustainability</a></li>
-                            </ul>
-                </div>
-                </div>
-            </div>
-                <div class="footer-bottom">
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                </div>
-                    <div class="footer-legal">
-                        <p>&copy; 2024 ÔDÔRAI. All rights reserved.</p>
-                        <div class="footer-legal-links">
-                            <a href="#">Privacy Policy</a>
-                            <a href="#">Terms of Service</a>
-                            <a href="#">Cookie Policy</a>
-                </div>
-            </div>
-        </div>
-        </div>
         </footer>
     </div>
 
@@ -2393,6 +2376,15 @@
                 });
             });
 
+            // --- Subscription: launching soon notice ---
+            const subscribeBtn = document.querySelector('.btn-subscribe');
+            if (subscribeBtn) {
+                subscribeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('Launching soon');
+                });
+            }
+
             // --- Hero Carousel Functionality ---
             let currentImageIndex = 0;
             const totalImages = 8; // header1.png to header8.png
@@ -2533,6 +2525,7 @@
                 const bubImg = document.getElementById('bub-image');
                 const rucSlot = document.getElementById('ruc-slot');
                 const bubSlot = document.getElementById('bub-slot');
+                const takeCloserLook = document.getElementById('take-closer-look');
                 if (!rucSlot || !bubSlot) return;
 
                 function swapToModel(imgEl, slotEl){
@@ -2552,6 +2545,9 @@
                     mv.setAttribute('exposure', '1');
                     mv.setAttribute('environment-image', 'neutral');
                     mv.setAttribute('shadow-intensity', '0.2');
+                    // Lock zoom: limit field-of-view min/max to same value
+                    mv.setAttribute('min-field-of-view', '45deg');
+                    mv.setAttribute('max-field-of-view', '45deg');
                     mv.style.width = '100%';
                     mv.style.height = '100%';
                     mv.style.background = '#fff';
@@ -2560,6 +2556,53 @@
 
                 if (rucImg) rucImg.addEventListener('click', () => swapToModel(rucImg, rucSlot));
                 if (bubImg) bubImg.addEventListener('click', () => swapToModel(bubImg, bubSlot));
+                if (takeCloserLook) {
+                    takeCloserLook.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        window.location.href = 'products.html';
+                    });
+                }
+            })();
+
+            // --- Global hover tooltip logic ---
+            (function setupHoverTooltips(){
+                const tooltip = document.getElementById('hover-tooltip');
+                if (!tooltip) return;
+
+                const targets = [
+                    { sel: '.product-center-line4', text: 'explore more details' },
+                    { sel: '#take-closer-look', text: 'explore more details' },
+                    { sel: '.section-4-learn-more', text: 'Click to view how it works' },
+                    { sel: '#learn-more-trigger', text: 'Click to view how it works' },
+                    { sel: '#ruc-image', text: 'Click to view 3D model' },
+                    { sel: '#bub-image', text: 'Click to view 3D model' },
+                    { sel: '.nav-btn.nav-right', text: 'Next' },
+                    { sel: '.nav-btn.nav-left', text: 'Previous' },
+                    { sel: '#carousel-click-area', text: 'click the rock to change faces' },
+                    { sel: '#section-2', text: 'click the ÔFFUSER to change the model' },
+                ];
+
+                function showTooltip(text, x, y){
+                    tooltip.textContent = text;
+                    tooltip.style.transform = `translate(${x + 12}px, ${y + 12}px)`;
+                    tooltip.style.opacity = '1';
+                    tooltip.setAttribute('aria-hidden', 'false');
+                }
+
+                function hideTooltip(){
+                    tooltip.style.opacity = '0';
+                    tooltip.setAttribute('aria-hidden', 'true');
+                }
+
+                targets.forEach(t => {
+                    document.querySelectorAll(t.sel).forEach(el => {
+                        el.addEventListener('mousemove', (e) => showTooltip(t.text, e.clientX, e.clientY));
+                        el.addEventListener('mouseleave', hideTooltip);
+                        el.addEventListener('scroll', hideTooltip, { passive: true });
+                    });
+                });
+
+                window.addEventListener('scroll', hideTooltip, { passive: true });
             })();
 
             // --- How It Works Modal (Section 4) ---

@@ -39,10 +39,10 @@
             height: 100%;
         }
 
-        /* Section 1: Hero Carousel - 1098px @ 1920px width */
+        /* Section 1: Hero Carousel - responsive by image aspect ratio */
         .section-1 {
-            height: calc(100vw * (1098 / 1920));
-            min-height: 600px;
+            height: calc(100vw * (1098 / 1920)); /* fallback height; JS will override to exact image ratio */
+            min-height: 0;
             position: relative;
             overflow: hidden;
         }
@@ -65,7 +65,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain; /* avoid cropping */
             opacity: 0;
             transition: opacity 0.8s ease-in-out;
             cursor: pointer;
@@ -193,13 +193,13 @@
 
 
 
-        /* Section 2: Brand Introduction - 1080px @ 1920px width */
+        /* Section 2: Brand Introduction - responsive by background image ratio */
         .section-2 {
-            height: calc(100vw * (1080 / 1920));
-            min-height: 500px;
+            height: calc(100vw * (1080 / 1920)); /* fallback; JS will set exact ratio */
+            min-height: 0;
             background-image: url('images/section2.png');
-            background-size: cover;
-            background-position: center;
+            background-size: contain; /* avoid cropping */
+            background-position: center top;
             background-repeat: no-repeat;
             position: relative;
             display: flex;
@@ -320,6 +320,34 @@
             object-fit: contain;
             align-self: end;
             margin-bottom: var(--img-lift, calc(100vw * (80 / 1920)));
+        }
+
+        .transparent-product-image.clickable {
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .transparent-product-image.clickable:hover {
+            transform: translateY(-6px);
+        }
+
+        /* Simple model modal for Section 3 */
+        /* Inline model slots in Section 3 */
+        .model-slot {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            background: transparent;
+            position: relative;
+        }
+        .model-slot model-viewer {
+            width: 100%;
+            height: 100%;
+            background: transparent; /* match section background */
+            border-radius: 0;
+            /* no shadow */
+            box-shadow: none;
         }
 
         .section-3-product-left,
@@ -552,10 +580,10 @@
             display: none;
         }
 
-        /* Section 6: Custom Scent Profile Quiz - 1150px @ 1920px width */
+        /* Section 6: Custom Scent Profile Quiz - 926px @ 1920px width */
         .section-6 {
-            height: calc(100vw * (1150 / 1920));
-            min-height: 700px;
+            height: calc(100vw * (926 / 1920));
+            min-height: 0;
             background: #000;
             color: #fff;
         }
@@ -661,12 +689,12 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center; /* vertically center content */
             align-items: center;
             padding: calc(100vw * (120 / 1920)) calc(100vw * (60 / 1920)) calc(100vw * (60 / 1920));
             max-width: calc(100vw * (1400 / 1920));
             margin: 0 auto;
-            min-height: calc(100vw * (1150 / 1920));
+            min-height: 0;
             box-sizing: border-box;
         }
 
@@ -757,12 +785,12 @@
             width: 100%;
             height: 100%;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: center; /* vertical center */
+            justify-content: center; /* horizontal center */
             padding: calc(100vw * (60 / 1920));
-            padding-top: calc(100vw * (160 / 1920));
+            padding-top: calc(100vw * (100 / 1920)); /* move a bit lower */
             box-sizing: border-box;
-            min-height: calc(100vw * (1150 / 1920));
+            min-height: 0; /* allow to center within section height */
         }
 
         .results-content {
@@ -1106,6 +1134,106 @@
             color: #fff;
             padding: 60px 0 30px 0;
             min-height: 400px;
+        }
+
+        /* How It Works Modal */
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10010;
+            padding: 40px;
+        }
+
+        .video-modal.show {
+            display: flex;
+        }
+
+        .video-modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-modal video {
+            width: auto;
+            height: auto;
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+            background: #000;
+            display: block;
+        }
+
+        .video-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .video-play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.35), rgba(0,0,0,0.55));
+            color: #fff;
+            font-family: 'NCTTorin', sans-serif;
+            gap: 16px;
+            cursor: pointer;
+            z-index: 1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .video-play-overlay .play-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-play-overlay .play-circle:before {
+            content: '';
+            display: block;
+            margin-left: 4px;
+            width: 0;
+            height: 0;
+            border-left: 16px solid #fff;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+        }
+
+        .video-play-overlay .play-text {
+            font-size: clamp(12px, 1.4vw, 18px);
+            letter-spacing: 0.5px;
+            opacity: 0.95;
         }
 
         .footer-content {
@@ -1710,21 +1838,118 @@
             
             <div class="section-3-products">
                 <div class="section-3-product-left">
-                    <img src="images/TRANSPARENTRUC.png" alt="ÔDÔRAI RÜC Transparent" class="transparent-product-image">
-            </div>
+                    <div class="model-slot" id="ruc-slot" data-model="images/RUC.glb">
+                        <img id="ruc-image" src="images/TRANSPARENTRUC.png" alt="ÔDÔRAI RÜC Transparent" class="transparent-product-image clickable">
+                    </div>
+                </div>
 
                 <div class="section-3-product-center">
                     <p class="product-center-line1">ÔDÔRAI DIFFUSER</p>
                     <p class="product-center-line2">ÔFFUSER</p>
                     <p class="product-center-line3">+ Take a closer look</p>
                     <a href="products.html" class="product-center-line4">explore now ></a>
-    </div>
+            </div>
 
                 <div class="section-3-product-right">
-                    <img src="images/TRANSPARENTBUB.png" alt="ÔDÔRAI BÜB Transparent" class="transparent-product-image">
-        </div>
+                    <div class="model-slot" id="bub-slot" data-model="images/BUB.glb">
+                        <img id="bub-image" src="images/TRANSPARENTBUB.png" alt="ÔDÔRAI BÜB Transparent" class="transparent-product-image clickable">
+                    </div>
+                </div>
             </div>
         </section>
+
+        <!-- Section 6: Custom Scent Profile Quiz - 1150px -->
+        <section class="section-6" id="section-6">
+            <div class="section-6-content">
+                <!-- Quiz Introduction (Initial View) -->
+                <div class="quiz-intro-section" id="quiz-intro" style="display: none;">
+                    <div class="quiz-text-content">
+                        <h2 class="quiz-main-title">Custom Scent Profile</h2>
+                        <p class="quiz-description">Create your personalized aromatherapy experience with our AI-driven scent analysis</p>
+                        <button class="start-quiz-btn" id="start-quiz-button">Start Your Profile Quiz</button>
+        </div>
+                    <div class="quiz-visual-content">
+                        <div class="quiz-preview-container">
+                            <div class="quiz-preview-item">
+                                <div class="preview-icon">🧠</div>
+                                <span>Lifestyle Analysis</span>
+            </div>
+                            <div class="quiz-preview-item">
+                                <div class="preview-icon">🌿</div>
+                                <span>Scent Preferences</span>
+            </div>
+                            <div class="quiz-preview-item">
+                                <div class="preview-icon">⚗️</div>
+                                <span>Custom Formula</span>
+            </div>
+                            <div class="quiz-preview-item">
+                                <div class="preview-icon">🎯</div>
+                                <span>Personalized Results</span>
+        </div>
+    </div>
+                    </div>
+                </div>
+
+                <!-- Quiz Content (Hidden Initially) -->
+                <div class="quiz-content-section" id="quiz-content" style="display: block;">
+                    <div class="quiz-header">
+                        <h3 class="quiz-question-title" id="quiz-question-title">Question 1 of 7</h3>
+                        <div class="quiz-progress-bar">
+                            <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+                </div>
+                        </div>
+                    
+                    <div class="quiz-question-content">
+                        <h2 class="quiz-question-text" id="quiz-question-text">Loading question...</h2>
+                        <div class="quiz-options" id="quiz-options">
+                            <!-- Options will be dynamically generated -->
+                        </div>
+                    </div>
+
+                    <!-- Navigation removed - auto advance on selection -->
+                        </div>
+
+                <!-- Quiz Results (Hidden Initially) -->
+                <div class="quiz-results-section" id="quiz-results" style="display: none;">
+                    <div class="results-content">
+                        <div class="results-header">
+                            <div class="results-icon">🌟</div>
+                            <h2 class="results-title">Your ÔDÔRAI Custom Scent Profile</h2>
+                        </div>
+                        
+                        <div class="results-profile-section">
+                            <div class="results-profile-title">
+                                <h3 class="results-profile-name" id="results-profile-name">Profile Name</h3>
+                                <p class="results-profile-desc" id="results-profile-desc">Profile Description</p>
+                    </div>
+
+                            <div class="results-formula-container" id="results-formula">
+                                <!-- Formula will be dynamically generated -->
+                        </div>
+                            
+                            <div class="results-ai-balance">
+                                <div>
+                                    <span class="results-ai-balance-text">AI Intelligent Balance Factor</span>
+                                    <span class="results-ingredient-percentage" id="ai-balance-percentage">15.3%</span>
+                        </div>
+                    </div>
+                        </div>
+
+                        <div class="results-promise">
+                            <h4 class="results-promise-title">Monthly Optimization Promise</h4>
+                            <p class="results-promise-text">✨ ÔDÔRAI will continuously learn and improve your exclusive formula</p>
+                    </div>
+                        
+                        <div class="results-buttons">
+                            <button class="results-restart-btn" id="results-restart-btn">Create Another Profile</button>
+                            <button class="results-save-btn" id="results-save-btn">Save My Profile</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </section>
+
+        <!-- removed modal: inline viewers are used in slots -->
 
         <!-- Section 4: Data Analysis - 1080px -->
         <section class="section-4" id="section-4">
@@ -1737,10 +1962,25 @@
                 <img src="images/data.png" alt="Data Analysis" class="data-image">
                 <div class="section-4-text">
                     <p class="section-4-description">ÔFFUSER continuously analyzes your physiological and environmental data to create the perfect scent experience</p>
-                    <p class="section-4-learn-more">+ Learn more about mechanism</p>
-            </div>
-            </div>
+                    <p class="section-4-learn-more" id="learn-more-trigger">+ Learn more about mechanism</p>
+        </div>
+                </div>
         </section>
+
+        <!-- How It Works Modal -->
+        <div class="video-modal" id="howitworks-modal" aria-hidden="true">
+            <div class="video-modal-content">
+                <button class="video-close" id="howitworks-close" aria-label="Close">✕</button>
+                <div class="video-play-overlay" id="howitworks-play-overlay">
+                    <div class="play-circle"></div>
+                    <div class="play-text">CLICK TO PLAY</div>
+                </div>
+                <video id="howitworks-video" preload="metadata">
+                    <source src="images/howitworks.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+                </div>
 
         <!-- Section 5: Advertisement Videos - 1150px -->
         <section class="section-5" id="section-5">
@@ -1758,107 +1998,17 @@
                         <source src="images/Advertise_01.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
-                </div>
+            </div>
                 <div class="video-container right-video">
                     <div class="audio-bars"></div>
                     <video class="advertise-video" muted loop playsinline>
                         <source src="images/Advertise_03.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
-                        </div>
-                        </div>
-        </section>
-
-                <!-- Section 6: Custom Scent Profile Quiz - 1150px -->
-        <section class="section-6" id="section-6">
-            <div class="section-6-content">
-                <!-- Quiz Introduction (Initial View) -->
-                <div class="quiz-intro-section" id="quiz-intro" style="display: none;">
-                    <div class="quiz-text-content">
-                        <h2 class="quiz-main-title">Custom Scent Profile</h2>
-                        <p class="quiz-description">Create your personalized aromatherapy experience with our AI-driven scent analysis</p>
-                        <button class="start-quiz-btn" id="start-quiz-button">Start Your Profile Quiz</button>
-                    </div>
-                    <div class="quiz-visual-content">
-                        <div class="quiz-preview-container">
-                            <div class="quiz-preview-item">
-                                <div class="preview-icon">🧠</div>
-                                <span>Lifestyle Analysis</span>
-                        </div>
-                            <div class="quiz-preview-item">
-                                <div class="preview-icon">🌿</div>
-                                <span>Scent Preferences</span>
-                        </div>
-                            <div class="quiz-preview-item">
-                                <div class="preview-icon">⚗️</div>
-                                <span>Custom Formula</span>
-                    </div>
-                            <div class="quiz-preview-item">
-                                <div class="preview-icon">🎯</div>
-                                <span>Personalized Results</span>
-                        </div>
-                        </div>
-                    </div>
-                        </div>
-
-                <!-- Quiz Content (Hidden Initially) -->
-                <div class="quiz-content-section" id="quiz-content" style="display: block;">
-                    <div class="quiz-header">
-                        <h3 class="quiz-question-title" id="quiz-question-title">Question 1 of 7</h3>
-                        <div class="quiz-progress-bar">
-                            <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
-                    </div>
-                        </div>
-                    
-                    <div class="quiz-question-content">
-                        <h2 class="quiz-question-text" id="quiz-question-text">Loading question...</h2>
-                        <div class="quiz-options" id="quiz-options">
-                            <!-- Options will be dynamically generated -->
-                    </div>
                 </div>
-
-                                        <!-- Navigation removed - auto advance on selection -->
-                </div>
-
-                                <!-- Quiz Results (Hidden Initially) -->
-                <div class="quiz-results-section" id="quiz-results" style="display: none;">
-                    <div class="results-content">
-                        <div class="results-header">
-                            <div class="results-icon">🌟</div>
-                            <h2 class="results-title">Your ÔDÔRAI Custom Scent Profile</h2>
-            </div>
-                        
-                        <div class="results-profile-section">
-                            <div class="results-profile-title">
-                                <h3 class="results-profile-name" id="results-profile-name">Profile Name</h3>
-                                <p class="results-profile-desc" id="results-profile-desc">Profile Description</p>
-    </div>
-
-                            <div class="results-formula-container" id="results-formula">
-                                <!-- Formula will be dynamically generated -->
-                </div>
-                            
-                            <div class="results-ai-balance">
-                                <div>
-                                    <span class="results-ai-balance-text">AI Intelligent Balance Factor</span>
-                                    <span class="results-ingredient-percentage" id="ai-balance-percentage">15.3%</span>
-        </div>
-                </div>
-                </div>
-
-                        <div class="results-promise">
-                            <h4 class="results-promise-title">Monthly Optimization Promise</h4>
-                            <p class="results-promise-text">✨ ÔDÔRAI will continuously learn and improve your exclusive formula</p>
-            </div>
-                        
-                        <div class="results-buttons">
-                            <button class="results-restart-btn" id="results-restart-btn">Create Another Profile</button>
-                            <button class="results-save-btn" id="results-save-btn">Save My Profile</button>
-                </div>
-                </div>
-            </div>
                 </div>
         </section>
+        
 
         <!-- Section 7 -->
         <section class="section-7" id="section-7">
@@ -1868,8 +2018,8 @@
                     <p class="section-7-line2">It matches your current state with a scent that supports you—</p>
                     <p class="section-7-line3">using science-backed personalization.</p>
                     <p class="section-7-line4">Long-term impact meets daily precision.</p>
-                </div>
             </div>
+        </div>
         </section>
 
         <!-- Section 8: Logic Video - 1080px -->
@@ -1880,7 +2030,7 @@
             </video>
             <div class="section-8-overlay">
                 <h2 class="section-8-title">How AI Personalizes Your Experience</h2>
-        </div>
+    </div>
         </section>
 
         <!-- Section 9: Background Image Only - 1156px -->
@@ -1960,6 +2110,8 @@
 
 
     <script src="navigation.js"></script>
+    <!-- model-viewer web component -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
     <script>
         // Section 9 inline navigation functions (global scope)
         window.section9CurrentImageIndex = 0;
@@ -2246,6 +2398,18 @@
             const totalImages = 8; // header1.png to header8.png
             const carouselImages = document.querySelectorAll('.hero-carousel-image');
             const carouselClickArea = document.getElementById('carousel-click-area');
+            const section1 = document.getElementById('section-1');
+
+            function updateHeroHeightByImage(imgEl) {
+                if (!section1 || !imgEl) return;
+                const img = new Image();
+                img.onload = function() {
+                    const ratio = this.naturalHeight / this.naturalWidth; // H/W
+                    const viewportWidth = section1.clientWidth || document.documentElement.clientWidth || window.innerWidth;
+                    section1.style.height = Math.round(viewportWidth * ratio) + 'px';
+                };
+                img.src = imgEl.src;
+            }
 
             function showImage(index) {
                 // Hide all images
@@ -2276,8 +2440,10 @@
                     }
                 } catch(e) { console.warn('Hero shader animation skipped', e); }
 
-                // Show current image
-                carouselImages[index].classList.add('active');
+                // Show current image and update section height to match image ratio
+                const activeImg = carouselImages[index];
+                activeImg.classList.add('active');
+                updateHeroHeightByImage(activeImg);
                 
                 currentImageIndex = index;
             }
@@ -2300,6 +2466,13 @@
 
             // Auto-advance carousel every 5 seconds (optional)
             let autoAdvanceInterval = setInterval(nextImage, 5000);
+            // Initialize height on first active image and on resize
+            const initialActive = document.querySelector('.hero-carousel-image.active') || carouselImages[0];
+            if (initialActive) updateHeroHeightByImage(initialActive);
+            window.addEventListener('resize', () => {
+                const current = document.querySelector('.hero-carousel-image.active') || carouselImages[currentImageIndex];
+                if (current) updateHeroHeightByImage(current);
+            });
 
             // Pause auto-advance when user interacts
             const heroSection = document.getElementById('section-1');
@@ -2353,6 +2526,88 @@
             // --- Section 5 & 8: Scroll-triggered Video Playback ---
             const advertiseVideos = document.querySelectorAll('.advertise-video');
             const section8Video = document.querySelector('.section-8-video');
+
+            // --- Section 3: Inline model viewers in place ---
+            (function setupSection3InlineModels(){
+                const rucImg = document.getElementById('ruc-image');
+                const bubImg = document.getElementById('bub-image');
+                const rucSlot = document.getElementById('ruc-slot');
+                const bubSlot = document.getElementById('bub-slot');
+                if (!rucSlot || !bubSlot) return;
+
+                function swapToModel(imgEl, slotEl){
+                    const src = slotEl.dataset.model;
+                    if (!src) return;
+                    // Remove image and inject model-viewer
+                    if (imgEl && imgEl.parentNode === slotEl) {
+                        slotEl.removeChild(imgEl);
+                    }
+                    // Prevent duplicate insertion
+                    if (slotEl.querySelector('model-viewer')) return;
+                    const mv = document.createElement('model-viewer');
+                    mv.setAttribute('src', src);
+                    mv.setAttribute('alt', '3D Model');
+                    mv.setAttribute('camera-controls', '');
+                    mv.setAttribute('auto-rotate', '');
+                    mv.setAttribute('exposure', '1');
+                    mv.setAttribute('environment-image', 'neutral');
+                    mv.setAttribute('shadow-intensity', '0.2');
+                    mv.style.width = '100%';
+                    mv.style.height = '100%';
+                    mv.style.background = '#fff';
+                    slotEl.appendChild(mv);
+                }
+
+                if (rucImg) rucImg.addEventListener('click', () => swapToModel(rucImg, rucSlot));
+                if (bubImg) bubImg.addEventListener('click', () => swapToModel(bubImg, bubSlot));
+            })();
+
+            // --- How It Works Modal (Section 4) ---
+            (function setupHowItWorksModal(){
+                const trigger = document.getElementById('learn-more-trigger');
+                const modal = document.getElementById('howitworks-modal');
+                const video = document.getElementById('howitworks-video');
+                const closeBtn = document.getElementById('howitworks-close');
+                const overlay = document.getElementById('howitworks-play-overlay');
+                if (!trigger || !modal || !video || !closeBtn || !overlay) return;
+
+                function openModal(){
+                    modal.classList.add('show');
+                    modal.setAttribute('aria-hidden', 'false');
+                    // Pause initially; wait for user click to play with sound
+                    try { video.pause(); video.currentTime = 0; } catch(_) {}
+                }
+
+                function closeModal(){
+                    modal.classList.remove('show');
+                    modal.setAttribute('aria-hidden', 'true');
+                    try { video.pause(); } catch(_) {}
+                }
+
+                trigger.addEventListener('click', function(e){
+                    e.preventDefault();
+                    openModal();
+                });
+
+                closeBtn.addEventListener('click', function(){
+                    closeModal();
+                });
+
+                modal.addEventListener('click', function(e){
+                    if (e.target === modal) closeModal();
+                });
+
+                // Play on overlay click with sound
+                overlay.addEventListener('click', function(){
+                    overlay.style.display = 'none';
+                    video.muted = false; // with sound
+                    video.controls = true;
+                    video.play().catch(()=>{
+                        // If autoplay with sound is blocked, keep overlay visible
+                        overlay.style.display = '';
+                    });
+                });
+            })();
             
             function checkVideoVisibility() {
                 // Check Section 5 advertise videos
@@ -2443,6 +2698,29 @@
                     'images/section3.png', 
                     'images/section1.png'
                 ];
+                const intrinsicRatios = {}; // cache image ratios by src
+
+                function setSection2HeightFor(src) {
+                    const apply = (ratio) => {
+                        const viewportWidth = section2.clientWidth || document.documentElement.clientWidth || window.innerWidth;
+                        section2.style.height = Math.round(viewportWidth * ratio) + 'px';
+                    };
+                    if (intrinsicRatios[src]) {
+                        apply(intrinsicRatios[src]);
+                        return;
+                    }
+                    const img = new Image();
+                    img.onload = function(){
+                        const ratio = this.naturalHeight / this.naturalWidth;
+                        intrinsicRatios[src] = ratio;
+                        apply(ratio);
+                    };
+                    img.src = src;
+                }
+
+                // Initialize height for initial background
+                setSection2HeightFor(backgrounds[currentBgIndex]);
+                window.addEventListener('resize', () => setSection2HeightFor(backgrounds[currentBgIndex]));
                 
                 // Click on title to navigate to products page
                 titleElement.addEventListener('click', function(e) {
@@ -2457,6 +2735,7 @@
                     if (e.target !== titleElement) {
                         currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
                         section2.style.backgroundImage = `url('${backgrounds[currentBgIndex]}')`;
+                        setSection2HeightFor(backgrounds[currentBgIndex]);
                         console.log(`🖼️ Section 2 background switched to: ${backgrounds[currentBgIndex]}`);
                     }
                 });

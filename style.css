@@ -602,7 +602,7 @@ body {
 .product-info {
     padding: 120px 0 60px 0;
     height: 100vh;
-    overflow-y: hidden;
+    overflow-y: hidden; /* default: no scroll */
     background-color: #fff;
     display: flex;
     flex-direction: column;
@@ -621,6 +621,20 @@ body {
     max-width: 450px;
     padding: 0 30px;
     box-sizing: border-box;
+}
+
+/* Allow scroll when viewport width is not enough and content overflows */
+@media (max-width: 1920px) {
+  .product-info {
+    overflow-y: auto; /* enable scroll on small/tight layouts */
+  }
+}
+
+/* Also enable scroll for shorter heights */
+@media (max-height: 1080px) {
+  .product-info {
+    overflow-y: auto;
+  }
 }
 
 .product-sku {

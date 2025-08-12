@@ -98,6 +98,27 @@
         @media (max-width: 768px) {
             #inline-model-host { height: 100%; }
         }
+
+        /* Hover tooltip */
+        .hover-tooltip {
+            position: fixed;
+            left: 0;
+            top: 0;
+            transform: translate(-9999px, -9999px);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1;
+            pointer-events: none;
+            z-index: 10050;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            opacity: 0;
+            transition: opacity 120ms ease;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -119,7 +140,7 @@
             <a href="index.html" class="logo" title="ÔDÔRAI Home">ÔDÔRAI</a>
             <div class="header-right">
                 <a href="#" class="btn-subscribe d-none-mobile" title="">Subscription</a>
-                <a href="#" class="d-none-mobile" title="">Contact Us</a>
+                <a href="mailto:info@theodorai.com" class="d-none-mobile" title="Contact Us">Contact Us</a>
                 <a href="#" title=""><i class="fas fa-user"></i></a>
                 <a href="#" class="cart-icon-wrapper" title="">
                     <i class="fas fa-shopping-bag"></i>
@@ -254,6 +275,9 @@
                 </div>
             </div>
         </main>
+
+        <!-- Global hover tooltip for products page -->
+        <div id="hover-tooltip" class="hover-tooltip" role="tooltip" aria-hidden="true"></div>
 
         <!-- 3D Model Modal -->
         <div id="model-modal-overlay" aria-hidden="true">
@@ -453,6 +477,19 @@
             }
         });
     </script>
+
+    <script>
+        // Subscription button on products page
+        (function(){
+            const subscribeBtn = document.querySelector('.btn-subscribe');
+            if (subscribeBtn) {
+                subscribeBtn.addEventListener('click', function(e){
+                    e.preventDefault();
+                    alert('Launching soon');
+                });
+            }
+        })();
+    </script>
     <script src="script.js"></script>
     <script>
         // Handle opening 3D model when clicking the first product image of current selection
@@ -462,6 +499,7 @@
             const model = document.getElementById('product-model');
             const imageStack = document.getElementById('image-stack');
             const inlineHost = document.getElementById('inline-model-host');
+            const tooltip = document.getElementById('hover-tooltip');
 
             if (!overlay || !closeBtn || !model || !imageStack) return;
 
@@ -569,6 +607,30 @@
                 } else {
                     console.log('❌ Click outside first image bounds');
                 }
+            });
+
+            // Hover tooltip on first image area: "click to view 3D"
+            imageStack.addEventListener('mousemove', (e)=>{
+                const imgs = imageStack.querySelectorAll('img');
+                if (!imgs.length || !tooltip) return;
+                const first = imgs[0];
+                const rect = first.getBoundingClientRect();
+                const x = e.clientX, y = e.clientY;
+                const inside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+                if (inside && inlineHost && inlineHost.style.display !== 'block') {
+                    tooltip.textContent = 'click to view 3D';
+                    tooltip.style.transform = `translate(${x + 12}px, ${y + 12}px)`;
+                    tooltip.style.opacity = '1';
+                    tooltip.setAttribute('aria-hidden', 'false');
+                } else if (tooltip) {
+                    tooltip.style.opacity = '0';
+                    tooltip.setAttribute('aria-hidden', 'true');
+                }
+            });
+            imageStack.addEventListener('mouseleave', ()=>{
+                if (!tooltip) return;
+                tooltip.style.opacity = '0';
+                tooltip.setAttribute('aria-hidden', 'true');
             });
 
             // Close inline 3D when switching materials (click swatch)
